@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'User must have password'],
-    validate: [validator.isMD5, 'Password was not hash yet']
+    validate: [validator.isMD5, 'Password was not hash yet'],
+    select: false
   },
   dentist_name: {
     type: String,
@@ -28,8 +29,7 @@ const userSchema = new mongoose.Schema({
   },
   dentist_ID: {
     type: String,
-    maxlength: [45, 'Dentist ID must have less or equal than 45 characters'],
-    validate: [validator.isAlpha, 'Dentist name must be String']
+    maxlength: [45, 'Dentist ID must have less or equal than 45 characters']
   }
 });
 

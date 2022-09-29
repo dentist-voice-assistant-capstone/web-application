@@ -2,7 +2,11 @@ const User = require('../models/userModel');
 
 exports.createAccount = async (req, res) => {
   try {
-    const newUser = await User.create(req.body);
+    const newUser = await (await User.create(req.body)).toJSON();
+
+    //Delete the password and redundant field
+    delete newUser.password;
+    delete newUser.__v;
 
     res.status(201).json({
       status: 'success',
