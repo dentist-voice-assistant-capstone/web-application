@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const registerRouter = require('./routes/registerRoutes');
+
 const app = express();
 
 // 1) MIDDLEWARES
@@ -10,8 +12,6 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.route('/hello_word').get((req, res) => {
-  res.end('HELLO WORD');
-});
+app.use('/register', registerRouter);
 
 module.exports = app;
