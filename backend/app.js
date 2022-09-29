@@ -8,4 +8,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(express.json());
+
+app.route('/hello_word').get((req, res) => {
+  res.end('HELLO WORD');
+});
+
 module.exports = app;
