@@ -44,6 +44,8 @@ const userSchema = new mongoose.Schema({
   passwordChangeAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  emailConfirmToken: String,
+  emailConfirmExpires: Date,
   active: {
     type: Boolean,
     default: true,
@@ -92,6 +94,20 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   return false;
 };
 
+userSchema.methods.createEmailConfirmToken = function() {
+  // Generate Reset Password Token for forget password route.
+  const confirmToken = crypto.randomBytes(32).toString('hex');
+
+  this.emailConfirmToken = crypto
+    .createHash('sha256')
+    .update(confirmToken)
+    .digest('hex');
+
+  this.emailConfirmExpires = Date.now() + 10 * 60 * 1000;
+
+  return confirmToken;
+};
+
 userSchema.methods.createPasswordResetToken = function() {
   // Generate Reset Password Token for forget password route.
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -100,8 +116,6 @@ userSchema.methods.createPasswordResetToken = function() {
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-
-  console.log({ resetToken }, this.passwordResetToken);
 
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 

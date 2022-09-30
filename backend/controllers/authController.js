@@ -50,6 +50,51 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 201, res);
 });
 
+exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError('Please provide email', 400));
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new AppError('Email does not exist in the database!', 400));
+  }
+
+  // 2) Generate the random reset token
+  const confirmToken = user.createEmailConfirmToken();
+  await user.save({ validateBeforeSave: false });
+
+  // 3) Send it to user's email
+  const emailConfirmURL = `${req.protocol}://${req.get(
+    'host'
+  )}/user/activateAccount/${confirmToken}`;
+
+  const message = `Please send a PATCH request to ${emailConfirmURL} to activate your account.`;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your email confirmation token (valid for 10 min)',
+      message
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email!'
+    });
+  } catch (err) {
+    user.emailConfirmToken = undefined;
+    user.emailConfirmExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError('There was an error sending the email. Try again later!'),
+      500
+    );
+  }
+});
+
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 

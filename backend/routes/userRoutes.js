@@ -22,4 +22,6 @@ router.patch(
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
+router.post('/sendEmailConfirm', authController.sendEmailConfirm);
+
 module.exports = router;
