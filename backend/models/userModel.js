@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
   emailConfirmExpires: Date,
   active: {
     type: Boolean,
-    default: true,
+    default: false,
     select: false
   }
 });
@@ -69,7 +69,7 @@ userSchema.pre('save', function(next) {
   next();
 });
 
-userSchema.pre(/^find/, function(next) {
+userSchema.pre(/^findById/, function(next) {
   // Query only the active account when using function which starts with find.
   this.find({ active: { $ne: false } });
   next();
@@ -104,6 +104,8 @@ userSchema.methods.createEmailConfirmToken = function() {
     .digest('hex');
 
   this.emailConfirmExpires = Date.now() + 10 * 60 * 1000;
+
+  console.log(confirmToken, this.emailConfirmToken);
 
   return confirmToken;
 };

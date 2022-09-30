@@ -57,9 +57,13 @@ exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide email', 400));
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+active');
+
   if (!user) {
     return next(new AppError('Email does not exist in the database!', 400));
+  }
+  if (user.active) {
+    return next(new AppError('This email was already active.', 400));
   }
 
   // 2) Generate the random reset token
@@ -103,7 +107,9 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide email and password!', 400));
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email: email, active: true }).select(
+    '+password'
+  );
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
@@ -177,7 +183,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email, active: true });
   if (!user) {
     return next(new AppError('There is no user with email address.', 404));
   }
@@ -224,6 +230,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .digest('hex');
 
   const user = await User.findOne({
+    active: true,
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() }
   });
@@ -239,6 +246,34 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 3) Update changedPasswordAt property for the user
+  // 4) Log the user in, send JWT
+  createSendToken(user, 200, res);
+});
+
+exports.activateAccount = catchAsync(async (req, res, next) => {
+  // 1) Get user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  console.log(req.params.token, hashedToken);
+  const user = await User.findOne({
+    active: false,
+    emailConfirmToken: hashedToken,
+    emailConfirmExpires: { $gt: Date.now() }
+  });
+
+  // 2) If token has not expired, and there is user, activate the new user
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired', 400));
+  }
+  user.active = true;
+  user.emailConfirmToken = undefined;
+  user.emailConfirmExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  // 3) Update active property for the user
   // 4) Log the user in, send JWT
   createSendToken(user, 200, res);
 });
