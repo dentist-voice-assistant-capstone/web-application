@@ -78,7 +78,7 @@ userSchema.methods.correctPassword = function(candidatePassword, userPassword) {
   return candidatePassword === userPassword;
 };
 
-userSchema.methods.changePasswordAfter = function(JWTTimestamp) {
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   // Compare the time when JWT was created and the time when password was changed.
   if (this.passwordChangeAt) {
     const changedTimestamp = parseInt(
