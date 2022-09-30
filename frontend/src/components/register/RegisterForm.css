@@ -1,0 +1,96 @@
+.register-form {
+  width: 85%;
+}
+
+.register-form__sections {
+  margin-bottom: 3rem;
+  /* border: 1px solid yellowgreen; */
+}
+
+.register-form__topics {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 24px;
+}
+
+.register-form__items-list li {
+  margin-bottom: 15px;
+}
+
+.register-form__items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid red; */
+  padding-right: 10px;
+}
+
+.register-form__items > * {
+  font-size: 20px;
+}
+
+.register-form__items label {
+  width: 100px;
+  text-align: right;
+  /* border: 1px solid sandybrown; */
+}
+
+.register-form__items > div {
+  width: 80%;
+}
+
+.register-form input {
+  padding-left: 1.2rem;
+  border-radius: 10px;
+  border: 0;
+  background-color: gainsboro;
+  height: 40px;
+  width: 100%;
+  font-size: 18px;
+}
+
+.register-form__items_input-text {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid green; */
+}
+
+.register-form__items_input-text p {
+  font-size: 14px;
+  color: gray;
+}
+
+.register-form__submit-area {
+  width: 100%;
+  margin-top: 30px;
+  /* border: 1px solid orange; */
+  display: flex;
+  justify-content: center;
+}
+
+.register-form__register-button {
+  border-radius: 10px;
+  font-size: 18px;
+  width: 85%;
+  height: 40px;
+  border: 0;
+  background-color: black;
+  color: white;
+}
+
+.register-form__register-button:hover {
+  background-color: green;
+}
+
+.register-form__items p {
+  font-size: 14px;
+}
+
+.info {
+  color: black;
+}
+
+.warning {
+  color: red;
+}
