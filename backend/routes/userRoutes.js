@@ -13,4 +13,10 @@ router.patch(
   userController.updateProfile
 );
 
+router.patch(
+  '/updatePassword',
+  authController.protect,
+  authController.updatePassword
+);
+
 module.exports = router;
