@@ -47,7 +47,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     confirmPassword: req.body.confirmPassword
   });
 
-  createSendToken(newUser, 201, res);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      newUser
+    }
+  });
 });
 
 exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
