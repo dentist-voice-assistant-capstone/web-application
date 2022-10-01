@@ -1,6 +1,6 @@
 # Backend API for Dentist Web Application
 ## Description
-This folder contains code (ExpressJS) for running an backend API
+This folder contains code (ExpressJS) for running an backend API. [API Doc](https://documenter.getpostman.com/view/19423217/2s83tCMDkT)
 ## Install
 For the installation, you need to run the following command in your terminal
 ```sh
