@@ -88,8 +88,3 @@ input:-webkit-autofill:focus {
 .register-form__items p {
   font-size: 14px;
 }
-
-.error,
-.required {
-  color: red;
-}
