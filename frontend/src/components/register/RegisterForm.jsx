@@ -4,6 +4,10 @@ import "./RegisterForm.css";
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 12;
 
+const NAME_MAX_LENGTH = 45;
+const SURNAME_MAX_LENGTH = 45;
+const DENTISTID_MAX_LENGTH = 45;
+
 const validateEmptyInput = (value) => {
   return {
     isPass: value.trim().length !== 0,
@@ -34,6 +38,13 @@ const validateConfirmPassword = (confirmPassword, password) => {
   };
 };
 
+const validateMaxLength = (value, maxLength) => {
+  return {
+    isPass: value.length <= maxLength,
+    defaultErrorMessage: `length must not be longer than ${maxLength} characters.`,
+  };
+};
+
 const RegisterForm = () => {
   const {
     value: enteredEmail,
@@ -53,7 +64,7 @@ const RegisterForm = () => {
     valueChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
     reset: resetPassword,
-  } = useInput("Password", [validateLength], {
+  } = useInput("Password", [validateEmptyInput, validateLength], {
     minLength: PASSWORD_MIN_LENGTH,
     maxLength: PASSWORD_MAX_LENGTH,
   });
@@ -66,8 +77,42 @@ const RegisterForm = () => {
     valueChangeHandler: confirmPasswordChangeHandler,
     inputBlurHandler: confirmPasswordBlurHandler,
     reset: resetConfirmPassword,
-  } = useInput("ConfirmPassword", [validateConfirmPassword], {
+  } = useInput("Password", [validateEmptyInput, validateConfirmPassword], {
     password: enteredPassword,
+  });
+
+  const {
+    value: enteredName,
+    isValueValid: isNameValid,
+    hasError: hasNameError,
+    errorMessage: errorMessageName,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetName,
+  } = useInput("Name", [validateMaxLength], { maxLength: NAME_MAX_LENGTH });
+
+  const {
+    value: enteredSurname,
+    isValueValid: isSurnameValid,
+    hasError: hasSurnameError,
+    errorMessage: errorMessageSurname,
+    valueChangeHandler: surnameChangeHandler,
+    inputBlurHandler: surnameBlurHandler,
+    reset: resetSurname,
+  } = useInput("Surname", [validateMaxLength], {
+    maxLength: SURNAME_MAX_LENGTH,
+  });
+
+  const {
+    value: enteredDentistId,
+    isValueValid: isDentistIdValid,
+    hasError: hasDentistIdError,
+    errorMessage: errorMessageDentistId,
+    valueChangeHandler: dentistIdChangeHandler,
+    inputBlurHandler: dentistIdBlurHandler,
+    reser: resetDentistID,
+  } = useInput("Dentist ID", [validateMaxLength], {
+    maxLength: DENTISTID_MAX_LENGTH,
   });
 
   const stypeInputClasses = (isValid, hasError) => {
@@ -99,8 +144,8 @@ const RegisterForm = () => {
         {/* 1.1) ส่วนกรอกข้อมูล Email and Password */}
         <div className="register-form__sections">
           <div className="register-form__topics">Account Information</div>
-
           <ul className="register-form__items-list">
+            {/* Email */}
             <li
               className={`register-form__items ${stypeInputClasses(
                 isEmailValid,
@@ -121,7 +166,7 @@ const RegisterForm = () => {
                 {hasEmailError && <p className="error">{errorMessageEmail}</p>}
               </div>
             </li>
-
+            {/* Password */}
             <li
               className={`register-form__items ${stypeInputClasses(
                 isPasswordValid,
@@ -145,13 +190,14 @@ const RegisterForm = () => {
                 )}
               </div>
             </li>
+            {/* Confirm Password */}
             <li
               className={`register-form__items ${stypeInputClasses(
                 isConfirmPasswordValid,
                 hasConfirmPasswordError
               )}`}
             >
-              <label>
+              <label htmlFor="confirmpassword">
                 Confirm<span className="required">*</span>
                 <br />
                 Password
@@ -178,31 +224,77 @@ const RegisterForm = () => {
           <div className="register-form__sections">
             <div className="register-form__topics">General Information</div>
             <ul className="register-form__items-list">
-              <li className="register-form__items">
-                <label>First Name</label>
+              {/* Name */}
+              <li
+                className={`register-form__items ${
+                  enteredName.trim().length !== 0
+                    ? stypeInputClasses(isNameValid, hasNameError)
+                    : ""
+                }`}
+              >
+                <label htmlFor="name">Name</label>
                 <div>
-                  <input type="text" name="firstName" />
+                  <input
+                    type="text"
+                    name="name"
+                    maxLength={NAME_MAX_LENGTH}
+                    value={enteredName}
+                    onChange={nameChangeHandler}
+                    onBlur={nameBlurHandler}
+                  />
+                  {hasNameError && <p className="error">{errorMessageName}</p>}
                 </div>
               </li>
-
-              <li className="register-form__items">
-                <label>Last Name</label>
+              {/* Surname */}
+              <li
+                className={`register-form__items ${
+                  enteredSurname.trim().length !== 0
+                    ? stypeInputClasses(isSurnameValid, hasSurnameError)
+                    : ""
+                }`}
+              >
+                <label htmlFor="surname">Surname</label>
                 <div>
-                  <input type="text" name="lastName" />
+                  <input
+                    type="text"
+                    name="surname"
+                    maxLength={SURNAME_MAX_LENGTH}
+                    value={enteredSurname}
+                    onChange={surnameChangeHandler}
+                    onBlur={surnameBlurHandler}
+                  />
+                  {hasSurnameError && (
+                    <p className="error">{errorMessageSurname}</p>
+                  )}
                 </div>
               </li>
-
-              <li className="register-form__items">
-                <label>Dentist ID</label>
+              {/* Dentist ID */}
+              <li
+                className={`register-form__items ${
+                  enteredDentistId.trim().length !== 0
+                    ? stypeInputClasses(isDentistIdValid, hasDentistIdError)
+                    : ""
+                }`}
+              >
+                <label htmlFor="dentistId">Dentist ID</label>
                 <div>
-                  <input type="text" name="dentistID" />
+                  <input
+                    type="text"
+                    name="dentistId"
+                    maxLength={DENTISTID_MAX_LENGTH}
+                    value={enteredDentistId}
+                    onChange={dentistIdChangeHandler}
+                    onBlur={dentistIdBlurHandler}
+                  />
+                  {hasDentistIdError && (
+                    <p className="error">{errorMessageDentistId}</p>
+                  )}
                 </div>
               </li>
             </ul>
           </div>
         </div>
       </div>
-
       {/* ส่วน submit button */}
       <div className="register-form__submit-area">
         <button type="submit" className="register-form__register-button">
