@@ -34,11 +34,6 @@
   border: 1px solid #03ac13;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  transition: background-color 600000s 0s, color 600000s 0s;
-}
-
 .register-form__items > * {
   font-size: 20px;
 }
@@ -79,6 +74,11 @@ input:-webkit-autofill:focus {
   border: 0;
   background-color: black;
   color: white;
+}
+
+.register-form__register-button:disabled,
+.register-form__register-button:disabled:hover {
+  background-color: gray;
 }
 
 .register-form__register-button:hover {

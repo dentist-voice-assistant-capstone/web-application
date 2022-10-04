@@ -45,7 +45,15 @@ const validateMaxLength = (value, maxLength) => {
   };
 };
 
-const RegisterForm = () => {
+const validateEnglishLetter = (value) => {
+  const englishLetterRegex = /^[a-zA-Z]*$/;
+  return {
+    isPass: englishLetterRegex.test(value),
+    defaultErrorMessage: "must not contain numbers or special letters.",
+  };
+};
+
+const RegisterForm = (props) => {
   const {
     value: enteredEmail,
     isValueValid: isEmailValid,
@@ -89,7 +97,9 @@ const RegisterForm = () => {
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
     reset: resetName,
-  } = useInput("Name", [validateMaxLength], { maxLength: NAME_MAX_LENGTH });
+  } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
+    maxLength: NAME_MAX_LENGTH,
+  });
 
   const {
     value: enteredSurname,
@@ -99,7 +109,7 @@ const RegisterForm = () => {
     valueChangeHandler: surnameChangeHandler,
     inputBlurHandler: surnameBlurHandler,
     reset: resetSurname,
-  } = useInput("Surname", [validateMaxLength], {
+  } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
     maxLength: SURNAME_MAX_LENGTH,
   });
 
@@ -125,12 +135,43 @@ const RegisterForm = () => {
     }
   };
 
+  let isFormValid = false;
+  if (
+    isEmailValid &&
+    isPasswordValid &&
+    isConfirmPasswordValid &&
+    isNameValid &&
+    isSurnameValid &&
+    isDentistIdValid
+  ) {
+    isFormValid = true;
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    // if the form still isn't valid, then don't do anything
+    if (!isFormValid) {
+      return;
+    }
 
-    console.log("Submit!");
-    console.log(enteredEmail);
-    console.log(enteredPassword);
+    // required fields
+    const userRegisterData = {
+      email: enteredEmail,
+      password: enteredPassword,
+      confirmPassword: enteredComfirmPassword,
+    };
+    // optional fields
+    if (enteredName.trim().length !== 0)
+      userRegisterData.dentistName = enteredName;
+    if (enteredSurname.trim().length !== 0)
+      userRegisterData.dentistSurname = enteredSurname;
+    if (enteredDentistId.trim().length !== 0)
+      userRegisterData.dentistID = enteredDentistId;
+
+    // TODO: encrypt password, confirmpassword ?
+
+    // send userRegisterData to RegisterPage.jsx
+    props.onRegisterSubmit(userRegisterData);
 
     // resetEmail();
     // resetPassword();
@@ -180,7 +221,6 @@ const RegisterForm = () => {
                 <input
                   type="password"
                   name="password"
-                  maxLength={PASSWORD_MAX_LENGTH}
                   value={enteredPassword}
                   onChange={passwordChangeHandler}
                   onBlur={passwordBlurHandler}
@@ -206,7 +246,6 @@ const RegisterForm = () => {
                 <input
                   type="password"
                   name="confirmPassword"
-                  maxLength={PASSWORD_MAX_LENGTH}
                   value={enteredComfirmPassword}
                   onChange={confirmPasswordChangeHandler}
                   onBlur={confirmPasswordBlurHandler}
@@ -297,7 +336,11 @@ const RegisterForm = () => {
       </div>
       {/* ส่วน submit button */}
       <div className="register-form__submit-area">
-        <button type="submit" className="register-form__register-button">
+        <button
+          type="submit"
+          className="register-form__register-button"
+          disabled={!isFormValid}
+        >
           Register
         </button>
       </div>

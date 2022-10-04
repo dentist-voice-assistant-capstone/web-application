@@ -31,7 +31,6 @@ const useInput = (field, validators, parameters) => {
     }
   }
   const hasError = !isValueValid && isTouched
-  isValueValid = isValueValid && isTouched
 
   const valueChangeHandler = (event) => {
     setEnteredValue(event.target.value);
