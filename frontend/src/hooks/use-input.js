@@ -12,6 +12,8 @@ const useInput = (field, validators, parameters) => {
     let validateResult;
     if (validator.name === 'validateLength') {
       validateResult = validator(enteredValue, parameters.minLength, parameters.maxLength)
+    } else if (validator.name === 'validateMaxLength') {
+      validateResult = validator(enteredValue, parameters.maxLength)
     } else if (validator.name === 'validateConfirmPassword') {
       validateResult = validator(enteredValue, parameters.password)
     } else {
