@@ -1,5 +1,13 @@
 import useInput from "../../hooks/use-input";
 import "./RegisterForm.css";
+import {
+  validateEmptyInput,
+  validateEmail,
+  validateLength,
+  validateConfirmPassword,
+  validateMaxLength,
+  validateEnglishLetter,
+} from "../../utils/validator";
 
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 12;
@@ -7,51 +15,6 @@ const PASSWORD_MAX_LENGTH = 12;
 const NAME_MAX_LENGTH = 45;
 const SURNAME_MAX_LENGTH = 45;
 const DENTISTID_MAX_LENGTH = 45;
-
-const validateEmptyInput = (value) => {
-  return {
-    isPass: value.trim().length !== 0,
-    defaultErrorMessage: "cannot be blank.",
-  };
-};
-
-const validateEmail = (email) => {
-  const emailRegex =
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return {
-    isPass: emailRegex.test(email),
-    defaultErrorMessage: "is invalid.",
-  };
-};
-
-const validateLength = (value, minLength, maxLength) => {
-  return {
-    isPass: value.length >= minLength && value.length <= maxLength,
-    defaultErrorMessage: `length must be between ${minLength}-${maxLength} characters.`,
-  };
-};
-
-const validateConfirmPassword = (confirmPassword, password) => {
-  return {
-    isPass: confirmPassword === password,
-    specialErrorMessage: "Password doesn't match.",
-  };
-};
-
-const validateMaxLength = (value, maxLength) => {
-  return {
-    isPass: value.length <= maxLength,
-    defaultErrorMessage: `length must not be longer than ${maxLength} characters.`,
-  };
-};
-
-const validateEnglishLetter = (value) => {
-  const englishLetterRegex = /^[a-zA-Z]*$/;
-  return {
-    isPass: englishLetterRegex.test(value),
-    defaultErrorMessage: "must not contain numbers or special letters.",
-  };
-};
 
 const RegisterForm = (props) => {
   const {
@@ -149,10 +112,13 @@ const RegisterForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     // if the form still isn't valid, then don't do anything
     if (!isFormValid) {
       return;
     }
+
+    // TODO: encrypt password, confirmpassword ?
 
     // required fields
     const userRegisterData = {
@@ -168,14 +134,16 @@ const RegisterForm = (props) => {
     if (enteredDentistId.trim().length !== 0)
       userRegisterData.dentistID = enteredDentistId;
 
-    // TODO: encrypt password, confirmpassword ?
-
     // send userRegisterData to RegisterPage.jsx
     props.onRegisterSubmit(userRegisterData);
 
+    // reset input fields if needed
     // resetEmail();
     // resetPassword();
     // resetConfirmPassword();
+    // resetName();
+    // resetSurname();
+    // resetDentistID();
   };
 
   return (
