@@ -1,0 +1,36 @@
+.landing-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.register {
+  width: 1000px;
+  height: 800px;
+  padding: 0 2.5% 0 2.5%;
+  /* border: 1px solid black; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.register__label {
+  font-size: 64px;
+  margin-bottom: 3rem;
+}
+
+.register__login {
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.register__login a {
+  color: green;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
