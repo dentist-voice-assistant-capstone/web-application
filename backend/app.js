@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
-const registerRouter = require('./routes/registerRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -12,9 +12,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 
-app.use('/register', registerRouter);
+app.use('/user', userRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
