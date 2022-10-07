@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import RegisterForm from "../../components/register/RegisterForm";
 import ErrorModal from "../../components/ui/ErrorModal";

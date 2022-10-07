@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const backendBaseURL = 'http://localhost:5000'
 
@@ -9,7 +8,7 @@ const userRegisterAPIHandler = (userRegisterData, setReigsterError, setIsEmailDu
   axios.post(USER_REGISTER_ENDPOINT, userRegisterData)
     .then(result => {
       // register completed 
-      if (result.status == 201) {
+      if (result.status === 201) {
         navigate('/register/email_confirmation', { state: { email: userRegisterData.email } })
       }
 
@@ -24,13 +23,13 @@ const userRegisterAPIHandler = (userRegisterData, setReigsterError, setIsEmailDu
       }
 
       // the email is already been used
-      if (error.response.status == 400 && error.response.data.message.startsWith('Duplicate field value: {"email":')) {
+      if (error.response.status === 400 && error.response.data.message.startsWith('Duplicate field value: {"email":')) {
         setReigsterError({
           header: "Cannot Register: Duplicated Email",
           content: <p><b>{userRegisterData.email}</b> has already been used. Please try again using another email.</p>
         })
         setIsEmailDuplicated(true)
-      } else if (error.response.status == 500) { // some unknown errors
+      } else if (error.response.status === 500) { // some unknown errors
         setReigsterError({
           header: "Something Wrong!",
           content: <p>Something went wrong! Please try again later</p>
