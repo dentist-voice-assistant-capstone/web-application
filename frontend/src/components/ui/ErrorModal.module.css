@@ -12,12 +12,21 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
-
-  /* border: 1px solid black; */
-  width: 30%;
+  width: 35%;
   border-radius: var(--main-border-radius);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   background-color: white;
+  animation: drop 0.3s forwards 0s ease-out;
+}
+
+@keyframes drop {
+  0% {
+    top: 55%;
+  }
+
+  100% {
+    top: 50%;
+  }
 }
 
 .error-modal__header {
@@ -27,14 +36,14 @@
 }
 
 .error-modal__header p {
-  font-size: 22px;
+  font-size: 20px;
   color: white;
   font-weight: bolder;
   text-align: center;
 }
 
 .error-modal__content {
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 2rem 0.5rem 2rem;
   margin-top: 20px;
 }
 
@@ -43,10 +52,15 @@
   text-align: center;
 }
 
+.error-modal__content p b {
+  color: red;
+  font-size: 20px;
+}
+
 .error-modal__actions {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 40px;
   margin-bottom: 20px;
 }
 
