@@ -19,7 +19,7 @@ const useInput = (field, validators, parameters) => {
     } else {
       validateResult = validator(enteredValue)
     }
-    const { isPass: isPass, defaultErrorMessage: defaultErrorMsg, specialErrorMessage: specialErrorMsg } = validateResult
+    const { isPass, defaultErrorMessage: defaultErrorMsg, specialErrorMessage: specialErrorMsg } = validateResult
 
     if (!isPass) {
       isValueValid = false;
