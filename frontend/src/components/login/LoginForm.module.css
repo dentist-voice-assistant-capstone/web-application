@@ -1,0 +1,53 @@
+.form {
+  width: 85%;
+  margin-bottom: 3rem;
+}
+
+.control {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+  margin-bottom: 1rem;
+}
+
+.control label {
+  width: 100px;
+  text-align: right;
+}
+
+.control input{
+  display: block;
+  font: inherit;
+  border-radius: 10px;
+  border: 0;
+  margin-left: 2%;
+  padding: 0.25rem;
+  width: 100%;
+  background-color: #ececec;
+}
+
+.actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.actions button {
+  border-radius: 10px;
+  font-size: 18px;
+  width: 85%;
+  height: 40px;
+  border: 0;
+  background-color: black;
+  color: white;
+}
+
+.actions button:disabled,
+.actions button:disabled:hover {
+  background-color: gray;
+}
+
+.actions button:hover {
+  background-color: green;
+}
