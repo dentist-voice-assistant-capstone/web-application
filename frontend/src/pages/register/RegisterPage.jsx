@@ -1,23 +1,57 @@
+import { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import RegisterForm from "../../components/register/RegisterForm";
+import ErrorModal from "../../components/ui/ErrorModal";
+import { userRegisterAPIHandler } from "../../utils/apiHandler";
+
 import "./RegisterPage.css";
 
 const RegisterPage = () => {
-  const registerSubmitHandler = (userRegisterData) => {
-    console.log(userRegisterData);
+  const navigate = useNavigate();
 
-    // TODO: send a POST request
+  const [isEmailDuplicated, setIsEmailDuplicated] = useState(false);
+  // registerError is an object, keys: header, content --> render in "ErrorModal Element"
+  const [registerError, setRegisterError] = useState();
+
+  const registerSubmitHandler = (userRegisterData) => {
+    // send a POST request
+    userRegisterAPIHandler(
+      userRegisterData,
+      setRegisterError,
+      setIsEmailDuplicated,
+      navigate
+    );
+  };
+
+  const errorModalOkHandler = () => {
+    // clear register error after click "OK" button or backdrop in ErrorModal
+    setRegisterError();
   };
 
   return (
-    <div className="landing-page">
-      <div className="register centered">
-        <div className="register__label">Register</div>
-        <RegisterForm onRegisterSubmit={registerSubmitHandler} />
-        <div className="register__login">
-          Already have an account? <a href="/login">LOGIN HERE</a>
+    <Fragment>
+      {registerError && (
+        <ErrorModal
+          header={registerError.header}
+          content={registerError.content}
+          onOKClick={errorModalOkHandler}
+        />
+      )}
+      <div className="landing-page">
+        <div className="register centered">
+          <div className="register__label">Register</div>
+          <RegisterForm
+            onRegisterSubmit={registerSubmitHandler}
+            isEmailDuplicated={isEmailDuplicated}
+            setIsEmailDuplicated={setIsEmailDuplicated}
+          />
+          <div className="register__login">
+            Already have an account? <a href="/login">LOGIN HERE</a>
+          </div>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

@@ -25,7 +25,9 @@ const RegisterForm = (props) => {
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
     reset: resetEmail,
-  } = useInput("Email", [validateEmptyInput, validateEmail]);
+  } = useInput("Email", [validateEmptyInput, validateEmail], {
+    removeEmailDuplicated: props.setIsEmailDuplicated,
+  });
 
   const {
     value: enteredPassword,
@@ -118,8 +120,6 @@ const RegisterForm = (props) => {
       return;
     }
 
-    // TODO: encrypt password, confirmpassword ?
-
     // required fields
     const userRegisterData = {
       email: enteredEmail,
@@ -156,10 +156,9 @@ const RegisterForm = (props) => {
           <ul className="register-form__items-list">
             {/* Email */}
             <li
-              className={`register-form__items ${stypeInputClasses(
-                isEmailValid,
-                hasEmailError
-              )}`}
+              className={`register-form__items ${
+                hasEmailError || props.isEmailDuplicated ? "invalid" : ""
+              }`}
             >
               <label htmlFor="email">
                 Email<span className="required">*</span>
@@ -172,7 +171,12 @@ const RegisterForm = (props) => {
                   onChange={emailChangeHandler}
                   onBlur={emailBlurHandler}
                 />
-                {hasEmailError && <p className="error">{errorMessageEmail}</p>}
+                {hasEmailError && !props.isEmailDuplicated && (
+                  <p className="error">{errorMessageEmail}</p>
+                )}
+                {props.isEmailDuplicated && (
+                  <p className="error">This email has already been used.</p>
+                )}
               </div>
             </li>
             {/* Password */}
@@ -193,9 +197,12 @@ const RegisterForm = (props) => {
                   onChange={passwordChangeHandler}
                   onBlur={passwordBlurHandler}
                 />
-                {hasPasswordError && (
+                {/* {hasPasswordError && (
                   <p className="error">{errorMessagePassword}</p>
-                )}
+                )} */}
+                <p className={hasPasswordError ? "error" : ""}>
+                  Password should have 8-12 characters length.
+                </p>
               </div>
             </li>
             {/* Confirm Password */}
