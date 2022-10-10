@@ -32,8 +32,16 @@ const useInput = (field, validators, parameters) => {
   }
   const hasError = !isValueValid && isTouched
 
-  const valueChangeHandler = (event) => {
+  const setEnterValue = (event) => {
     setEnteredValue(event.target.value);
+  }
+
+  const valueChangeHandler = (event) => {
+    setEnterValue(event);
+    // for email
+    if (parameters.removeEmailDuplicated) {
+      parameters.removeEmailDuplicated(false);
+    }
   };
 
   const inputBlurHandler = (event) => {
