@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const backendBaseURL = 'http://localhost:5000'
+const backendBaseURL = 'http://localhost:3000'
 
 const USER_REGISTER_ENDPOINT = `${backendBaseURL}/user/signup`;
 
