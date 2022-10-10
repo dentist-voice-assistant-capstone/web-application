@@ -7,6 +7,10 @@ const EmailConfirmPage = () => {
 
   // console.log(email);
 
+  function resendHandler() {
+    console.log("email");
+  }
+
   return (
     <div className="landing-page">
       <div className="email_confirmation centered">
@@ -19,8 +23,8 @@ const EmailConfirmPage = () => {
         </div>
         <div className="email_confirmation__resend">
           If you still don't see it, you can{" "}
-          <a href="/register/email_confirmation">
-            RESEND THE CONFIRMATION EMAIL.
+          <a href="/register/email_confirmation" onClick={resendHandler}>
+            RESEND THE CONFIRMATION EMAIL
           </a>
         </div>
         <div className="email_confirmation__login">
