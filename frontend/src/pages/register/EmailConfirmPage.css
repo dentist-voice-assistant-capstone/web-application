@@ -1,0 +1,50 @@
+.landing-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.email_confirmation {
+  width: 1000px;
+  height: 800px;
+  padding: 0 2.5% 0 2.5%;
+  /* border: 1px solid black; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.email_confirmation__label {
+  font-size: 64px;
+  margin-bottom: 3rem;
+}
+
+.email_confirmation__detail {
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.email_confirmation__resend {
+  font-size: 16px;
+  margin-top: 60px;
+}
+
+.email_confirmation__resend a {
+  color: green;
+}
+
+.email_confirmation__login {
+  font-size: 16px;
+  margin-top: 30px;
+}
+
+.email_confirmation__login a {
+  color: green;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
