@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
@@ -29,6 +30,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'User must have password'],
+    minlength: [8, 'Password must have more or equal than 8 characters'],
+    maxlength: [12, 'Password must have less or equal than 12 characters'],
     select: false
   },
   confirmPassword: {
@@ -53,8 +56,11 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
+
+  // Generate Salt of lenght 12 and hash.
+  this.password = await bcrypt.hash(this.password, 12);
 
   // Delete confirmPassword field before save.
   this.confirmPassword = undefined;
@@ -75,9 +81,12 @@ userSchema.pre(/^findById/, function(next) {
   next();
 });
 
-userSchema.methods.correctPassword = function(candidatePassword, userPassword) {
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
   // Check the candidatePassword from the request and the password in the database.
-  return candidatePassword === userPassword;
+  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
