@@ -60,20 +60,32 @@ const userRegisterAPIHandler = (
     });
 };
 
-const userLoginAPIHandler = (userLoginData, setLoginError, navigate) => {
+const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time, navigate) => {
+  // const authCtx = useContext(AuthContext)
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
-      console.log(result.response.data);
-      if (result.status === 201) {
+      console.log(result)
+      if (result.status === 200) {
+        const expirationTime = new Date(new Date().getTime() + session_time)
+        authCtx.login(result.data.token, expirationTime.toISOString())
+        console.log(authCtx.isLoggedIn)
         navigate("/");
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
+      console.log(authCtx.isLoggedIn)
+      if (!error.response) {
+        setLoginError({
+          header: "Connection Error",
+          content: <p>Cannot connect to backend server.</p>,
+        });
+        return false;
+      }
       setLoginError({
         header: "Cannot Login",
-        content: <p>{error.response.data.message}</p>,
+        content: <p>Invalid username or password</p>,
       });
       return false;
     });

@@ -15,7 +15,6 @@ function LoginForm(props) {
       email: enteredEmail,
       password: enteredPassword,
     };
-
     props.onLogin(loginData);
   }
 
