@@ -3,6 +3,7 @@ import axios from "axios";
 const backendBaseURL = "http://localhost:3000";
 
 const USER_REGISTER_ENDPOINT = `${backendBaseURL}/user/signup`;
+const USER_LOGIN_ENDPOINT = `${backendBaseURL}/user/login`;
 const USER_EMAIL_CONFIRMATION_ENDPOINT = `${backendBaseURL}/user/sendEmailConfirm`;
 
 const userRegisterAPIHandler = (
@@ -59,6 +60,25 @@ const userRegisterAPIHandler = (
     });
 };
 
+const userLoginAPIHandler = (userLoginData, setLoginError, navigate) => {
+  axios
+    .post(USER_LOGIN_ENDPOINT, userLoginData)
+    .then((result) => {
+      console.log(result.response.data);
+      if (result.status === 201) {
+        navigate("/");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      setLoginError({
+        header: "Cannot Login",
+        content: <p>{error.response.data.message}</p>,
+      });
+      return false;
+    });
+};
+
 // const userEmailConfirmationAPIHandler = (userEmail) => {
 //   axios
 //     .post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail)
@@ -69,4 +89,4 @@ const userRegisterAPIHandler = (
 //     .catch((error) => {});
 // };
 
-export { userRegisterAPIHandler };
+export { userRegisterAPIHandler, userLoginAPIHandler };

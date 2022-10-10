@@ -14,7 +14,8 @@
 
 .control label {
   width: 100px;
-  text-align: right;
+  text-align: left;
+  font-size: 20px;
 }
 
 .control input{
@@ -22,7 +23,7 @@
   font: inherit;
   border-radius: 10px;
   border: 0;
-  margin-left: 2%;
+  margin-left: 3%;
   padding: 0.25rem;
   width: 100%;
   background-color: #ececec;
