@@ -106,6 +106,35 @@ exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.sendFile = catchAsync(async (req, res, next) => {
+  const { email } = await User.findById(req.user.id);
+  const message = `Send PDF Attach`;
+  try {
+    await sendEmail({
+      email: email,
+      subject: 'Send PDF',
+      message,
+      attachments: [
+        {
+          filename: 'buffer.pdf',
+          path: './buffer.pdf',
+          contentType: 'application/pdf'
+        }
+      ]
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email!'
+    });
+  } catch (err) {
+    return next(
+      new AppError('There was an error sending the email. Try again later!'),
+      500
+    );
+  }
+});
+
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
