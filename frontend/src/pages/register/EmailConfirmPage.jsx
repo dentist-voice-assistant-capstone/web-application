@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import "./EmailConfirmPage.css";
+import { userEmailConfirmationAPIHandler } from "../../utils/apiHandler";
 
 const EmailConfirmPage = () => {
   const { state } = useLocation();
@@ -8,7 +9,7 @@ const EmailConfirmPage = () => {
   // console.log(email);
 
   function resendHandler() {
-    console.log("email");
+    userEmailConfirmationAPIHandler({ email: email });
   }
 
   return (
