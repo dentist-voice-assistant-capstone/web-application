@@ -8,13 +8,13 @@ import {
   validateMaxLength,
   validateEnglishLetter,
 } from "../../utils/validator";
-
-const PASSWORD_MIN_LENGTH = 8;
-const PASSWORD_MAX_LENGTH = 12;
-
-const NAME_MAX_LENGTH = 45;
-const SURNAME_MAX_LENGTH = 45;
-const DENTISTID_MAX_LENGTH = 45;
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  SURNAME_MAX_LENGTH,
+  DENTISTID_MAX_LENGTH,
+} from "../../utils/constants";
 
 const RegisterForm = (props) => {
   const {
