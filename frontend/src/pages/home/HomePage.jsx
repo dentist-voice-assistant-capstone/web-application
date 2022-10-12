@@ -1,7 +1,5 @@
-import LogoutButton from "../../components/ui/LogoutButton";
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
-import { useLocation } from "react-router-dom";
 import { startAPIHandler, editAccountAPIHandler } from "../../utils/apiHandler";
 
 const HomePage = () => {
