@@ -1,0 +1,124 @@
+/* variable declare */
+:root {
+  --main-border-radius: 10px;
+  --main-background-color: #f0f0f0;
+}
+
+.account-edit__background {
+  background-color: var(--main-background-color);
+  top: 0;
+  left: 0;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+}
+
+.account-edit__main {
+  margin-top: 0px;
+  /* border: 1px solid black; */
+  height: 800px;
+  width: 65%;
+  display: flex;
+  background-color: white;
+  border-radius: var(--main-border-radius);
+}
+
+.account-edit__sidebar {
+  height: 100%;
+  /* border: 1px solid salmon; */
+  /* border-right: 1px solid gray; */
+  width: 225px;
+  box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.3);
+  background-color: #d4d4d4;
+  border-radius: var(--main-border-radius) 0px 0px var(--main-border-radius);
+}
+
+.account-edit__sidebar h2 {
+  margin-top: 50px;
+  padding-left: 30px;
+  margin-bottom: 60px;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.account-edit__sidebar-menu {
+  width: 100%;
+  /* border: 1px solid greenyellow; */
+  padding: 15px 30px 15px 30px;
+  font-size: 16px;
+}
+
+.account-edit__sidebar-menu.selected {
+  background-color: #808080;
+  font-size: 18px;
+}
+
+.account-edit__form-area {
+  height: 100%;
+  /* border: 1px solid yellow; */
+  flex: 1;
+  padding: 160px 100px 50px 100px;
+}
+
+.account-edit__form-items {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.account-edit__form-items label {
+  font-size: 18px;
+}
+
+.account-edit__form-items p {
+  margin-top: 8px;
+  font-size: 18px;
+  color: gray;
+}
+
+.account-edit__form-items input {
+  font-size: 16px;
+  width: 85%;
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 10px;
+  margin-top: 5px;
+  border: 0;
+  background-color: white;
+  border: 1px solid #9c9c9c;
+}
+
+.account-edit__form-items input:disabled {
+  background-color: #ececec;
+}
+
+.account-edit__from-actions {
+  width: 100%;
+  margin-top: 100px;
+}
+
+.account-edit__from-actions button {
+  float: right;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  font-size: 16px;
+}
+
+.account-edit__from-actions button.edit {
+  background-color: lightblue;
+  color: black;
+}
+
+.account-edit__from-actions button.edit:hover {
+  background-color: #63e5ff;
+}
+
+.account-edit__from-actions button.save {
+  background-color: #1c2e4a;
+  color: white;
+}
