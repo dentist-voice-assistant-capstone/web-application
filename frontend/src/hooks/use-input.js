@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 const useInput = (field, validators, parameters) => {
-  const [enteredValue, setEnteredValue] = useState("");
+  let defaultValue = "";
+  if (parameters.defaultValue) {
+    defaultValue = parameters.defaultValue
+  }
+
+  const [enteredValue, setEnteredValue] = useState(defaultValue);
   const [isTouched, setIsTouched] = useState(false);
 
   // iterate through all validators
