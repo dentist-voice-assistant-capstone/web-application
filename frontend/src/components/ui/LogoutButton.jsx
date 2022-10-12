@@ -1,4 +1,4 @@
-// import classes from './LogoutButton.module.css'
+import classes from './LogoutButton.module.css'
 import { useContext } from 'react'
 import AuthContext from '../../store/auth-context';
 
@@ -8,9 +8,11 @@ function LogoutButton() {
     const logoutHandler = () => {
       authCtx.logout()
     }
-  
-  return (<div>
-    <button onClick={logoutHandler}> Logout </button>
+
+
+  return (
+    <div className={classes.actions}>
+      <button onClick={logoutHandler}> Logout </button>
     </div>
   );
 }

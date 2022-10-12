@@ -17,6 +17,7 @@ const userRegisterAPIHandler = (
     .then((result) => {
       // register completed
       if (result.status === 201) {
+        userEmailConfirmationAPIHandler({ email: userRegisterData.email });
         navigate("/register/email_confirmation", {
           state: { email: userRegisterData.email },
         });
@@ -60,6 +61,11 @@ const userRegisterAPIHandler = (
     });
 };
 
+
+const userEmailConfirmationAPIHandler = (userEmail) => {
+  axios.post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail);
+};
+
 const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time, navigate) => {
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
@@ -88,4 +94,19 @@ const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time
     });
 };
 
-export { userRegisterAPIHandler, userLoginAPIHandler };
+const startAPIHandler = () => {
+  console.log("Starting");
+};
+
+const editAccountAPIHandler = (userEmail) => {
+  // eslint-disable-next-line no-undef
+  navigate("/account/edit");
+};
+
+export {
+  userRegisterAPIHandler,
+  userEmailConfirmationAPIHandler,
+  userLoginAPIHandler,
+  startAPIHandler,
+  editAccountAPIHandler,
+};
