@@ -1,11 +1,18 @@
 import { Fragment, useState } from "react";
+import AccountEditForm from "../../components/account/AccountEditForm";
 import classes from "./AccountEditPage.module.css";
 
 const AccountEditPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [idxMenuSelected, setIdxMenuSelected] = useState(0);
 
-  const sideBarMenuLabels = ["Account", "Password"];
+  const sideBarMenuLabels = ["Account", "Change Password"];
+
+  const changeMenuHandler = (event) => {
+    setIdxMenuSelected(event.target.getAttribute("idx"));
+    // always disable editing to false when user change the menu
+    setIsEditing(false);
+  };
 
   const editClickHandler = () => {
     setIsEditing(true);
@@ -13,7 +20,7 @@ const AccountEditPage = () => {
 
   const saveClickHandler = () => {
     setIsEditing(false);
-    // POST API request
+    // TODO: POST Api request
   };
 
   return (
@@ -29,43 +36,20 @@ const AccountEditPage = () => {
                 idx == idxMenuSelected ? classes["selected"] : ""
               }`}
               key={sidebarMenuLabel}
+              idx={idx}
+              onClick={changeMenuHandler}
             >
               {sidebarMenuLabel}
             </div>
           ))}
         </div>
         <div className={classes["account-edit__form-area"]}>
-          <div className={classes["account-edit__form-items"]}>
-            <label>Email</label>
-            <br />
-            <p>test@hotmail.com</p>
-          </div>
-          <div className={classes["account-edit__form-items"]}>
-            <label>Name</label>
-            <br />
-            <input placeholder="Name Test" disabled={!isEditing}></input>
-          </div>
-          <div className={classes["account-edit__form-items"]}>
-            <label>Surname</label>
-            <br />
-            <input placeholder="Surname Test" disabled={!isEditing}></input>
-          </div>
-          <div className={classes["account-edit__form-items"]}>
-            <label>Dentist ID</label>
-            <br />
-            <input placeholder="Dentist ID Rest" disabled={!isEditing}></input>
-          </div>
-          <div className={classes["account-edit__from-actions"]}>
-            {!isEditing ? (
-              <button className={classes["edit"]} onClick={editClickHandler}>
-                Edit
-              </button>
-            ) : (
-              <button className={classes["save"]} onClick={saveClickHandler}>
-                Save Change
-              </button>
-            )}
-          </div>
+          <AccountEditForm
+            isEditing={isEditing}
+            menuSelected={sideBarMenuLabels[idxMenuSelected]}
+            onEditClick={editClickHandler}
+            onSaveClick={saveClickHandler}
+          />
         </div>
       </div>
     </Fragment>

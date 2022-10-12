@@ -1,0 +1,62 @@
+.account-edit__form-items {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.account-edit__form-items label {
+  font-size: 18px;
+}
+
+.account-edit__form-items p {
+  margin-top: 8px;
+  font-size: 18px;
+  color: gray;
+}
+
+.account-edit__form-items input {
+  font-size: 16px;
+  width: 85%;
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-radius: 10px;
+  margin-top: 5px;
+  border: 0;
+  background-color: white;
+  border: 1px solid #9c9c9c;
+}
+
+.account-edit__form-items input:disabled {
+  background-color: #ececec;
+}
+
+.account-edit__from-actions {
+  width: 100%;
+  margin-top: 100px;
+}
+
+.account-edit__from-actions button {
+  float: right;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  font-size: 16px;
+}
+
+.account-edit__from-actions button.edit {
+  background-color: lightblue;
+  color: black;
+}
+
+.account-edit__from-actions button.edit:hover {
+  background-color: #63e5ff;
+}
+
+.account-edit__from-actions button.save {
+  background-color: #1c2e4a;
+  color: white;
+}
