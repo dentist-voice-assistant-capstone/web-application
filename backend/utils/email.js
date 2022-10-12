@@ -16,7 +16,8 @@ const sendEmail = async options => {
     from: 'noreply.host.dentist@gmail.com',
     to: options.email,
     subject: options.subject,
-    text: options.message
+    text: options.message,
+    attachments: options.attachments
   };
 
   // 3) Actually send the email
