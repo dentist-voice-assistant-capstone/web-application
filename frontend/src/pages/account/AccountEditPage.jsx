@@ -23,6 +23,19 @@ const AccountEditPage = () => {
     // TODO: POST Api request
   };
 
+  // select appropriate form to be displayed, depends on selected menu (default: Account)
+  let formToBeDisplayed;
+  if (sideBarMenuLabels[idxMenuSelected] == "Account") {
+    formToBeDisplayed = (
+      <AccountEditForm
+        isEditing={isEditing}
+        menuSelected={sideBarMenuLabels[idxMenuSelected]}
+        onEditClick={editClickHandler}
+        onSaveClick={saveClickHandler}
+      />
+    );
+  }
+
   return (
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
@@ -44,12 +57,7 @@ const AccountEditPage = () => {
           ))}
         </div>
         <div className={classes["account-edit__form-area"]}>
-          <AccountEditForm
-            isEditing={isEditing}
-            menuSelected={sideBarMenuLabels[idxMenuSelected]}
-            onEditClick={editClickHandler}
-            onSaveClick={saveClickHandler}
-          />
+          {formToBeDisplayed}
         </div>
       </div>
     </Fragment>

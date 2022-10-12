@@ -10,11 +10,11 @@
 .account-edit__form-items p {
   margin-top: 8px;
   font-size: 18px;
-  color: gray;
+  color: black;
 }
 
 .account-edit__form-items input {
-  font-size: 16px;
+  font-size: 18px;
   width: 85%;
   padding-left: 0.5rem;
   padding-top: 0.25rem;
