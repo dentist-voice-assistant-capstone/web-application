@@ -1,14 +1,20 @@
-import classes from './LoginBottom.module.css'
+import classes from './LogoutButton.module.css'
+import { useContext } from 'react'
+import AuthContext from '../../store/auth-context';
 
-function LoginBottom(props) {
-  // function logoutHandler(event) {
-  //   event.preventDefault();
-  // }
-  
-  return (<div className={classes.actions}>
-    <button> Logout </button>
+function LogoutButton() {
+
+    const authCtx = useContext(AuthContext);
+    const logoutHandler = () => {
+      authCtx.logout()
+    }
+
+
+  return (
+    <div className={classes.actions}>
+      <button onClick={logoutHandler}> Logout </button>
     </div>
   );
 }
 
-export default LoginBottom;
+export default LogoutButton;

@@ -4,12 +4,17 @@ import LoginPage from "./pages/login/LoginPage";
 import EmailConfirmPage from "./pages/register/EmailConfirmPage";
 import AccountEditPage from "./pages/account/AccountEditPage";
 
-const ROUTES = [
+export const ROUTES = [
   { path: "/", element: <HomePage /> },
+  { path: "*", element: <HomePage /> },
+  { path: "/account/edit", element: <AccountEditPage /> },
+];
+
+export const ROUTES_NOT_LOGIN = [
   { path: "/register", element: <RegisterPage /> },
   { path: "/register/email_confirmation", element: <EmailConfirmPage /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "/account/edit", element: <AccountEditPage /> },
+  { path: "*", element: <LoginPage /> },
 ];
 
 export default ROUTES;

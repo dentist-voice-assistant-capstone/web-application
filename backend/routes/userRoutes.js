@@ -19,6 +19,10 @@ router.patch(
   authController.updatePassword
 );
 
+router.get('/userInfo', authController.protect, authController.getUserInfo);
+
+router.post('/sendFile', authController.protect, authController.sendFile);
+
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
