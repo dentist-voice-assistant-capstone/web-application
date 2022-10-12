@@ -84,18 +84,19 @@ const userLoginAPIHandler = (userLoginData, setLoginError, navigate) => {
     });
 };
 
-// const userEmailConfirmationAPIHandler = (userEmail) => {
-//   axios
-//     .post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail)
-//     .then((result) => {
-//       if (result.status === 201) {
-//       }
-//     })
-//     .catch((error) => {});
-// };
+const startAPIHandler = () => {
+  console.log("Starting");
+};
+
+const editAccountAPIHandler = (userEmail) => {
+  // eslint-disable-next-line no-undef
+  navigate("/account/edit");
+};
 
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
   userLoginAPIHandler,
+  startAPIHandler,
+  editAccountAPIHandler,
 };
