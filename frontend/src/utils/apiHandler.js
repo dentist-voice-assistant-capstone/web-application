@@ -65,20 +65,35 @@ const userEmailConfirmationAPIHandler = (userEmail) => {
   axios.post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail);
 };
 
-const userLoginAPIHandler = (userLoginData, setLoginError, navigate) => {
+const userLoginAPIHandler = (
+  userLoginData,
+  setLoginError,
+  authCtx,
+  session_time,
+  navigate
+) => {
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
-      console.log(result.response.data);
-      if (result.status === 201) {
+      console.log(result);
+      if (result.status === 200) {
+        const expirationTime = new Date(new Date().getTime() + session_time);
+        authCtx.login(result.data.token, expirationTime.toISOString());
         navigate("/");
       }
     })
     .catch((error) => {
       console.log(error);
+      if (!error.response) {
+        setLoginError({
+          header: "Connection Error",
+          content: <p>Cannot connect to backend server.</p>,
+        });
+        return false;
+      }
       setLoginError({
         header: "Cannot Login",
-        content: <p>{error.response.data.message}</p>,
+        content: <p>Invalid email or password.</p>,
       });
       return false;
     });
