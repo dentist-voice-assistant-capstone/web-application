@@ -61,24 +61,29 @@ const userRegisterAPIHandler = (
     });
 };
 
-
 const userEmailConfirmationAPIHandler = (userEmail) => {
   axios.post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail);
 };
 
-const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time, navigate) => {
+const userLoginAPIHandler = (
+  userLoginData,
+  setLoginError,
+  authCtx,
+  session_time,
+  navigate
+) => {
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
-        const expirationTime = new Date(new Date().getTime() + session_time)
-        authCtx.login(result.data.token, expirationTime.toISOString())
+        const expirationTime = new Date(new Date().getTime() + session_time);
+        authCtx.login(result.data.token, expirationTime.toISOString());
         navigate("/");
       }
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       if (!error.response) {
         setLoginError({
           header: "Connection Error",
