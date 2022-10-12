@@ -14,8 +14,8 @@ const LoginPage = () => {
 
   function loginHandler(loginData) {
     console.log(loginData);
-    // Parameter: x milliseconds login session time
-    const session_time = 10000
+    // Parameter: x milliseconds login session time (15 days)
+    const session_time = 15*24*60*60*1000
     // Send a post request
     userLoginAPIHandler(loginData, setLoginError, authCtx, session_time, navigate);
   }

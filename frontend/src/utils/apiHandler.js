@@ -61,7 +61,6 @@ const userRegisterAPIHandler = (
 };
 
 const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time, navigate) => {
-  // const authCtx = useContext(AuthContext)
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
@@ -69,13 +68,11 @@ const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time
       if (result.status === 200) {
         const expirationTime = new Date(new Date().getTime() + session_time)
         authCtx.login(result.data.token, expirationTime.toISOString())
-        console.log(authCtx.isLoggedIn)
         navigate("/");
       }
     })
     .catch((error) => {
       console.log(error)
-      console.log(authCtx.isLoggedIn)
       if (!error.response) {
         setLoginError({
           header: "Connection Error",
@@ -85,20 +82,10 @@ const userLoginAPIHandler = (userLoginData, setLoginError, authCtx, session_time
       }
       setLoginError({
         header: "Cannot Login",
-        content: <p>Invalid username or password</p>,
+        content: <p>Invalid email or password.</p>,
       });
       return false;
     });
 };
-
-// const userEmailConfirmationAPIHandler = (userEmail) => {
-//   axios
-//     .post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail)
-//     .then((result) => {
-//       if (result.status === 201) {
-//       }
-//     })
-//     .catch((error) => {});
-// };
 
 export { userRegisterAPIHandler, userLoginAPIHandler };
