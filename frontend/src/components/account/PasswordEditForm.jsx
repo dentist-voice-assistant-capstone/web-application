@@ -13,7 +13,7 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 
 import classes from "./AccountEditForm.module.css";
 
-const PasswordEditForm = () => {
+const PasswordEditForm = (props) => {
   const {
     value: enteredOldPassword,
     isValueValid: isOldPasswordValid,
@@ -57,7 +57,14 @@ const PasswordEditForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("handle submit detected");
+
+    const userPasswordUpdateData = {
+      oldPassword: enteredOldPassword,
+      newPassword: enteredNewPassword,
+      confirmNewPassword: enteredConfirmNewPassword,
+    };
+    console.log(userPasswordUpdateData);
+    props.onSaveClick(userPasswordUpdateData);
   };
 
   return (

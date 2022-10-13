@@ -2,11 +2,13 @@ import { Fragment, useState, useContext, useEffect } from "react";
 
 import AccountEditForm from "../../components/account/AccountEditForm";
 import PasswordEditForm from "../../components/account/PasswordEditForm";
+import ErrorModal from "../../components/ui/ErrorModal";
 import NavBar from "../../components/ui/NavBar";
 import AuthContext from "../../store/auth-context";
 import {
   fetchUserInfoAPIHandler,
   updateUserProfileAPIHandler,
+  updateUserPasswordAPIHandler,
 } from "../../utils/apiHandler";
 
 import classes from "./AccountEditPage.module.css";
@@ -20,11 +22,13 @@ const AccountEditPage = () => {
   const [userData, setUserData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [updateError, setUpdateError] = useState(null);
+
   const sideBarMenuLabels = ["Account", "Change Password"];
 
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded, setUpdateError);
   }, []);
   // =============================================================
 
@@ -42,9 +46,23 @@ const AccountEditPage = () => {
     setIsEditing(false);
   };
 
-  const saveClickHandler = (userProfileUpdateData) => {
+  const profileUpdateHandler = (userProfileUpdateData) => {
     setIsEditing(false);
-    updateUserProfileAPIHandler(token, userProfileUpdateData, setUserData);
+    updateUserProfileAPIHandler(
+      token,
+      userProfileUpdateData,
+      setUserData,
+      setUpdateError
+    );
+  };
+
+  const updatePasswordHandler = (userPasswordUpdateData) => {
+    updateUserPasswordAPIHandler(token, userPasswordUpdateData, setUpdateError);
+  };
+
+  const errorModalOkHandler = () => {
+    // clear update error after click "OK" button or backdrop in ErrorModal
+    setUpdateError();
   };
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)
@@ -53,21 +71,29 @@ const AccountEditPage = () => {
     formToBeDisplayed = (
       <AccountEditForm
         isEditing={isEditing}
-        menuSelected={sideBarMenuLabels[idxMenuSelected]}
         userDefaultData={userData}
         onEditClick={editClickHandler}
         onCancelClick={cancelClickHandler}
-        onSaveClick={saveClickHandler}
+        onSaveClick={profileUpdateHandler}
       />
     );
   } else if (sideBarMenuLabels[idxMenuSelected] === "Change Password") {
-    formToBeDisplayed = <PasswordEditForm />;
+    formToBeDisplayed = (
+      <PasswordEditForm onSaveClick={updatePasswordHandler} />
+    );
   }
 
   return (
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
       <NavBar email="email"></NavBar>
+      {updateError && (
+        <ErrorModal
+          header={updateError.header}
+          content={updateError.content}
+          onOKClick={errorModalOkHandler}
+        />
+      )}
 
       <div className={`${classes["account-edit__main"]} centered`}>
         <div className={classes["account-edit__sidebar"]}>
