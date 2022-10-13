@@ -11,7 +11,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const [isEmailDuplicated, setIsEmailDuplicated] = useState(false);
-  // registerError is an object, keys: header, content --> render in "ErrorModal Element"
+  // registerError is an object, keys: header, content --> render in "Modal Element"
   const [registerError, setRegisterError] = useState();
 
   const registerSubmitHandler = (userRegisterData) => {

@@ -71,12 +71,12 @@
 }
 
 .account-edit__from-actions button.save {
-  background-color: #1c2e4a;
+  background-color: blue;
   color: white;
 }
 
 .account-edit__from-actions button.save:hover {
-  background-color: blue;
+  background-color: #1c2e4a;
 }
 
 .account-edit__from-actions button.save:disabled {

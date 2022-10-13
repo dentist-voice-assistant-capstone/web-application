@@ -160,7 +160,7 @@ const updateUserProfileAPIHandler = (token, userProfileUpdateData, setUserData, 
   })
 }
 
-const updateUserPasswordAPIHandler = (token, userPasswordUpdateData, setUpdateError) => {
+const updateUserPasswordAPIHandler = (token, userPasswordUpdateData, setUpdateError, setUpdateInfo) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   }
@@ -169,7 +169,10 @@ const updateUserPasswordAPIHandler = (token, userPasswordUpdateData, setUpdateEr
     // change password completed
     if (result.status === 200) {
       // TODO: show InfoModal to let the user re-login again, logout the user, navigate to login page 
-
+      setUpdateInfo({
+        header: "Re-Login needed",
+        content: <p>Your password has been successfully changed. Re-login is needed. The system will redirect you to the login page.</p>
+      })
     }
   }).catch((error) => {
     if (!error.response) {

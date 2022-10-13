@@ -14,15 +14,19 @@ import {
 import classes from "./AccountEditPage.module.css";
 
 const AccountEditPage = () => {
+  // states for editing, sidebar menu selection
   const [isEditing, setIsEditing] = useState(false);
   const [idxMenuSelected, setIdxMenuSelected] = useState(0);
 
+  // states for handling initial fetching user's data
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
   const [userData, setUserData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // states for toggling modals
   const [updateError, setUpdateError] = useState(null);
+  const [updateInfo, setUpdateInfo] = useState(null);
 
   const sideBarMenuLabels = ["Account", "Change Password"];
 
@@ -57,12 +61,22 @@ const AccountEditPage = () => {
   };
 
   const updatePasswordHandler = (userPasswordUpdateData) => {
-    updateUserPasswordAPIHandler(token, userPasswordUpdateData, setUpdateError);
+    updateUserPasswordAPIHandler(
+      token,
+      userPasswordUpdateData,
+      setUpdateError,
+      setUpdateInfo
+    );
   };
 
   const errorModalOkHandler = () => {
     // clear update error after click "OK" button or backdrop in ErrorModal
     setUpdateError();
+  };
+
+  const infoModalOkHandler = () => {
+    setUpdateInfo();
+    authCtx.logout();
   };
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)
@@ -87,11 +101,22 @@ const AccountEditPage = () => {
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
       <NavBar email="email"></NavBar>
+      {/* Error Modal */}
       {updateError && (
         <Modal
           header={updateError.header}
           content={updateError.content}
           onOKClick={errorModalOkHandler}
+          modalType="error"
+        />
+      )}
+      {/* Info Modal */}
+      {updateInfo && (
+        <Modal
+          header={updateInfo.header}
+          content={updateInfo.content}
+          onOKClick={infoModalOkHandler}
+          modalType="info"
         />
       )}
 
