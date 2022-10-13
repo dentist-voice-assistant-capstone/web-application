@@ -33,7 +33,7 @@ const AccountEditPage = () => {
   // fetching user data, when loaded page =========================
   useEffect(() => {
     fetchUserInfoAPIHandler(token, setUserData, setIsLoaded, setUpdateError);
-  }, []);
+  }, [token]);
   // =============================================================
 
   const changeMenuHandler = (event) => {
