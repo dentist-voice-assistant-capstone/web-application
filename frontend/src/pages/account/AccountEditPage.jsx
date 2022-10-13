@@ -2,7 +2,7 @@ import { Fragment, useState, useContext, useEffect } from "react";
 
 import AccountEditForm from "../../components/account/AccountEditForm";
 import PasswordEditForm from "../../components/account/PasswordEditForm";
-import ErrorModal from "../../components/ui/ErrorModal";
+import Modal from "../../components/ui/Modal";
 import NavBar from "../../components/ui/NavBar";
 import AuthContext from "../../store/auth-context";
 import {
@@ -88,7 +88,7 @@ const AccountEditPage = () => {
       <div className={classes["account-edit__background"]}></div>
       <NavBar email="email"></NavBar>
       {updateError && (
-        <ErrorModal
+        <Modal
           header={updateError.header}
           content={updateError.content}
           onOKClick={errorModalOkHandler}
