@@ -43,7 +43,7 @@ const RegisterForm = (props) => {
   });
 
   const {
-    value: enteredComfirmPassword,
+    value: enteredConfirmPassword,
     isValueValid: isConfirmPasswordValid,
     hasError: hasConfirmPasswordError,
     errorMessage: errorMessageConfirmPassword,
@@ -124,7 +124,7 @@ const RegisterForm = (props) => {
     const userRegisterData = {
       email: enteredEmail,
       password: enteredPassword,
-      confirmPassword: enteredComfirmPassword,
+      confirmPassword: enteredConfirmPassword,
     };
     // optional fields
     if (enteredName.trim().length !== 0)
@@ -218,7 +218,7 @@ const RegisterForm = (props) => {
                 <input
                   type="password"
                   name="confirmPassword"
-                  value={enteredComfirmPassword}
+                  value={enteredConfirmPassword}
                   onChange={confirmPasswordChangeHandler}
                   onBlur={confirmPasswordBlurHandler}
                 />

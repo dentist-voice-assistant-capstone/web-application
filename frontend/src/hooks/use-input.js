@@ -19,7 +19,7 @@ const useInput = (field, validators, parameters) => {
       validateResult = validator(enteredValue, parameters.minLength, parameters.maxLength)
     } else if (validator.name === 'validateMaxLength') {
       validateResult = validator(enteredValue, parameters.maxLength)
-    } else if (validator.name === 'validateConfirmPassword') {
+    } else if (validator.name === 'validateConfirmPassword' || validator.name === 'validateOldandNewPassword') {
       validateResult = validator(enteredValue, parameters.password)
     } else {
       validateResult = validator(enteredValue)

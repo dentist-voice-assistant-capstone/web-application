@@ -1,6 +1,7 @@
 import { Fragment, useState, useContext, useEffect } from "react";
 
 import AccountEditForm from "../../components/account/AccountEditForm";
+import PasswordEditForm from "../../components/account/PasswordEditForm";
 import NavBar from "../../components/ui/NavBar";
 import AuthContext from "../../store/auth-context";
 import {
@@ -59,6 +60,8 @@ const AccountEditPage = () => {
         onSaveClick={saveClickHandler}
       />
     );
+  } else if (sideBarMenuLabels[idxMenuSelected] === "Change Password") {
+    formToBeDisplayed = <PasswordEditForm />;
   }
 
   return (

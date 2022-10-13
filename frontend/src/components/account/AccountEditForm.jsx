@@ -10,7 +10,6 @@ import {
 } from "../../utils/constants";
 
 import classes from "./AccountEditForm.module.css";
-import "../../index.css";
 
 const AccountEditForm = (props) => {
   const userDefaultData = props.userDefaultData;
@@ -68,9 +67,9 @@ const AccountEditForm = (props) => {
     }
 
     const enteredUserData = {
-      dentistName: enteredName,
-      dentistSurname: enteredSurname,
-      dentistID: enteredDentistId,
+      dentistName: enteredName.trim(),
+      dentistSurname: enteredSurname.trim(),
+      dentistID: enteredDentistId.trim(),
     };
 
     // if the updated value differs from the original value, add to the userProfileUpdateData
