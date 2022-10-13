@@ -25,7 +25,7 @@ const AccountEditForm = (props) => {
     reset: resetName,
   } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
     maxLength: NAME_MAX_LENGTH,
-    defaultValue: userDefaultData.name,
+    defaultValue: userDefaultData.dentistName,
   });
 
   const {
@@ -38,7 +38,7 @@ const AccountEditForm = (props) => {
     reset: resetSurname,
   } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
     maxLength: SURNAME_MAX_LENGTH,
-    defaultValue: userDefaultData.surname,
+    defaultValue: userDefaultData.dentistSurname,
   });
 
   const {
@@ -61,8 +61,32 @@ const AccountEditForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.onSaveClick();
-    console.log("handleSubmit detected!");
+
+    // if the form still isn't valid, then don't do anything
+    if (!isFormValid) {
+      return;
+    }
+
+    const enteredUserData = {
+      dentistName: enteredName,
+      dentistSurname: enteredSurname,
+      dentistID: enteredDentistId,
+    };
+
+    // if the updated value differs from the original value, add to the userProfileUpdateData
+    const userProfileUpdateData = {};
+    for (const field in enteredUserData) {
+      if (enteredUserData[field] !== userDefaultData[field]) {
+        userProfileUpdateData[field] = enteredUserData[field];
+      }
+    }
+    if (Object.keys(userProfileUpdateData).length === 0) {
+      // no updated fields --> same as click cancel
+      props.onCancelClick();
+    } else {
+      // there are updated fields --> call function to send request
+      props.onSaveClick(userProfileUpdateData);
+    }
   };
 
   const handleCancel = () => {

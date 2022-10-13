@@ -3,7 +3,10 @@ import { Fragment, useState, useContext, useEffect } from "react";
 import AccountEditForm from "../../components/account/AccountEditForm";
 import NavBar from "../../components/ui/NavBar";
 import AuthContext from "../../store/auth-context";
-import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
+import {
+  fetchUserInfoAPIHandler,
+  updateUserProfileAPIHandler,
+} from "../../utils/apiHandler";
 
 import classes from "./AccountEditPage.module.css";
 
@@ -16,12 +19,13 @@ const AccountEditPage = () => {
   const [userData, setUserData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // fetching user data, when loaded page
+  const sideBarMenuLabels = ["Account", "Change Password"];
+
+  // fetching user data, when loaded page =========================
   useEffect(() => {
     fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
   }, []);
-
-  const sideBarMenuLabels = ["Account", "Change Password"];
+  // =============================================================
 
   const changeMenuHandler = (event) => {
     setIdxMenuSelected(parseInt(event.target.getAttribute("idx")));
@@ -37,9 +41,9 @@ const AccountEditPage = () => {
     setIsEditing(false);
   };
 
-  const saveClickHandler = () => {
+  const saveClickHandler = (userProfileUpdateData) => {
     setIsEditing(false);
-    // TODO: POST Api request
+    updateUserProfileAPIHandler(token, userProfileUpdateData, setUserData);
   };
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)

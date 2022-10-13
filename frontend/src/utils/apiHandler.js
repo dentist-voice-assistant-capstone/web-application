@@ -5,7 +5,8 @@ const backendBaseURL = "http://localhost:3000";
 const USER_REGISTER_ENDPOINT = `${backendBaseURL}/user/signup`;
 const USER_LOGIN_ENDPOINT = `${backendBaseURL}/user/login`;
 const USER_EMAIL_CONFIRMATION_ENDPOINT = `${backendBaseURL}/user/sendEmailConfirm`;
-const USER_INFO_ENDPOINT = `${backendBaseURL}/user/userInfo`
+const USER_INFO_ENDPOINT = `${backendBaseURL}/user/userInfo`;
+const USER_UPDATE_PROFILE_ENDPOINT = `${backendBaseURL}/user/updateProfile`;
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -118,8 +119,8 @@ const fetchUserInfoAPIHandler = (token, setUserData, setIsLoaded) => {
         setIsLoaded(true)
         setUserData({
           email: userInfoData.email,
-          name: userInfoData.dentistName || "",
-          surname: userInfoData.dentistSurname || "",
+          dentistName: userInfoData.dentistName || "",
+          dentistSurname: userInfoData.dentistSurname || "",
           dentistID: userInfoData.dentistID || ""
         })
       }
@@ -130,10 +131,29 @@ const fetchUserInfoAPIHandler = (token, setUserData, setIsLoaded) => {
     })
 }
 
+const updateUserProfileAPIHandler = (token, userProfileUpdateData, setUserData) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  axios.patch(USER_UPDATE_PROFILE_ENDPOINT, userProfileUpdateData, config).then((result) => {
+    let userInfoData = result.data.data.user
+    setUserData({
+      email: userInfoData.email,
+      dentistName: userInfoData.dentistName || "",
+      dentistSurname: userInfoData.dentistSurname || "",
+      dentistID: userInfoData.dentistID || ""
+    })
+  }).catch((error) => {
+    alert("error");
+    console.log(error);
+  })
+}
+
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
   userLoginAPIHandler,
   startAPIHandler,
-  fetchUserInfoAPIHandler
+  fetchUserInfoAPIHandler,
+  updateUserProfileAPIHandler
 };
