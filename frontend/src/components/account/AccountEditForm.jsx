@@ -13,6 +13,8 @@ import classes from "./AccountEditForm.module.css";
 import "../../index.css";
 
 const AccountEditForm = (props) => {
+  const userDefaultData = props.userDefaultData;
+
   const {
     value: enteredName,
     isValueValid: isNameValid,
@@ -23,7 +25,7 @@ const AccountEditForm = (props) => {
     reset: resetName,
   } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
     maxLength: NAME_MAX_LENGTH,
-    defaultValue: "Pongsapak",
+    defaultValue: userDefaultData.name,
   });
 
   const {
@@ -36,7 +38,7 @@ const AccountEditForm = (props) => {
     reset: resetSurname,
   } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
     maxLength: SURNAME_MAX_LENGTH,
-    defaultValue: "Pulthasthan",
+    defaultValue: userDefaultData.surname,
   });
 
   const {
@@ -49,7 +51,7 @@ const AccountEditForm = (props) => {
     reset: resetDentistID,
   } = useInput("Dentist ID", [validateMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
-    defaultValue: "000001",
+    defaultValue: userDefaultData.dentistID,
   });
 
   let isFormValid = false;
@@ -77,7 +79,7 @@ const AccountEditForm = (props) => {
       <div className={classes["account-edit__form-items"]}>
         <label>Email</label>
         <br />
-        <p className={classes["data"]}>test@hotmail.com</p>
+        <p className={classes["data"]}>{userDefaultData.email}</p>
       </div>
 
       <div

@@ -1,13 +1,25 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 
 import AccountEditForm from "../../components/account/AccountEditForm";
 import NavBar from "../../components/ui/NavBar";
+import AuthContext from "../../store/auth-context";
+import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 
 import classes from "./AccountEditPage.module.css";
 
 const AccountEditPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [idxMenuSelected, setIdxMenuSelected] = useState(0);
+
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const [userData, setUserData] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // fetching user data, when loaded page
+  useEffect(() => {
+    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+  }, []);
 
   const sideBarMenuLabels = ["Account", "Change Password"];
 
@@ -37,6 +49,7 @@ const AccountEditPage = () => {
       <AccountEditForm
         isEditing={isEditing}
         menuSelected={sideBarMenuLabels[idxMenuSelected]}
+        userDefaultData={userData}
         onEditClick={editClickHandler}
         onCancelClick={cancelClickHandler}
         onSaveClick={saveClickHandler}
@@ -48,6 +61,7 @@ const AccountEditPage = () => {
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
       <NavBar email="email"></NavBar>
+
       <div className={`${classes["account-edit__main"]} centered`}>
         <div className={classes["account-edit__sidebar"]}>
           <h2>User Profile</h2>
@@ -65,7 +79,8 @@ const AccountEditPage = () => {
           ))}
         </div>
         <div className={classes["account-edit__form-area"]}>
-          {formToBeDisplayed}
+          {/* only render form, when the user's data is loaded */}
+          {isLoaded && formToBeDisplayed}
         </div>
       </div>
     </Fragment>
