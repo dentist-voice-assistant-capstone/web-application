@@ -157,6 +157,13 @@ const updateUserProfileAPIHandler = (token, userProfileUpdateData, setUserData, 
       });
       return false;
     }
+    if (error.response.status === 500) {
+      // some unknown errors
+      setUpdateError({
+        header: "Something Wrong!",
+        content: <p>Something went wrong! Please try again later</p>,
+      });
+    }
   })
 }
 
