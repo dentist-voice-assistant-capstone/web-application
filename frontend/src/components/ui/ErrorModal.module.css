@@ -1,8 +1,6 @@
 /* variable declare */
 :root {
   --main-border-radius: 10px;
-  --primary-color-error: #ef5350;
-  --secondary-color-error: #e57373;
 }
 
 /* error-modal */
@@ -40,6 +38,7 @@
   color: white;
   font-weight: bolder;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .error-modal__content {

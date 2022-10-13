@@ -54,7 +54,7 @@ const useInput = (field, validators, parameters) => {
   }
 
   const reset = () => {
-    setEnteredValue("");
+    setEnteredValue(defaultValue);
     setIsTouched(false);
   }
 

@@ -103,7 +103,7 @@ const startAPIHandler = () => {
   console.log("Starting");
 };
 
-const editAccountAPIHandler = (userEmail) => {
+const editAccountAPIHandler = (userEmail, navigate) => {
   // eslint-disable-next-line no-undef
   navigate("/account/edit");
 };

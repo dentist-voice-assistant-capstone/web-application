@@ -3,9 +3,14 @@ import {
   validateMaxLength,
   validateEnglishLetter,
 } from "../../utils/validator";
-import { NAME_MAX_LENGTH } from "../../utils/constants";
+import {
+  NAME_MAX_LENGTH,
+  SURNAME_MAX_LENGTH,
+  DENTISTID_MAX_LENGTH,
+} from "../../utils/constants";
 
 import classes from "./AccountEditForm.module.css";
+import "../../index.css";
 
 const AccountEditForm = (props) => {
   const {
@@ -18,13 +23,52 @@ const AccountEditForm = (props) => {
     reset: resetName,
   } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
     maxLength: NAME_MAX_LENGTH,
-    defaultValue: "test@hotmail.com",
+    defaultValue: "Pongsapak",
   });
+
+  const {
+    value: enteredSurname,
+    isValueValid: isSurnameValid,
+    hasError: hasSurnameError,
+    errorMessage: errorMessageSurname,
+    valueChangeHandler: surnameChangeHandler,
+    inputBlurHandler: surnameBlurHandler,
+    reset: resetSurname,
+  } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
+    maxLength: SURNAME_MAX_LENGTH,
+    defaultValue: "Pulthasthan",
+  });
+
+  const {
+    value: enteredDentistId,
+    isValueValid: isDentistIdValid,
+    hasError: hasDentistIdError,
+    errorMessage: errorMessageDentistId,
+    valueChangeHandler: dentistIdChangeHandler,
+    inputBlurHandler: dentistIdBlurHandler,
+    reset: resetDentistID,
+  } = useInput("Dentist ID", [validateMaxLength], {
+    maxLength: DENTISTID_MAX_LENGTH,
+    defaultValue: "000001",
+  });
+
+  let isFormValid = false;
+  if (isNameValid && isSurnameValid && isDentistIdValid) {
+    isFormValid = true;
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
     props.onSaveClick();
     console.log("handleSubmit detected!");
+  };
+
+  const handleCancel = () => {
+    // reset back to its previous value
+    resetName();
+    resetSurname();
+    resetDentistID();
+    props.onCancelClick();
   };
 
   return (
@@ -33,10 +77,14 @@ const AccountEditForm = (props) => {
       <div className={classes["account-edit__form-items"]}>
         <label>Email</label>
         <br />
-        <p>test@hotmail.com</p>
+        <p className={classes["data"]}>test@hotmail.com</p>
       </div>
 
-      <div className={classes["account-edit__form-items"]}>
+      <div
+        className={`${classes["account-edit__form-items"]} ${
+          hasNameError ? classes["invalid"] : ""
+        }`}
+      >
         <label htmlFor="name">Name</label>
         <br />
         <input
@@ -48,26 +96,50 @@ const AccountEditForm = (props) => {
           onBlur={nameBlurHandler}
           disabled={!props.isEditing}
         ></input>
+        {hasNameError && <p className={classes["error"]}>{errorMessageName}</p>}
       </div>
 
-      <div className={classes["account-edit__form-items"]}>
-        <label>Surname</label>
+      <div
+        className={`${classes["account-edit__form-items"]} ${
+          hasSurnameError ? classes["invalid"] : ""
+        }`}
+      >
+        <label htmlFor="surname">Surname</label>
         <br />
         <input
-          disabled={!props.isEditing}
-          placeholder="test surname"
           type="text"
+          name="surname"
+          maxLength={SURNAME_MAX_LENGTH}
+          value={enteredSurname}
+          onChange={surnameChangeHandler}
+          onBlur={surnameBlurHandler}
+          disabled={!props.isEditing}
         ></input>
+        {hasSurnameError && (
+          <p className={classes["error"]}>{errorMessageSurname}</p>
+        )}
       </div>
 
-      <div className={classes["account-edit__form-items"]}>
-        <label>Dentist ID</label>
+      <div
+        className={`${classes["account-edit__form-items"]} ${
+          hasDentistIdError ? classes["invalid"] : ""
+        }`}
+      >
+        <label htmlFor="dentistId">Dentist ID</label>
         <br />
         <input
-          disabled={!props.isEditing}
-          placeholder="test dentist ID"
           type="text"
+          name="dentistId"
+          maxLength={DENTISTID_MAX_LENGTH}
+          value={enteredDentistId}
+          onChange={dentistIdChangeHandler}
+          onBlur={dentistIdBlurHandler}
+          disabled={!props.isEditing}
         ></input>
+
+        {hasDentistIdError && (
+          <p className={classes["error"]}>{errorMessageDentistId}</p>
+        )}
       </div>
 
       {/* Actions */}
@@ -87,9 +159,21 @@ const AccountEditForm = (props) => {
           type="submit"
           className={classes["save"]}
           hidden={!props.isEditing}
+          disabled={!isFormValid}
         >
           Save Change
         </button>
+
+        {/* Cancel button */}
+        {props.isEditing && (
+          <button
+            type="button"
+            className={classes["cancel"]}
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        )}
       </div>
     </form>
   );

@@ -85,7 +85,7 @@ const RegisterForm = (props) => {
     errorMessage: errorMessageDentistId,
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
-    reser: resetDentistID,
+    reset: resetDentistID,
   } = useInput("Dentist ID", [validateMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
   });
@@ -197,9 +197,6 @@ const RegisterForm = (props) => {
                   onChange={passwordChangeHandler}
                   onBlur={passwordBlurHandler}
                 />
-                {/* {hasPasswordError && (
-                  <p className="error">{errorMessagePassword}</p>
-                )} */}
                 <p className={hasPasswordError ? "error" : ""}>
                   Password should have 8-12 characters length.
                 </p>

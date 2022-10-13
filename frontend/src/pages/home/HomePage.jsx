@@ -1,8 +1,11 @@
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
+import { useNavigate } from "react-router-dom";
 import { startAPIHandler, editAccountAPIHandler } from "../../utils/apiHandler";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
   // const { state } = useLocation();
   // const { email } = state;
   function startHandler() {
@@ -10,7 +13,7 @@ const HomePage = () => {
   }
 
   function editAccountHandler(userEmail) {
-    editAccountAPIHandler({ email: userEmail });
+    editAccountAPIHandler({ email: userEmail }, navigate);
   }
 
   return (

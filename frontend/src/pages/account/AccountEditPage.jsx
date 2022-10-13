@@ -1,5 +1,8 @@
 import { Fragment, useState } from "react";
+
 import AccountEditForm from "../../components/account/AccountEditForm";
+import NavBar from "../../components/ui/NavBar";
+
 import classes from "./AccountEditPage.module.css";
 
 const AccountEditPage = () => {
@@ -9,13 +12,17 @@ const AccountEditPage = () => {
   const sideBarMenuLabels = ["Account", "Change Password"];
 
   const changeMenuHandler = (event) => {
-    setIdxMenuSelected(event.target.getAttribute("idx"));
+    setIdxMenuSelected(parseInt(event.target.getAttribute("idx")));
     // always disable editing to false when user change the menu
     setIsEditing(false);
   };
 
   const editClickHandler = () => {
     setIsEditing(true);
+  };
+
+  const cancelClickHandler = () => {
+    setIsEditing(false);
   };
 
   const saveClickHandler = () => {
@@ -25,12 +32,13 @@ const AccountEditPage = () => {
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)
   let formToBeDisplayed;
-  if (sideBarMenuLabels[idxMenuSelected] == "Account") {
+  if (sideBarMenuLabels[idxMenuSelected] === "Account") {
     formToBeDisplayed = (
       <AccountEditForm
         isEditing={isEditing}
         menuSelected={sideBarMenuLabels[idxMenuSelected]}
         onEditClick={editClickHandler}
+        onCancelClick={cancelClickHandler}
         onSaveClick={saveClickHandler}
       />
     );
@@ -39,14 +47,14 @@ const AccountEditPage = () => {
   return (
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
-      {/* navbar will be here */}
+      <NavBar email="email"></NavBar>
       <div className={`${classes["account-edit__main"]} centered`}>
         <div className={classes["account-edit__sidebar"]}>
           <h2>User Profile</h2>
           {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
             <div
               className={`${classes["account-edit__sidebar-menu"]} ${
-                idx == idxMenuSelected ? classes["selected"] : ""
+                idx === idxMenuSelected ? classes["selected"] : ""
               }`}
               key={sidebarMenuLabel}
               idx={idx}

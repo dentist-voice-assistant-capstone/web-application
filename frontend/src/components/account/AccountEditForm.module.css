@@ -8,9 +8,19 @@
 }
 
 .account-edit__form-items p {
+  margin-bottom: 0;
+}
+
+.account-edit__form-items p.data {
   margin-top: 8px;
   font-size: 18px;
   color: black;
+}
+
+.account-edit__form-items p.error {
+  font-size: 14px;
+  color: red;
+  visibility: visible;
 }
 
 .account-edit__form-items input {
@@ -28,6 +38,10 @@
 
 .account-edit__form-items input:disabled {
   background-color: #ececec;
+}
+
+.account-edit__form-items.invalid input {
+  border: 1px solid red;
 }
 
 .account-edit__from-actions {
@@ -59,4 +73,23 @@
 .account-edit__from-actions button.save {
   background-color: #1c2e4a;
   color: white;
+}
+
+.account-edit__from-actions button.save:hover {
+  background-color: blue;
+}
+
+.account-edit__from-actions button.save:disabled {
+  background-color: gray;
+  color: white;
+}
+
+.account-edit__from-actions button.cancel {
+  background-color: var(--primary-color-error);
+  color: white;
+  margin-right: 20px;
+}
+
+.account-edit__from-actions button.cancel:hover {
+  background-color: var(--secondary-color-error);
 }
