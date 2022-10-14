@@ -1,5 +1,4 @@
-import { Fragment, useState, useContext, useEffect } from "react";
-
+import { useState, useContext, useEffect } from "react";
 import classes from "./NavBar.module.css";
 import "bootstrap/dist/css/bootstrap.css";
 import LogoutButton from "./LogoutButton";
@@ -39,7 +38,7 @@ function NavBar(props) {
             {userData.email}
           </Navbar.Brand>
         )}
-        <LogoutButton></LogoutButton>
+        {isLoaded && <LogoutButton></LogoutButton>}
       </Container>
     </Navbar>
   );

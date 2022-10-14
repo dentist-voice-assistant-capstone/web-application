@@ -1,6 +1,5 @@
 .form {
   width: 85%;
-  margin-bottom: 3rem;
 }
 
 .control {
@@ -18,7 +17,7 @@
   font-size: 20px;
 }
 
-.control input{
+.control input {
   display: block;
   font: inherit;
   border-radius: 10px;
@@ -30,7 +29,7 @@
 }
 
 .actions {
-  margin-top: 2rem;
+  margin-top: 4rem;
   text-align: center;
 }
 
