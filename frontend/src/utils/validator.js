@@ -21,6 +21,13 @@ export const validateLength = (value, minLength, maxLength) => {
   };
 };
 
+export const validateOldandNewPassword = (newPassword, oldPassword) => {
+  return {
+    isPass: newPassword !== oldPassword,
+    specialErrorMessage: "New password should not be same as old password."
+  }
+}
+
 export const validateConfirmPassword = (confirmPassword, password) => {
   return {
     isPass: confirmPassword === password,

@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import RegisterForm from "../../components/register/RegisterForm";
-import ErrorModal from "../../components/ui/ErrorModal";
+import Modal from "../../components/ui/Modal";
 import { userRegisterAPIHandler } from "../../utils/apiHandler";
 
 import "./RegisterPage.css";
@@ -11,7 +11,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const [isEmailDuplicated, setIsEmailDuplicated] = useState(false);
-  // registerError is an object, keys: header, content --> render in "ErrorModal Element"
+  // registerError is an object, keys: header, content --> render in "Modal Element"
   const [registerError, setRegisterError] = useState();
 
   const registerSubmitHandler = (userRegisterData) => {
@@ -32,10 +32,11 @@ const RegisterPage = () => {
   return (
     <Fragment>
       {registerError && (
-        <ErrorModal
+        <Modal
           header={registerError.header}
           content={registerError.content}
           onOKClick={errorModalOkHandler}
+          modalType="error"
         />
       )}
       <div className="landing-page">

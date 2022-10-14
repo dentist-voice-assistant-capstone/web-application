@@ -1,0 +1,63 @@
+/* variable declare */
+:root {
+  --main-border-radius: 10px;
+  --main-background-color: #f0f0f0;
+}
+
+.account-edit__background {
+  background-color: var(--main-background-color);
+  top: 0;
+  left: 0;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+}
+
+.account-edit__main {
+  margin-top: 0px;
+  height: 800px;
+  width: 70%;
+  display: flex;
+  background-color: white;
+  border-radius: var(--main-border-radius);
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+}
+
+.account-edit__sidebar {
+  height: 100%;
+  width: 225px;
+  box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.3);
+  background-color: #d4d4d4;
+  border-radius: var(--main-border-radius) 0px 0px var(--main-border-radius);
+}
+
+.account-edit__sidebar h2 {
+  margin-top: 50px;
+  padding-left: 25px;
+  margin-bottom: 60px;
+  text-shadow: 2px 2px rgba(10, 10, 10, 0.1);
+}
+
+.account-edit__sidebar-menu {
+  width: 100%;
+  padding: 15px 30px 15px 30px;
+  font-size: 16px;
+}
+
+.account-edit__sidebar-menu:hover {
+  background-color: #b8b8b8;
+}
+
+.account-edit__sidebar-menu.selected {
+  background-color: #808080;
+  font-size: 18px;
+}
+
+.account-edit__form-area {
+  height: 100%;
+  width: 100%;
+  /* border: 1px solid yellow; */
+  flex: 1;
+  padding: 160px 100px 50px 100px;
+}

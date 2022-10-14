@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 const useInput = (field, validators, parameters) => {
-  const [enteredValue, setEnteredValue] = useState("");
+  let defaultValue = "";
+  if (parameters.defaultValue) {
+    defaultValue = parameters.defaultValue
+  }
+
+  const [enteredValue, setEnteredValue] = useState(defaultValue);
   const [isTouched, setIsTouched] = useState(false);
 
   // iterate through all validators
@@ -14,7 +19,7 @@ const useInput = (field, validators, parameters) => {
       validateResult = validator(enteredValue, parameters.minLength, parameters.maxLength)
     } else if (validator.name === 'validateMaxLength') {
       validateResult = validator(enteredValue, parameters.maxLength)
-    } else if (validator.name === 'validateConfirmPassword') {
+    } else if (validator.name === 'validateConfirmPassword' || validator.name === 'validateOldandNewPassword') {
       validateResult = validator(enteredValue, parameters.password)
     } else {
       validateResult = validator(enteredValue)
@@ -49,7 +54,7 @@ const useInput = (field, validators, parameters) => {
   }
 
   const reset = () => {
-    setEnteredValue("");
+    setEnteredValue(defaultValue);
     setIsTouched(false);
   }
 

@@ -8,13 +8,13 @@ import {
   validateMaxLength,
   validateEnglishLetter,
 } from "../../utils/validator";
-
-const PASSWORD_MIN_LENGTH = 8;
-const PASSWORD_MAX_LENGTH = 12;
-
-const NAME_MAX_LENGTH = 45;
-const SURNAME_MAX_LENGTH = 45;
-const DENTISTID_MAX_LENGTH = 45;
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  SURNAME_MAX_LENGTH,
+  DENTISTID_MAX_LENGTH,
+} from "../../utils/constants";
 
 const RegisterForm = (props) => {
   const {
@@ -43,7 +43,7 @@ const RegisterForm = (props) => {
   });
 
   const {
-    value: enteredComfirmPassword,
+    value: enteredConfirmPassword,
     isValueValid: isConfirmPasswordValid,
     hasError: hasConfirmPasswordError,
     errorMessage: errorMessageConfirmPassword,
@@ -85,7 +85,7 @@ const RegisterForm = (props) => {
     errorMessage: errorMessageDentistId,
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
-    reser: resetDentistID,
+    reset: resetDentistID,
   } = useInput("Dentist ID", [validateMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
   });
@@ -124,7 +124,7 @@ const RegisterForm = (props) => {
     const userRegisterData = {
       email: enteredEmail,
       password: enteredPassword,
-      confirmPassword: enteredComfirmPassword,
+      confirmPassword: enteredConfirmPassword,
     };
     // optional fields
     if (enteredName.trim().length !== 0)
@@ -197,9 +197,6 @@ const RegisterForm = (props) => {
                   onChange={passwordChangeHandler}
                   onBlur={passwordBlurHandler}
                 />
-                {/* {hasPasswordError && (
-                  <p className="error">{errorMessagePassword}</p>
-                )} */}
                 <p className={hasPasswordError ? "error" : ""}>
                   Password should have 8-12 characters length.
                 </p>
@@ -221,7 +218,7 @@ const RegisterForm = (props) => {
                 <input
                   type="password"
                   name="confirmPassword"
-                  value={enteredComfirmPassword}
+                  value={enteredConfirmPassword}
                   onChange={confirmPasswordChangeHandler}
                   onBlur={confirmPasswordBlurHandler}
                 />

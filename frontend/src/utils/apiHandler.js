@@ -5,6 +5,9 @@ const backendBaseURL = "http://localhost:3000";
 const USER_REGISTER_ENDPOINT = `${backendBaseURL}/user/signup`;
 const USER_LOGIN_ENDPOINT = `${backendBaseURL}/user/login`;
 const USER_EMAIL_CONFIRMATION_ENDPOINT = `${backendBaseURL}/user/sendEmailConfirm`;
+const USER_INFO_ENDPOINT = `${backendBaseURL}/user/userInfo`;
+const USER_UPDATE_PROFILE_ENDPOINT = `${backendBaseURL}/user/updateProfile`;
+const USER_UPDATE_PASSWORD_ENDPOINT = `${backendBaseURL}/user/updatePassword`;
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -79,7 +82,9 @@ const userLoginAPIHandler = (
       if (result.status === 200) {
         const expirationTime = new Date(new Date().getTime() + session_time);
         authCtx.login(result.data.token, expirationTime.toISOString());
-        navigate("/");
+        navigate("/", {
+          state: { email: userLoginData.email },
+        });
       }
     })
     .catch((error) => {
@@ -103,15 +108,110 @@ const startAPIHandler = () => {
   console.log("Starting");
 };
 
-const editAccountAPIHandler = (userEmail) => {
-  // eslint-disable-next-line no-undef
-  navigate("/account/edit");
-};
+const fetchUserInfoAPIHandler = (token, setUserData, setIsLoaded, setUpdateError) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  axios.get(USER_INFO_ENDPOINT, config)
+    .then((result) => {
+      // console.log(result)
+      if (result.status === 200) {
+        let userInfoData = result.data.data.user
+        setIsLoaded(true)
+        setUserData({
+          email: userInfoData.email,
+          dentistName: userInfoData.dentistName || "",
+          dentistSurname: userInfoData.dentistSurname || "",
+          dentistID: userInfoData.dentistID || ""
+        })
+      }
+    })
+    .catch((error) => {
+      if (!error.response) {
+        setUpdateError({
+          header: "Connection Error",
+          content: <p>Cannot connect to backend server.</p>,
+        });
+        return false;
+      }
+    })
+}
+
+const updateUserProfileAPIHandler = (token, userProfileUpdateData, setUserData, setUpdateError) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  axios.patch(USER_UPDATE_PROFILE_ENDPOINT, userProfileUpdateData, config).then((result) => {
+    let userInfoData = result.data.data.user
+    setUserData({
+      email: userInfoData.email,
+      dentistName: userInfoData.dentistName || "",
+      dentistSurname: userInfoData.dentistSurname || "",
+      dentistID: userInfoData.dentistID || ""
+    })
+  }).catch((error) => {
+    if (!error.response) {
+      setUpdateError({
+        header: "Connection Error",
+        content: <p>Cannot connect to backend server.</p>,
+      });
+      return false;
+    }
+    if (error.response.status === 500) {
+      // some unknown errors
+      setUpdateError({
+        header: "Something Wrong!",
+        content: <p>Something went wrong! Please try again later</p>,
+      });
+    }
+  })
+}
+
+const updateUserPasswordAPIHandler = (token, userPasswordUpdateData, setUpdateError, setUpdateInfo) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  axios.patch(USER_UPDATE_PASSWORD_ENDPOINT, userPasswordUpdateData, config).then((result) => {
+    console.log(result)
+    // change password completed
+    if (result.status === 200) {
+      // TODO: show InfoModal to let the user re-login again, logout the user, navigate to login page 
+      setUpdateInfo({
+        header: "Re-Login needed",
+        content: <p>Your password has been successfully changed. Re-login is needed. The system will redirect you to the login page.</p>
+      })
+    }
+  }).catch((error) => {
+    if (!error.response) {
+      setUpdateError({
+        header: "Connection Error",
+        content: <p>Cannot connect to backend server.</p>,
+      });
+      return false;
+    }
+
+    // if the entered old password is not correct
+    if (error.response.status === 401) {
+      setUpdateError({
+        header: "Wrong old Password",
+        content: <p>You have entered incorrect old password. Please recheck and try again.</p>
+      })
+    } else if (error.response.status === 500) {
+      // some unknown errors
+      setUpdateError({
+        header: "Something Wrong!",
+        content: <p>Something went wrong! Please try again later</p>,
+      });
+    }
+  })
+}
 
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
   userLoginAPIHandler,
   startAPIHandler,
-  editAccountAPIHandler,
+  fetchUserInfoAPIHandler,
+  updateUserProfileAPIHandler,
+  updateUserPasswordAPIHandler
 };
