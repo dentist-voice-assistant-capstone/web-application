@@ -13,7 +13,12 @@ const userSchema = new mongoose.Schema({
   dentistName: {
     type: String,
     maxlength: [45, 'Dentist name must have less or equal than 45 characters'],
-    validate: [validator.isAlpha, 'Dentist name must be String']
+    validate: {
+      validator: function(el) {
+        return validator.isAlpha(el) || el.trim() === '';
+      },
+      message: 'Dentist name must be String'
+    }
   },
   dentistSurname: {
     type: String,
@@ -21,7 +26,12 @@ const userSchema = new mongoose.Schema({
       45,
       'Dentist surname must have less or equal than 45 characters'
     ],
-    validate: [validator.isAlpha, 'Dentist name must be String']
+    validate: {
+      validator: function(el) {
+        return validator.isAlpha(el) || el.trim() === '';
+      },
+      message: 'Dentist surname must be String'
+    }
   },
   dentistID: {
     type: String,
