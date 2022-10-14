@@ -1,11 +1,28 @@
+import { Fragment, useState, useContext, useEffect } from "react";
+
 import classes from "./NavBar.module.css";
 import "bootstrap/dist/css/bootstrap.css";
 import LogoutButton from "./LogoutButton";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import AuthContext from "../../store/auth-context";
+import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 
 function NavBar(props) {
   console.log(props);
+
+  // states for handling initial fetching user's data
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const [userData, setUserData] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // fetching user data, when loaded page =========================
+  useEffect(() => {
+    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+  }, [token]);
+  // =============================================================
+
   return (
     // <Navbar bg="light">
     //   <Container>
@@ -17,7 +34,11 @@ function NavBar(props) {
     // </Navbar>
     <Navbar bg="black" variant="dark">
       <Container>
-        <Navbar.Brand className={classes.actions}>{props.email}</Navbar.Brand>
+        {isLoaded && (
+          <Navbar.Brand className={classes.actions}>
+            {userData.email}
+          </Navbar.Brand>
+        )}
         <LogoutButton></LogoutButton>
       </Container>
     </Navbar>
