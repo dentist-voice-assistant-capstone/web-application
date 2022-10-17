@@ -22,31 +22,32 @@
 // };
 
 import { useReactMediaRecorder } from "react-media-recorder";
-import "./AudioStreamingPage.module.css";
+import classes from "./AudioStreamingPage.module.css";
 
 const AudioStreamingPage = () => {
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
 
   console.log(status);
+  console.log(mediaBlobUrl);
 
   return (
     <div>
       <p>{status}</p>
       <button
         type="submit"
-        className="audio-record_start"
+        className={classes.audio_record_start}
         onClick={startRecording}
       >
-        start
+        Start
       </button>
       <div />
       <button
         type="submit"
-        className="audio-record_stop"
+        className={classes.audio_record_stop}
         onClick={stopRecording}
       >
-        stop
+        Stop
       </button>
       <div />
       <video src={mediaBlobUrl} controls autoPlay loop />

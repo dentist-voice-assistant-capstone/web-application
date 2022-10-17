@@ -33,7 +33,7 @@
   background-color: green;
 }
 
-.audio-record_start {
+.audio_record_start {
   border-radius: 10px;
   font-size: 18px;
   width: 85%;
@@ -41,9 +41,10 @@
   border: 0;
   background-color: black;
   color: white;
+  margin-bottom: 20px;
 }
 
-.audio-record_stop {
+.audio_record_stop {
   border-radius: 10px;
   font-size: 18px;
   width: 85%;
@@ -51,4 +52,5 @@
   border: 0;
   background-color: black;
   color: white;
+  margin-bottom: 20px;
 }
