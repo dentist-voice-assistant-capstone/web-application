@@ -14,6 +14,7 @@ function TopInformationBar(props) {
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
   const [userData, setUserData] = useState(null);
+  const [patienceData, setPatienceData] = useState("55555555");
   const [isLoaded, setIsLoaded] = useState(false);
 
   const current = new Date();
@@ -38,20 +39,22 @@ function TopInformationBar(props) {
     // </Navbar>
     <Navbar bg="black" variant="dark">
       <Container>
-        {/* {isLoaded && (
-          <Navbar.Brand className={classes.actions}>
-            {userData.email}
-          </Navbar.Brand>
-        )}
-        {isLoaded && <LogoutButton></LogoutButton>} */}
         {isLoaded && (
           <Navbar.Brand className={classes.actions}>
             <div>
-              {"dentistID: "}
+              {"Dentist ID: "}
               {userData.dentistID}
             </div>
 
-            <div>{date}</div>
+            <div className="patienceID">
+              {"Patience ID: "}
+              {patienceData}
+            </div>
+
+            <div>
+              {"Date: "}
+              {date}
+            </div>
           </Navbar.Brand>
         )}
       </Container>

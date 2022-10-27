@@ -29,3 +29,10 @@
 .actions button:hover {
   background-color: green;
 }
+
+/* .patienceID {
+  color: white;
+  flex-flow: row;
+  display: flex;
+  justify-content: center;
+} */

@@ -2,7 +2,7 @@ import TopInformationBar from "../../components/record/TopInformationBar";
 // import classes from "./HomePage.module.css";
 // import NavBar from "../../components/ui/NavBar";
 import { useNavigate, useLocation } from "react-router-dom";
-import { startAPIHandler } from "../../utils/apiHandler";
+// import { startAPIHandler } from "../../utils/apiHandler";
 
 const RecordPage = () => {
   const navigate = useNavigate();
@@ -10,13 +10,13 @@ const RecordPage = () => {
   // const { state } = useLocation();
   // const { email } = state;
 
-  function startHandler() {
-    startAPIHandler();
-  }
+  //   function startHandler() {
+  //     startAPIHandler();
+  //   }
 
-  function editAccountMenuOnClickHandler() {
-    navigate("/account/edit");
-  }
+  //   function editAccountMenuOnClickHandler() {
+  //     navigate("/account/edit");
+  //   }
 
   return (
     <div className="landing-page">
