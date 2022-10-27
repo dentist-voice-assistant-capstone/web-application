@@ -14,7 +14,7 @@ function TopInformationBar(props) {
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
   const [userData, setUserData] = useState(null);
-  const [patienceData, setPatienceData] = useState("55555555");
+  const [patienceData, ] = useState("55555555");
   const [isLoaded, setIsLoaded] = useState(false);
 
   const current = new Date();
