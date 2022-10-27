@@ -1,0 +1,38 @@
+/* .column {
+  float: left;
+  width: 50%;
+} */
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.actions {
+  border-radius: 10px;
+  font-size: 18px;
+  border: 0;
+  color: white;
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+.actions button:disabled,
+.actions button:disabled:hover {
+  background-color: gray;
+}
+
+.actions button:hover {
+  background-color: green;
+}
+
+/* .patienceID {
+  color: white;
+  flex-flow: row;
+  display: flex;
+  justify-content: center;
+} */

@@ -37,7 +37,7 @@ function TopInformationBar(props) {
     //     </Nav>
     //   </Container>
     // </Navbar>
-    <Navbar bg="black" variant="dark">
+    <Navbar bg="black" variant="dark" fixed="top">
       <Container>
         {isLoaded && (
           <Navbar.Brand className={classes.actions}>
