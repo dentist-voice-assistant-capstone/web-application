@@ -6,9 +6,6 @@ import { startAPIHandler } from "../../utils/apiHandler";
 const HomePage = () => {
   const navigate = useNavigate();
 
-  // const { state } = useLocation();
-  // const { email } = state;
-
   function startHandler() {
     startAPIHandler();
   }
