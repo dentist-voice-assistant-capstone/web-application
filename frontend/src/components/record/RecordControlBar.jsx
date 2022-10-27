@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -18,11 +18,11 @@ function RecordControlBar(props) {
     <Navbar bg="black" variant="dark" fixed="bottom">
       <Container>
         <Navbar.Brand className={classes.actions}>
-          <div>
-            <button onClick={pauseResumeHandler}>
-              {isPaused ? "Resume" : "Pause"}
-            </button>
-          </div>
+          <div> </div>
+          <button className="recordButton" onClick={pauseResumeHandler}>
+            {isPaused ? "Resume" : "Pause"}
+          </button>
+          <button className="finishButton">Finish</button>
         </Navbar.Brand>
       </Container>
     </Navbar>

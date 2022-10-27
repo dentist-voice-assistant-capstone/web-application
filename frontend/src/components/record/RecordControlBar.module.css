@@ -22,17 +22,22 @@
 }
 
 .actions button:disabled,
-.actions button:disabled:hover {
+/* .actions button:disabled:hover {
   background-color: gray;
-}
-
-.actions button:hover {
-  background-color: green;
-}
-
-/* .patienceID {
-  color: white;
-  flex-flow: row;
-  display: flex;
-  justify-content: center;
 } */
+
+.recordButton {
+  background-color: black;
+  color: white;
+  border-color: white;
+  border-style: none;
+  margin: auto;
+}
+
+.finishButton {
+  background-color: green;
+  color: white;
+  border-color: white;
+  border-style: none;
+  margin: auto;
+}
