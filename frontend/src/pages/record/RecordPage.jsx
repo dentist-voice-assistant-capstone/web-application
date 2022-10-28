@@ -3,30 +3,15 @@ import TopInformationBar from "../../components/record/TopInformationBar";
 // import NavBar from "../../components/ui/NavBar";
 import { useNavigate, useLocation } from "react-router-dom";
 // import { startAPIHandler } from "../../utils/apiHandler";
+import RecordControlBar from "../../components/record/RecordControlBar";
 
 const RecordPage = () => {
   const navigate = useNavigate();
 
-  // const { state } = useLocation();
-  // const { email } = state;
-
-  //   function startHandler() {
-  //     startAPIHandler();
-  //   }
-
-  //   function editAccountMenuOnClickHandler() {
-  //     navigate("/account/edit");
-  //   }
-
   return (
     <div className="landing-page">
       <TopInformationBar dentistID={"dentistID"}></TopInformationBar>
-      {/* <div className={classes.actions}>
-        <button onClick={startHandler}>Start</button>
-      </div>
-      <div className={classes.actions}>
-        <button onClick={editAccountMenuOnClickHandler}>Account Edit</button>
-      </div> */}
+      <RecordControlBar />
     </div>
   );
 };
