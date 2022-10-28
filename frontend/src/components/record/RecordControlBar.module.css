@@ -27,11 +27,15 @@
 } */
 
 .recordButton {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
   border-color: white;
   border-style: none;
+  border-radius: 5px;
   margin: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+  width: 90px;
 }
 
 .finishButton {
@@ -39,5 +43,13 @@
   color: white;
   border-color: white;
   border-style: none;
+  border-radius: 5px;
   margin: auto;
+  margin-right: 10%;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.container {
+  margin-left: 31%;
 }

@@ -16,13 +16,12 @@ function RecordControlBar(props) {
 
   return (
     <Navbar bg="black" variant="dark" fixed="bottom">
-      <Container>
+      <Container className={classes.container}>
         <Navbar.Brand className={classes.actions}>
-          <div> </div>
-          <button className="recordButton" onClick={pauseResumeHandler}>
+          <button className={classes.recordButton} onClick={pauseResumeHandler}>
             {isPaused ? "Resume" : "Pause"}
           </button>
-          <button className="finishButton">Finish</button>
+          <button className={classes.finishButton}>Finish</button>
         </Navbar.Brand>
       </Container>
     </Navbar>
