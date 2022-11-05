@@ -1,3 +1,23 @@
+# Frontend for Dentist Voice-Controlled Assistant Web Application
+
+## Install
+
+For the installation, you need to run the following command in your terminal
+
+```sh
+npm install
+```
+
+## Running Server
+
+For runnning the server, you can run the following command
+
+```sh
+npm start
+```
+
+In addition, you can change the running port by changing the PORT variable in config.env (default port = 5000)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

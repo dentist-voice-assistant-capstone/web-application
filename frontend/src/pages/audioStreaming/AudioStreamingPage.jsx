@@ -21,38 +21,45 @@
 //   );
 // };
 
-import { useReactMediaRecorder } from "react-media-recorder";
-import classes from "./AudioStreamingPage.module.css";
+// import { useReactMediaRecorder } from "react-media-recorder";
+// import classes from "./AudioStreamingPage.module.css";
+
+// const AudioStreamingPage = () => {
+//   const { status, startRecording, stopRecording, mediaBlobUrl } =
+//     useReactMediaRecorder({ audio: true });
+
+//   console.log(status);
+//   console.log(mediaBlobUrl);
+
+//   return (
+//     <div>
+//       <p>{status}</p>
+//       <button
+//         type="submit"
+//         className={classes.audio_record_start}
+//         onClick={startRecording}
+//       >
+//         Start
+//       </button>
+//       <div />
+//       <button
+//         type="submit"
+//         className={classes.audio_record_stop}
+//         onClick={stopRecording}
+//       >
+//         Stop
+//       </button>
+//       <div />
+//       <video src={mediaBlobUrl} controls autoPlay loop />
+//     </div>
+//   );
+// };
+
+import * as tf from "@tensorflow/tfjs";
+import * as speechCommands from "@tensorflow-models/speech-commands";
 
 const AudioStreamingPage = () => {
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({ audio: true });
-
-  console.log(status);
-  console.log(mediaBlobUrl);
-
-  return (
-    <div>
-      <p>{status}</p>
-      <button
-        type="submit"
-        className={classes.audio_record_start}
-        onClick={startRecording}
-      >
-        Start
-      </button>
-      <div />
-      <button
-        type="submit"
-        className={classes.audio_record_stop}
-        onClick={stopRecording}
-      >
-        Stop
-      </button>
-      <div />
-      <video src={mediaBlobUrl} controls autoPlay loop />
-    </div>
-  );
+  return <div>Hello World</div>;
 };
 
 export default AudioStreamingPage;
