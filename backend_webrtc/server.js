@@ -20,24 +20,51 @@ io.on("connection", (socket) => {
   // Initialize parameter in socket section
   let sink = null;
   let outputFileStream = null;
+  let audioTrack = null;
 
+  // Create RTC peer connection and send server candidate to client
   const pc = new webrtc.RTCPeerConnection();
   pc.onicecandidate = ({ candidate }) => {
     socket.emit("candidate", candidate);
   };
 
+  // Set SDP and answer to client
   socket.on("offer", async (offer) => {
     await pc.setRemoteDescription(offer);
     await pc.setLocalDescription(await pc.createAnswer());
     socket.emit("answer", pc.localDescription);
   });
 
+  // When receive candidate from client, then add candidate to iceCandidate
   socket.on("candidate", async (candidate) => {
     if (candidate) {
       await pc.addIceCandidate(candidate);
     }
   });
 
+  // When client send start record
+  socket.on("start_record", async () => {
+    outputFileStream = new WavFileWriter(`./audio/${socket.id}.wav`, {
+      sampleRate: 48000,
+      bitDepth: 16,
+      channels: 1,
+    });
+
+    sink = new RTCAudioSink(audioTrack);
+    sink.ondata = ({ samples: { buffer } }) => {
+      if (buffer && outputFileStream) {
+        outputFileStream.write(Buffer.from(buffer));
+      }
+    };
+  });
+
+  // When client send stop record
+  socket.on("stop_record", async () => {
+    outputFileStream.end();
+    sink.stop();
+  });
+
+  // When disconnect end the streaming
   socket.on("disconnect", () => {
     console.log("disconnect");
     if (outputFileStream) {
@@ -50,21 +77,9 @@ io.on("connection", (socket) => {
     }
   });
 
+  // When new audio track is added, then assign audio track
   pc.ontrack = (event) => {
-    outputFileStream = new WavFileWriter(`./audio/${socket.id}.wav`, {
-      sampleRate: 48000,
-      bitDepth: 16,
-      channels: 1,
-    });
-
-    console.log(event.streams);
-    let audioTrack = event.streams[0].getAudioTracks()[0];
-    sink = new RTCAudioSink(audioTrack);
-    sink.ondata = ({ samples: { buffer } }) => {
-      if (buffer && outputFileStream) {
-        outputFileStream.write(Buffer.from(buffer));
-      }
-    };
+    audioTrack = event.streams[0].getAudioTracks()[0];
   };
 });
 
