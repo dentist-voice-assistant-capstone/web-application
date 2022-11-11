@@ -127,23 +127,24 @@ const AudioStreamingPage = () => {
     };
     const pc = new RTCPeerConnection(configuration);
 
-    // In case of needing to re-exchange SDP between the client and the server (negotiation) =====
-    // pc.onnegotiationneeded = async () => {
-    //   try {
-    //     await pc.setLocalDescription(await pc.createOffer());
-    //     // CODE HERE: send the offer to the server via socket.io
-    //     //
-    //   } catch (err) {
-    //     alert(err);
-    //   }
-    // };
-    // listen for local ICE candidates on the local RTCPeerConnection ===========================
+    // listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
     pc.onicecandidate = ({ candidate }) => {
       if (candidate) {
-        // CODE HERE: send the event.candidate to the server via socket.io
-        //
+        socket.emit("candidate", candidate);
       }
     };
+
+    // In case of needing to re-exchange SDP between the client and the server (negotiation)
+    pc.onnegotiationneeded = async () => {
+      try {
+        await pc.setLocalDescription(await pc.createOffer());
+        // sending offer to server
+        socket.emit("offer", pc.localDescription);
+      } catch (err) {
+        alert(err);
+      }
+    };
+
     // listen for connection state change ========================================================
     pc.onconnectionstatechange = (event) => {
       if (pc.connectionState === "connected") {
@@ -154,30 +155,45 @@ const AudioStreamingPage = () => {
     // ============================================================================================
     console.log("peerConnection created!");
 
-    // 2) get the localStream
-    const lStream = await navigator.mediaDevices.getUserMedia({
-      video: false,
-      audio: true,
-    });
-    const audioTracks = lStream.getAudioTracks();
-    if (audioTracks.length > 0) {
-      console.log(`Using audio device: ${audioTracks[0].label}`);
-    } else {
-      console.log("No audio");
-    }
+    // 2) get the localStream and then add the tracks from the localStream toi the peerConnection
+    const lStream = await navigator.mediaDevices
+      .getUserMedia({
+        video: false,
+        audio: true,
+      })
+      .then((mediaStream) => {
+        mediaStream.getTracks().forEach((track) => {
+          pc.addTrack(track, mediaStream);
+        });
+        console.log("add track finished");
+      });
 
-    // 3) adding tracks from localStream to the peerConneciton
-    lStream.getTracks().forEach((track) => {
-      pc.addTrack(track, lStream);
-    });
-    console.log("finish adding tracks");
+    // 3) creating offer and send offer to server via socket.io
+    // const offer = await pc.createOffer();
+    // await pc.setLocalDescription(offer);
+    // console.log("sending offer to server", offer);
+    // socket.emit("offer", offer);
 
-    // 4) creating offer and send offer to server
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-    console.log(offer);
-    // CODE HERE: send the offer to the sever via socket.io
-    //
+    // 4) waiting for answer event from client via socket.io
+    socket.on("answer", async (answer) => {
+      console.log("received answer from server", answer);
+      // if (pc.signalingState === "stable") {
+      //   console.log("rejected answer");
+      //   return;
+      // }
+      try {
+        await pc.setRemoteDescription(answer);
+        console.log("finish setting answer");
+      } catch (err) {
+        alert(err);
+      }
+    });
+
+    socket.on("candidate", async (candidate) => {
+      if (candidate) {
+        await pc.addIceCandidate(candidate);
+      }
+    });
 
     setPeerConnection(pc);
     setLocalStream(lStream);
@@ -192,7 +208,7 @@ const AudioStreamingPage = () => {
         if (first) {
           setGowajeeProb(gowajee_prob);
         }
-        console.log(gowajee_prob, "streaming = ", isStreaming);
+        // console.log(gowajee_prob, "streaming = ", isStreaming);
         // if gowajee_prob > GOWAJEE_THRESH, toggle the streaming
         if (gowajee_prob > GOWAJEE_THRESH) {
           if (first) {
@@ -215,7 +231,10 @@ const AudioStreamingPage = () => {
   };
 
   const toggleIsStreaming = () => {
-    recognizer.stopListening();
+    if (recognizer.isListening) {
+      recognizer.stopListening();
+    }
+
     setIsListening(false);
 
     if (isStreaming) {
@@ -240,20 +259,13 @@ const AudioStreamingPage = () => {
      * with predefined model's weight and metadata. This function will be called
      * when the page is loaded.
      */
-    if (!recognizer) {
-      initiateRecognizer();
-    }
+    initiateRecognizer();
+
     /* This function is used to initiate the Client's RTCPeerConnection in
      * order to stream audio to the backend server.
      */
-    if (!peerConnection) {
-      initiateClientPeerConnection();
-    }
-
-    /* For socket to listening incoming messages */
-    // CODE HERE: listen for incoming answer
-    // CODE HERE: listen for incoming candidate
-  }, [recognizer, peerConnection]);
+    initiateClientPeerConnection();
+  }, []);
 
   // if the model is ready, start listening
   if (recognizer && !isListening && !isForcedStopListening) {
@@ -307,6 +319,18 @@ const AudioStreamingPage = () => {
           </div>
 
           <p className={classes["audioStreaming__items-header"]}>
+            Socket Connection:
+          </p>
+          <div
+            className={`${classes["audioStreaming__items-status"]} ${
+              socket.connected === true ? classes["pos"] : classes["neg"]
+            }`}
+          >
+            {socket.connected ? socket.id : "Socket Disconnected"}
+          </div>
+          <div></div>
+
+          <p className={classes["audioStreaming__items-header"]}>
             RTCPeerConnection:
           </p>
           <div
@@ -318,7 +342,9 @@ const AudioStreamingPage = () => {
           >
             {peerConnection ? peerConnection.connectionState : "Not Ready"}
           </div>
+          <div></div>
         </div>
+
         <br></br>
 
         <div

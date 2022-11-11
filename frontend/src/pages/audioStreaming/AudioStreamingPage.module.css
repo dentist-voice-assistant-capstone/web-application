@@ -9,7 +9,7 @@
 
 .audioStreaming__items-grid {
   display: grid;
-  grid-template-columns: 250px 200px 150px;
+  grid-template-columns: 250px 250px 150px;
   grid-column-gap: 2.5rem;
   grid-row-gap: 0.5rem;
 }
