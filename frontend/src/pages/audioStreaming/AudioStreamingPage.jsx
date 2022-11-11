@@ -280,25 +280,27 @@ const AudioStreamingPage = () => {
   }, []);
 
   // if the model is ready, start listening
-  if (recognizer && !isListening && !isForcedStopListening) {
+  const isReadyToListenGowajee =
+    !!recognizer && !isListening && !isForcedStopListening;
+  if (isReadyToListenGowajee) {
     recognizerListen();
-  } else if (recognizer && isListening && isForcedStopListening) {
+  } else if (!!recognizer && isListening && isForcedStopListening) {
     recognizer.stopListening();
     setGowajeeProb(null);
     setIsListening(false);
   }
 
   // if the RTCPeerConnection is ready, start streaming
-  if (
-    peerConnection &&
+  const isReadyToStream =
+    !!peerConnection &&
     peerConnection.connectionState === "connected" &&
     localStream &&
     !isStreaming &&
-    !isForcedStopStreaming
-  ) {
+    !isForcedStopStreaming;
+  if (isReadyToStream) {
     startStreaming();
   }
-
+  // if the stream is streaming and has been forced to stop
   if (localStream && isStreaming && isForcedStopStreaming) {
     stopStreaming();
   }
@@ -376,18 +378,10 @@ const AudioStreamingPage = () => {
 
         <div
           className={`${classes["audioStreaming__items-status"]} ${
-            peerConnection &&
-            peerConnection.connectionState === "connected" &&
-            isStreaming
-              ? classes["pos"]
-              : classes["neg"]
+            isStreaming ? classes["pos"] : classes["neg"]
           }`}
         >
-          {peerConnection &&
-          peerConnection.connectionState === "connected" &&
-          isStreaming
-            ? "Streaming"
-            : "Not Streaming"}
+          {isStreaming ? "Streaming" : "Not Streaming"}
         </div>
         <div></div>
 
