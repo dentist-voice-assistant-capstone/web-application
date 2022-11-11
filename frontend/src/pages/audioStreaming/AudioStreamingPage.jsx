@@ -87,6 +87,7 @@ const AudioStreamingPage = () => {
 
   /* states for enable/disable streaming */
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isForcedStopStreaming, setIsForedStopStreaming] = useState(false);
 
   /* states for error modals */
   const [socketConnectionErrorModal, setSocketConnectionErrorModal] =
@@ -145,18 +146,11 @@ const AudioStreamingPage = () => {
       }
     };
 
-    // listen for connection state change ========================================================
-    pc.onconnectionstatechange = (event) => {
-      if (pc.connectionState === "connected") {
-        // this will be triggered if the SDPs have been successfully exchanged between client and server
-        console.log("PEERS CONNECTED");
-      }
-    };
-    // ============================================================================================
     console.log("peerConnection created!");
 
-    // 2) get the localStream and then add the tracks from the localStream toi the peerConnection
-    const lStream = await navigator.mediaDevices
+    // 2) get the localStream and then add the tracks from the localStream to the peerConnection
+    // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
+    await navigator.mediaDevices
       .getUserMedia({
         video: false,
         audio: true,
@@ -166,21 +160,21 @@ const AudioStreamingPage = () => {
           pc.addTrack(track, mediaStream);
         });
         console.log("add track finished");
+        setLocalStream(mediaStream);
       });
 
-    // 3) creating offer and send offer to server via socket.io
-    // const offer = await pc.createOffer();
-    // await pc.setLocalDescription(offer);
-    // console.log("sending offer to server", offer);
-    // socket.emit("offer", offer);
+    // listen for connectionstate change ========================================================
+    pc.onconnectionstatechange = (event) => {
+      if (pc.connectionState === "connected") {
+        // start streaming
+        console.log("PEERS CONNECTED");
+      }
+    };
+    // ============================================================================================
 
-    // 4) waiting for answer event from client via socket.io
+    // 3) waiting for answer event from client via socket.io
     socket.on("answer", async (answer) => {
       console.log("received answer from server", answer);
-      // if (pc.signalingState === "stable") {
-      //   console.log("rejected answer");
-      //   return;
-      // }
       try {
         await pc.setRemoteDescription(answer);
         console.log("finish setting answer");
@@ -196,7 +190,6 @@ const AudioStreamingPage = () => {
     });
 
     setPeerConnection(pc);
-    setLocalStream(lStream);
   };
 
   const recognizerListen = async () => {
@@ -212,7 +205,7 @@ const AudioStreamingPage = () => {
         // if gowajee_prob > GOWAJEE_THRESH, toggle the streaming
         if (gowajee_prob > GOWAJEE_THRESH) {
           if (first) {
-            toggleIsStreaming();
+            toggleIsForcedStopStreaming();
           } else {
             console.log("skipped!");
           }
@@ -230,21 +223,40 @@ const AudioStreamingPage = () => {
     );
   };
 
-  const toggleIsStreaming = () => {
+  // FUNCTIONS for handling start/stop/toggle streaming ===============
+  const startStreaming = () => {
+    console.log("start streaming");
+    localStream.getTracks().forEach((track) => {
+      track.enabled = true;
+    });
+    socket.emit("start_record");
+    setIsStreaming(true);
+  };
+
+  const stopStreaming = () => {
+    console.log("stop streaming");
+    socket.emit("stop_record");
+    localStream.getTracks().forEach((track) => {
+      track.enabled = false;
+    });
+
+    setIsStreaming(false);
+  };
+
+  const toggleIsForcedStopStreaming = () => {
     if (recognizer.isListening) {
       recognizer.stopListening();
     }
-
     setIsListening(false);
 
-    if (isStreaming) {
-      console.log("Stop Streaming");
-      setIsStreaming(false);
+    if (isForcedStopStreaming) {
+      setIsForedStopStreaming(false);
     } else {
-      console.log("Start Streaming");
-      setIsStreaming(true);
+      setIsForedStopStreaming(true);
     }
   };
+
+  //===================================================================
 
   const toggleIsForcedStopListening = () => {
     if (isForcedStopListening) {
@@ -274,6 +286,21 @@ const AudioStreamingPage = () => {
     recognizer.stopListening();
     setGowajeeProb(null);
     setIsListening(false);
+  }
+
+  // if the RTCPeerConnection is ready, start streaming
+  if (
+    peerConnection &&
+    peerConnection.connectionState === "connected" &&
+    localStream &&
+    !isStreaming &&
+    !isForcedStopStreaming
+  ) {
+    startStreaming();
+  }
+
+  if (localStream && isStreaming && isForcedStopStreaming) {
+    stopStreaming();
   }
 
   return (
@@ -349,10 +376,18 @@ const AudioStreamingPage = () => {
 
         <div
           className={`${classes["audioStreaming__items-status"]} ${
-            isStreaming ? classes["pos"] : classes["neg"]
+            peerConnection &&
+            peerConnection.connectionState === "connected" &&
+            isStreaming
+              ? classes["pos"]
+              : classes["neg"]
           }`}
         >
-          {isStreaming ? "Streaming" : "Not Streaming"}
+          {peerConnection &&
+          peerConnection.connectionState === "connected" &&
+          isStreaming
+            ? "Streaming"
+            : "Not Streaming"}
         </div>
         <div></div>
 
