@@ -1,5 +1,12 @@
 .direction {
+  width: 100px;
   display: flex;
   flex-direction: column;
   gap: 28px;
+}
+
+.title {
+  width: 100%;
+  height: 32px;
+  text-align: center;
 }

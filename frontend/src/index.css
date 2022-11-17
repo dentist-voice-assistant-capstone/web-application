@@ -1,4 +1,4 @@
-@import "../src/components/record/information/CustomDropdown.module.css";
+@import "../src/components/record/information/CustomRecord.module.css";
 
 :root {
   --primary-color-error: #ef5350;
