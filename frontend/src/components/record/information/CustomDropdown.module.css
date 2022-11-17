@@ -21,3 +21,29 @@
 .show {
   width: 100%;
 }
+
+.checkbox {
+  display: inline-block;
+  border-radius: 0.375rem;
+  height: 32px;
+  width: 32px;
+  background: #fff;
+  border: 2px #dedede solid;
+  margin-right: 4px;
+}
+
+.checkbox--active {
+  border-color: #ef5350;
+  background: #ef5350;
+  border: 2px #dedede solid;
+}
+
+input[type="checkbox"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
