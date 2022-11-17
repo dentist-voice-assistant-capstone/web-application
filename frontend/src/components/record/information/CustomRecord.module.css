@@ -1,11 +1,6 @@
-.smallBox {
-  width: 32px;
-  height: 32px;
-}
-
 .btn {
   width: 100%;
-  height: 32px;
+  height: 100%;
 }
 
 .dropdown-toggle::after {

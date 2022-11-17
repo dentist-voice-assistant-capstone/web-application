@@ -1,9 +1,4 @@
-.direction {
-  /* position: flex-center; */
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-  /* margin: 5px; */
-  /* background-color: aqua; */
-  /* background-color: #f1f1f1; */
+.a {
+  width: 100px;
+  height: 100px;
 }

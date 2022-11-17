@@ -1,5 +1,6 @@
 import RecordBuccalInformation from "./RecordBuccalInformation";
 import RecordLingualInformation from "./RecordLingualInformation";
+
 import classes from "./RecordSection.module.css";
 
 const RecordSection = ({ id }) => {

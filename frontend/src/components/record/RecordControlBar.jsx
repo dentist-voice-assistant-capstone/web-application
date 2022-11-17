@@ -5,8 +5,6 @@ import Navbar from "react-bootstrap/Navbar";
 import classes from "./RecordControlBar.module.css";
 
 function RecordControlBar(props) {
-  console.log(props);
-
   // states for handling initial fetching user's data
   const [isPaused, setIsPaused] = useState(false);
 
