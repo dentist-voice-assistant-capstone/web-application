@@ -1,0 +1,23 @@
+.smallBox {
+  width: 32px;
+  height: 32px;
+}
+
+.btn {
+  width: 100%;
+  height: 32px;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.dropdown-item {
+  font-size: 14px;
+  text-align: center !important;
+  width: 99% !important;
+}
+
+.show {
+  width: 100%;
+}

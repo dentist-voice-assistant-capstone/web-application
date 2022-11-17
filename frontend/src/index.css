@@ -1,3 +1,5 @@
+@import "../src/components/record/information/CustomDropdown.module.css";
+
 :root {
   --primary-color-error: #ef5350;
   --secondary-color-error: #e57373;
