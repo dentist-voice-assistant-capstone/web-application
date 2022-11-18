@@ -1,4 +1,11 @@
 .a {
+  /* width: 100px;
+  height: 100px; */
+  padding-top: 5%;
+  position: absolute;
+  left: 90%;
+}
+.box {
   width: 100px;
   height: 100px;
 }

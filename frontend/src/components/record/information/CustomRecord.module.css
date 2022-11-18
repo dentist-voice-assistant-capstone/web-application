@@ -10,6 +10,8 @@
 .dropdown-item {
   font-size: 14px;
   text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
   width: 99% !important;
 }
 

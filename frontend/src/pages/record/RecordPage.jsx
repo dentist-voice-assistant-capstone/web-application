@@ -18,9 +18,9 @@ const RecordPage = () => {
   return (
     <div className="landing-page">
       <TopInformationBar />
-      <div className="centered">
+      <div className={classes.a}>
         <DropdownButton
-          className={classes.smallbox}
+          className={classes.box}
           title={quadrant}
           onSelect={handleSelect}
         >
@@ -29,6 +29,8 @@ const RecordPage = () => {
           <Dropdown.Item eventKey="3">3</Dropdown.Item>
           <Dropdown.Item eventKey="4">4</Dropdown.Item>
         </DropdownButton>
+      </div>
+      <div className="centered">
         {quadrant == 1 && <RecordInformation quadrant={1} />}
         {quadrant == 2 && <RecordInformation quadrant={2} />}
         {quadrant == 3 && <RecordInformation quadrant={3} />}
