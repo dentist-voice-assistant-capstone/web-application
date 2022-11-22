@@ -7,7 +7,8 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   function startHandler() {
-    startAPIHandler();
+    startAPIHandler(); // just console.log("starting")
+    navigate("/record");
   }
 
   function editAccountMenuOnClickHandler() {

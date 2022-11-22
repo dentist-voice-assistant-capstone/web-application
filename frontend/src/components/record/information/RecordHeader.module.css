@@ -1,0 +1,38 @@
+.direction {
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.side_space {
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 216px;
+}
+
+.side_direction {
+  /* width: 132px; */
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.title {
+  width: 100%;
+  height: 32px;
+  text-align: center;
+}
+.side {
+  display: flex;
+  width: 32px;
+  height: 148px;
+  background: #dedede;
+  text-orientation: upright;
+  writing-mode: vertical-rl;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
