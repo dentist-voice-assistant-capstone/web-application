@@ -49,7 +49,7 @@
   width: 90px;
 }
 
-.recordControl {
+.recordControlContainer {
   display: flex;
   flex-wrap: inherit;
   align-items: center;

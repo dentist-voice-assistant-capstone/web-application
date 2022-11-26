@@ -14,7 +14,7 @@ function RecordControlBar(props) {
 
   return (
     <Navbar bg="black" variant="dark" fixed="bottom">
-      <div className={classes.recordControl}>
+      <div className={classes.recordControlContainer}>
         <Navbar.Brand className={classes.actions}>
           <button className={classes.recordButton} onClick={pauseResumeHandler}>
             {isPaused ? "Resume" : "Pause"}
