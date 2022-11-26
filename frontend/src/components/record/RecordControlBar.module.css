@@ -49,6 +49,11 @@
   width: 90px;
 }
 
-.container {
+.recordControl {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
   margin-left: 31%;
+  width: 100%;
 }
