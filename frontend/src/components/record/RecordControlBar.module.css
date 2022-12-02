@@ -36,6 +36,8 @@
   padding-left: 6px;
   padding-right: 6px;
   width: 90px;
+  margin-left: 17%;
+  position: fixed;
 }
 
 .finishButton {
@@ -56,4 +58,38 @@
   justify-content: space-between;
   margin-left: 31%;
   width: 100%;
+}
+
+.blinking {
+  display: flex;
+  height: auto;
+  width: auto;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 37%;
+  color: transparent;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  animation: blinkingBackground 1s infinite;
+}
+@keyframes blinkingBackground {
+  0% {
+    background-color: #000000;
+  }
+  /* 25% {
+    background-color: #480000;
+  }
+  50% {
+    background-color: #780008;
+  }
+  75% {
+    background-color: #c50000;
+  } */
+  100% {
+    background-color: #ff0000;
+  }
 }

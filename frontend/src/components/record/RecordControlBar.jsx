@@ -19,6 +19,12 @@ function RecordControlBar(props) {
           <button className={classes.recordButton} onClick={pauseResumeHandler}>
             {isPaused ? "Resume" : "Pause"}
           </button>
+          {!isPaused && (
+            <div className={classes.blinking}>
+              <text>test</text>
+            </div>
+          )}
+
           <button className={classes.finishButton}>Finish</button>
         </Navbar.Brand>
       </div>
