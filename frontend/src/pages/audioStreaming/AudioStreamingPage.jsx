@@ -1,64 +1,8 @@
-// import { ReactMediaRecorder } from "react-media-recorder";
-// import NavBar from "../../components/ui/NavBar";
-
-// const AudioStreamingPage = () => {
-//   return (
-//     <div>
-//       <ReactMediaRecorder
-//         audio
-//         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-//           <div>
-//             <p>{status}</p>
-//             <button onClick={startRecording}>Start Recording</button>
-//             <div />
-//             <button onClick={stopRecording}>Stop Recording</button>
-//             <div />
-//             <video src={mediaBlobUrl} controls autoPlay loop />
-//           </div>
-//         )}
-//       />
-//     </div>
-//   );
-// };
-
-// import { useReactMediaRecorder } from "react-media-recorder";
-// import classes from "./AudioStreamingPage.module.css";
-
-// const AudioStreamingPage = () => {
-//   const { status, startRecording, stopRecording, mediaBlobUrl } =
-//     useReactMediaRecorder({ audio: true });
-
-//   console.log(status);
-//   console.log(mediaBlobUrl);
-
-//   return (
-//     <div>
-//       <p>{status}</p>
-//       <button
-//         type="submit"
-//         className={classes.audio_record_start}
-//         onClick={startRecording}
-//       >
-//         Start
-//       </button>
-//       <div />
-//       <button
-//         type="submit"
-//         className={classes.audio_record_stop}
-//         onClick={stopRecording}
-//       >
-//         Stop
-//       </button>
-//       <div />
-//       <video src={mediaBlobUrl} controls autoPlay loop />
-//     </div>
-//   );
-// };
-
 import { Fragment, useState, useEffect } from "react";
 
 import Modal from "../../components/ui/Modal";
 
+/* Import css modules */
 import classes from "./AudioStreamingPage.module.css";
 
 /* Import modules for using sockets */
@@ -68,22 +12,36 @@ import io from "socket.io-client";
 import * as tf from "@tensorflow/tfjs";
 import * as speechCommands from "@tensorflow-models/speech-commands";
 
+// [Constants] ================================================================
 /* probability threshold for recognizer to detect GOWAJEE keywords */
 const GOWAJEE_THRESH = 0.8;
 
-/* connection to socket server */
-const socket = io.connect("http://localhost:3001");
+/* URL to connect to backend streaming server */
+const URL_BACKEND_STREAMING = "http://localhost:3001";
+
+/* RTC configuration object */
+const RTC_CONFIG = {
+  iceServers: [
+    {
+      urls: ["stun:stun.l.google.com:19302"],
+    },
+  ],
+};
+// ============================================================================
 
 const AudioStreamingPage = () => {
+  /* states for socket.io connection */
+  const [socket, setSocket] = useState(null);
+
+  /* states for WebRTC Connection (streaming audio to backend) */
+  const [peerConnection, setPeerConnection] = useState(null);
+  const [localStream, setLocalStream] = useState(null);
+
   /* states for speech recognizer model */
   const [recognizer, setRecognizer] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [isForcedStopListening, setIsForcredStopListening] = useState(false);
   const [gowajeeProb, setGowajeeProb] = useState(null);
-
-  /* states for WebRTC Connection (streaming audio to backend) */
-  const [peerConnection, setPeerConnection] = useState(null);
-  const [localStream, setLocalStream] = useState(null);
 
   /* states for enable/disable streaming */
   const [isStreaming, setIsStreaming] = useState(false);
@@ -92,6 +50,9 @@ const AudioStreamingPage = () => {
   /* states for error modals */
   const [socketConnectionErrorModal, setSocketConnectionErrorModal] =
     useState(null);
+
+  /* determine the socket's connection status */
+  const isSocketConnect = !!socket ? socket.connected : false; // false - no connection, true - connected
 
   // For showing error modal if cannot connect to backend server ==================
   // if (!socket.connected && !socketConnectionErrorModal) {
@@ -102,53 +63,57 @@ const AudioStreamingPage = () => {
   // }
   // ==============================================================================
 
-  const initiateRecognizer = async () => {
-    /* load speechRecognizer model with its metadata and pre-trained weight
-     * noted that the metadata and the weight are kept in the public folder, to prevent being processed by react
-     */
-    const r = speechCommands.create(
-      "BROWSER_FFT",
-      null,
-      "http://localhost:5000/wakewordWeight/model.json",
-      "http://localhost:5000/wakewordWeight/metadata.json"
-    );
-    await r.ensureModelLoaded();
-    setRecognizer(r);
-  };
+  const initiateSocketandClientPeerConnection = async () => {
+    /* 1) initiate RTCPeerConnectionObject and socket object */
+    const pc = new RTCPeerConnection(RTC_CONFIG);
+    const s = await io.connect(URL_BACKEND_STREAMING);
 
-  const initiateClientPeerConnection = async () => {
-    // 1) initiate RTCPeerConnection
-    // RTCPeerConnection configuration - STUN servers, ...
-    const configuration = {
-      iceServers: [
-        {
-          urls: ["stun:stun.l.google.com:19302"],
-        },
-      ],
-    };
-    const pc = new RTCPeerConnection(configuration);
+    /* 2) set event for socket */
+    // receiving answer from backend streaming server
+    s.on("answer", async (answer) => {
+      console.log("received answer from server", answer);
+      try {
+        await pc.setRemoteDescription(answer);
+        console.log("finish setting answer");
+      } catch (err) {
+        alert(err);
+      }
+    });
+    // receiving candidate from backend streaming server
+    s.on("candidate", async (candidate) => {
+      if (candidate) {
+        await pc.addIceCandidate(candidate);
+      }
+    });
 
+    /* 3) set event for RTC PeerConnection */
     // listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
     pc.onicecandidate = ({ candidate }) => {
       if (candidate) {
-        socket.emit("candidate", candidate);
+        s.emit("candidate", candidate);
       }
     };
-
     // In case of needing to re-exchange SDP between the client and the server (negotiation)
     pc.onnegotiationneeded = async () => {
       try {
         await pc.setLocalDescription(await pc.createOffer());
         // sending offer to server
-        socket.emit("offer", pc.localDescription);
+        s.emit("offer", pc.localDescription);
       } catch (err) {
         alert(err);
       }
     };
-
+    // listen for connectionstate change ========================================================
+    pc.onconnectionstatechange = (event) => {
+      if (pc.connectionState === "connected") {
+        // start streaming
+        console.log("PEERS CONNECTED");
+      }
+    };
+    // ==========================================================================================
     console.log("peerConnection created!");
 
-    // 2) get the localStream and then add the tracks from the localStream to the peerConnection
+    /* 4) get the localStream and then add the tracks from the localStream to the peerConnection */
     // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
     await navigator.mediaDevices
       .getUserMedia({
@@ -163,33 +128,22 @@ const AudioStreamingPage = () => {
         setLocalStream(mediaStream);
       });
 
-    // listen for connectionstate change ========================================================
-    pc.onconnectionstatechange = (event) => {
-      if (pc.connectionState === "connected") {
-        // start streaming
-        console.log("PEERS CONNECTED");
-      }
-    };
-    // ============================================================================================
-
-    // 3) waiting for answer event from client via socket.io
-    socket.on("answer", async (answer) => {
-      console.log("received answer from server", answer);
-      try {
-        await pc.setRemoteDescription(answer);
-        console.log("finish setting answer");
-      } catch (err) {
-        alert(err);
-      }
-    });
-
-    socket.on("candidate", async (candidate) => {
-      if (candidate) {
-        await pc.addIceCandidate(candidate);
-      }
-    });
-
     setPeerConnection(pc);
+    setSocket(s);
+  };
+
+  const initiateRecognizer = async () => {
+    /* load speechRecognizer model with its metadata and pre-trained weight
+     * noted that the metadata and the weight are kept in the public folder, to prevent being processed by react
+     */
+    const r = speechCommands.create(
+      "BROWSER_FFT",
+      null,
+      "http://localhost:5000/wakewordWeight/model.json",
+      "http://localhost:5000/wakewordWeight/metadata.json"
+    );
+    await r.ensureModelLoaded();
+    setRecognizer(r);
   };
 
   const recognizerListen = async () => {
@@ -256,7 +210,6 @@ const AudioStreamingPage = () => {
       setIsForedStopStreaming(true);
     }
   };
-
   //===================================================================
 
   const toggleIsForcedStopListening = () => {
@@ -274,10 +227,10 @@ const AudioStreamingPage = () => {
      */
     initiateRecognizer();
 
-    /* This function is used to initiate the Client's RTCPeerConnection in
-     * order to stream audio to the backend server.
+    /* This function is used to initiate socket.io connection
+     * and the Client's RTCPeerConnection in order to stream audio to the backend server.
      */
-    initiateClientPeerConnection();
+    initiateSocketandClientPeerConnection();
   }, []);
 
   // if the model is ready, start listening
@@ -353,10 +306,10 @@ const AudioStreamingPage = () => {
           </p>
           <div
             className={`${classes["audioStreaming__items-status"]} ${
-              socket.connected === true ? classes["pos"] : classes["neg"]
+              isSocketConnect ? classes["pos"] : classes["neg"]
             }`}
           >
-            {socket.connected ? socket.id : "Socket Disconnected"}
+            {isSocketConnect ? socket.id : "Socket Disconnected"}
           </div>
           <div></div>
 
