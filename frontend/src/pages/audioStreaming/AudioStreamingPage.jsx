@@ -69,7 +69,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as speechCommands from "@tensorflow-models/speech-commands";
 
 /* probability threshold for recognizer to detect GOWAJEE keywords */
-const GOWAJEE_THRESH = 0.9;
+const GOWAJEE_THRESH = 0.8;
 
 /* connection to socket server */
 const socket = io.connect("http://localhost:3001");
@@ -201,10 +201,11 @@ const AudioStreamingPage = () => {
         if (first) {
           setGowajeeProb(gowajee_prob);
         }
-        // console.log(gowajee_prob, "streaming = ", isStreaming);
+        console.log(gowajee_prob);
         // if gowajee_prob > GOWAJEE_THRESH, toggle the streaming
         if (gowajee_prob > GOWAJEE_THRESH) {
           if (first) {
+            console.log("Gowajee Detected");
             toggleIsForcedStopStreaming();
           } else {
             console.log("skipped!");
