@@ -8,13 +8,11 @@ import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 import classes from "./TopInformationBar.module.css";
 
 function TopInformationBar(props) {
-  console.log(props);
-
   // states for handling initial fetching user's data
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
   const [userData, setUserData] = useState(null);
-  const [patienceData, ] = useState("55555555");
+  const [patienceData] = useState("55555555");
   const [isLoaded, setIsLoaded] = useState(false);
 
   const current = new Date();

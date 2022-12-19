@@ -45,9 +45,8 @@
   border-style: none;
   border-radius: 5px;
   margin: auto;
-  margin-right: 10%;
-  padding-left: 6px;
-  padding-right: 6px;
+  margin-right: 8%;
+  width: 90px;
 }
 
 .container {
