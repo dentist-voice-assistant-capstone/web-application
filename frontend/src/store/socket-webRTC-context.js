@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { RTC_CONFIG, URL_BACKEND_STREAMING } from "../utils/constants";
 
 /* Import modules for using sockets */
@@ -7,9 +7,12 @@ import io from "socket.io-client";
 const SocketWebRTCContext = React.createContext({
   socket: null,
   peerConnection: null,
-  isSocketConnected: false,
+  isPaused: false,
   isAudioStreaming: false,
-  initiateConnection: () => { }
+  initiateConnection: () => { },
+  startAudioStreaming: () => { },
+  stopAudioStreaming: () => { },
+  pauseResumeHandler: () => { }
 })
 
 export const SocketWebRTCContextProvider = (props) => {
@@ -21,12 +24,25 @@ export const SocketWebRTCContextProvider = (props) => {
   const [peerConnection, setPeerConnection] = useState(null);
   const [localStream, setLocalStream] = useState(null);
 
-  /* states for enable/disable streaming */
-  const [isAudioStreaming, setIsAudioStreaming] = useState(null);
+  /* states for control streaming */
+  const [isPaused, setIsPaused] = useState(false);
+  const pauseResumeHandler = () => {
+    setIsPaused((prevIsPaused) => {
+      return !prevIsPaused;
+    });
+  };
+
+  const [isAudioStreaming, setIsAudioStreaming] = useState(false);
   // ================================================================
 
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false
+
+  /* determine that the connection is ready or not ? */
+  const isConnectionReady = !!peerConnection &&
+    peerConnection.connectionState === "connected" &&
+    !!socket &&
+    isSocketConnected;
 
   const initiateConnection = async () => {
     /* 1) initiate RTCPeerConnectionObject and socket object */
@@ -73,6 +89,8 @@ export const SocketWebRTCContextProvider = (props) => {
       if (pc.connectionState === "connected") {
         // start streaming
         console.log("PEERS CONNECTED");
+        // update the peerConnection to re update the isConnectionReady variable
+        setPeerConnection(pc);
       }
     };
 
@@ -97,12 +115,52 @@ export const SocketWebRTCContextProvider = (props) => {
     console.log(`socket connected, id = ${s.id}`)
   }
 
+  /* This function will be called when the connection is ready or
+   * the user resume the recording process after paused.
+   */
+  const startAudioStreaming = () => {
+    console.log("start streaming");
+
+    localStream.getTracks().forEach((track) => {
+      track.enabled = true;
+    });
+    socket.emit("start_record");
+    setIsAudioStreaming(true);
+  }
+
+  /* This function will be called when the user pause the recording process
+   * or the recording process is finished.
+  */
+  const stopAudioStreaming = () => {
+    console.log("stop streaming");
+
+    localStream.getTracks().forEach((track) => {
+      track.enabled = false;
+    });
+    socket.emit("stop_record");
+    setIsAudioStreaming(false);
+  }
+
+  if (isConnectionReady && !isPaused && !isAudioStreaming) {
+    startAudioStreaming();
+  } else if (isConnectionReady && isPaused && isAudioStreaming) {
+    stopAudioStreaming();
+  }
+
+  useEffect(() => {
+    initiateConnection();
+  }, [])
+
   const contextValue = {
     socket: socket,
     peerConnection: peerConnection,
-    isSocketConnected: isSocketConnected,
+    isPaused: isPaused,
     isAudioStreaming: isAudioStreaming,
-    initiateConnection: initiateConnection
+    isConnectionReady: isConnectionReady,
+    initiateConnection: initiateConnection,
+    startAudioStreaming: startAudioStreaming,
+    stopAudioStreaming: stopAudioStreaming,
+    pauseResumeHandler: pauseResumeHandler
   };
 
   return (
@@ -113,3 +171,4 @@ export const SocketWebRTCContextProvider = (props) => {
 };
 
 export default SocketWebRTCContext
+

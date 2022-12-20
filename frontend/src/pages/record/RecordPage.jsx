@@ -21,13 +21,6 @@ const RecordPage = () => {
     setQuadrant(e);
   };
 
-  useEffect(() => {
-    /* This function is used to initiate socket.io connection
-     * and the Client's RTCPeerConnection in order to stream audio to the backend server.
-     */
-    socketWebRTCCtx.initiateConnection();
-  }, []);
-
   return (
     <div className="landing-page">
       <TopInformationBar />
@@ -61,7 +54,10 @@ const RecordPage = () => {
           <RecordInformation quadrant={4} />
         )} */}
       </div>
-      <RecordControlBar />
+      <RecordControlBar
+        isPaused={socketWebRTCCtx.isPaused}
+        pauseResumeHandler={socketWebRTCCtx.pauseResumeHandler}
+      />
     </div>
   );
 };
