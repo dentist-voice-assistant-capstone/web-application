@@ -5,21 +5,13 @@ import EmailConfirmPage from "./pages/register/EmailConfirmPage";
 import AccountEditPage from "./pages/account/AccountEditPage";
 import AudioStreamingPage from "./pages/audioStreaming/AudioStreamingPage";
 import RecordPage from "./pages/record/RecordPage";
-import { SocketWebRTCContextProvider } from "./store/socket-webRTC-context";
 
 export const ROUTES = [
   { path: "/", element: <HomePage /> },
   { path: "*", element: <HomePage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
-  {
-    path: "/record",
-    element: (
-      <SocketWebRTCContextProvider>
-        <RecordPage />
-      </SocketWebRTCContextProvider>
-    ),
-  },
+  { path: "/record", element: <RecordPage /> },
 ];
 
 export const ROUTES_NOT_LOGIN = [
@@ -28,14 +20,7 @@ export const ROUTES_NOT_LOGIN = [
   { path: "/login", element: <LoginPage /> },
   { path: "*", element: <LoginPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
-  {
-    path: "/record",
-    element: (
-      <SocketWebRTCContextProvider>
-        <RecordPage />
-      </SocketWebRTCContextProvider>
-    ),
-  }, //maybe delete later
+  { path: "/record", element: <RecordPage /> }, //maybe delete later
 ];
 
 export default ROUTES;

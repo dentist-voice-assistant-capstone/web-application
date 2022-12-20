@@ -10,16 +10,57 @@ import RecordControlBar from "../../components/record/RecordControlBar";
 
 import RecordInformation from "../../components/record/RecordInformation";
 
-import SocketWebRTCContext from "../../store/socket-webRTC-context";
+import {
+  initiateConnection,
+  startAudioStreaming,
+  stopAudioStreaming,
+} from "../../utils/socketWebRTCHandler";
 
 const RecordPage = () => {
-  /* React Context for handling socket and WebRTC Connection with backend streaming server */
-  const socketWebRTCCtx = useContext(SocketWebRTCContext);
+  // [States] ===============================================================
+  /* states for socket.io connection */
+  const [socket, setSocket] = useState(null);
 
+  /* states for WebRTC Connection (streaming audio to backend) */
+  const [peerConnection, setPeerConnection] = useState(null);
+  const [localStream, setLocalStream] = useState(null);
+
+  /* states for enable/disable streaming audio */
+  const [isAudioStreaming, setIsAudioStreaming] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const pauseResumeHandler = () => {
+    setIsPaused((prevIsPaused) => {
+      return !prevIsPaused;
+    });
+  };
+
+  /* states for quadrant */
   const [quadrant, setQuadrant] = useState("1");
   const handleSelect = (e) => {
     setQuadrant(e);
   };
+  // ========================================================================
+
+  /* determine the socket's connection status */
+  const isSocketConnected = !!socket ? socket.connected : false;
+
+  /* determine that the connection is ready or not ? */
+  const isConnectionReady =
+    !!peerConnection &&
+    peerConnection.connectionState === "connected" &&
+    !!socket &&
+    isSocketConnected;
+
+  /* pause/resume streaming logic */
+  if (isConnectionReady && !isPaused && !isAudioStreaming) {
+    startAudioStreaming(socket, localStream, setIsAudioStreaming);
+  } else if (isConnectionReady && isPaused && isAudioStreaming) {
+    stopAudioStreaming(socket, localStream, setIsAudioStreaming);
+  }
+
+  useEffect(() => {
+    initiateConnection(setSocket, setPeerConnection, setLocalStream);
+  }, []);
 
   return (
     <div className="landing-page">
@@ -55,8 +96,8 @@ const RecordPage = () => {
         )} */}
       </div>
       <RecordControlBar
-        isPaused={socketWebRTCCtx.isPaused}
-        pauseResumeHandler={socketWebRTCCtx.pauseResumeHandler}
+        isPaused={isPaused}
+        pauseResumeHandler={pauseResumeHandler}
       />
     </div>
   );
