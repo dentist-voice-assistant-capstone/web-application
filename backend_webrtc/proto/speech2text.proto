@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package gowajee.speech.speech2text;
+
+option cc_enable_arenas = true;
+option go_package = "api.gowajee.ai";
+
+// import "health.proto";
+import "audio.proto";
+import "decoder_type.proto";
+
+/*
+ * The GowajeeSpeechToText service provides two mechanisms for converting speech to text.
+ */
+service GowajeeSpeechToText {
+    // Transcribe expects a TranscribeRequest and returns a TranscribeResponse.
+    rpc Transcribe(TranscribeRequest) returns (TranscribeResponse) {}
+    // StreamingTranscribe is a non-blocking API call that allows audio data chunks to be fed to the server.
+    rpc StreamingTranscribe(stream StreamingTranscribeRequest) returns (stream StreamingTranscribeResponse) {}
+}
+
+
+message TranscribeRequest {
+    // Provides configuration for process request.
+    TranscribeConfig config = 1;
+    // The raw audio data. 
+    bytes audio_data = 2;
+}
+
+
+message StreamingTranscribeRequest {
+
+    // oneof streaming_request {
+
+    StreamingTranscribeConfig streaming_config = 1;
+    bytes audio_data = 2;
+    bool is_final = 3;
+    // }
+}
+
+
+message TranscribeConfig {
+
+		// Currently only th-TH is supported
+    string language_code = 3;
+
+    DecoderType decoder_type = 4;
+
+  	// word-level timestamps. The default is `false`.
+    bool get_word_timestamps = 8;
+
+  	// compute speaking rate of audio (syllable/seconds). The default 'false'.
+  	bool get_speaking_rate = 9;
+
+    // Custom words list for more appear
+  	repeated string word_list = 12;
+
+}
+
+message StreamingTranscribeConfig {
+
+    TranscribeConfig transcribe_config = 1;
+
+    AudioEncoding encoding = 2;
+
+    int32 sample_rate = 3;
+
+    int32 num_channels = 4;
+
+}
+
+
+message TranscribeResponse {
+
+  	// sequential transcription of audio.
+    repeated TranscriptionResult results = 1;
+
+    string version = 2;
+    float duration = 3;
+}
+
+
+message TranscriptionResult {
+  // Transcript text representing the words that the user spoke.
+  string transcript = 1;
+
+  float start_time = 2;
+  float end_time = 3;
+  float speaking_rate = 4;
+  
+  repeated WordInfo word_timestamps = 5;
+}
+
+// Word-specific information for recognized words.
+message WordInfo {
+  
+  string word = 1;
+
+  float start_time = 2;
+
+  float end_time = 3;
+
+  float confidence = 4;
+
+}
+
+
+
+message StreamingTranscribeResponse {
+
+  repeated TranscriptionResult results = 1;
+
+  bool is_final = 2;
+
+  
+  string version = 4;
+  float duration = 7;
+}
+
