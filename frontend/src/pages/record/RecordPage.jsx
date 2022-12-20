@@ -35,6 +35,18 @@ const RecordPage = () => {
         {quadrant == 2 && <RecordInformation quadrant={2} />}
         {quadrant == 3 && <RecordInformation quadrant={3} />}
         {quadrant == 4 && <RecordInformation quadrant={4} />}
+        {/* {Boolean(quadrant.localeCompare("1")) && (
+          <RecordInformation quadrant={1} />
+        )}
+        {Boolean(quadrant.localeCompare("2")) && (
+          <RecordInformation quadrant={2} />
+        )}
+        {Boolean(quadrant.localeCompare("3")) && (
+          <RecordInformation quadrant={3} />
+        )}
+        {Boolean(quadrant.localeCompare("4")) && (
+          <RecordInformation quadrant={4} />
+        )} */}
       </div>
       <RecordControlBar />
     </div>
