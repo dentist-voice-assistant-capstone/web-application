@@ -1,0 +1,12 @@
+syntax = "proto3";
+option go_package = "apis.speech.gowajee.ai";
+package gowajee.speech;
+
+enum AudioEncoding {
+    // Not specified.
+    ENCODING_UNSPECIFIED = 0;
+
+    // Uncompressed 16-bit signed little-endian samples (Linear PCM).
+    LINEAR_PCM = 1;
+
+}
