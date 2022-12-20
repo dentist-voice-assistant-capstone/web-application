@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package ner_backend;
+
+service NERBackend {
+    rpc StreamingNER(stream StreamingTranscribeResponse) returns (stream NERResponse);
+}
+
+
+message NERRequest {
+    string message = 1;
+}
+
+message NERResponse {
+    string message = 1;
+}
+
+message TranscriptionResult {
+  // Transcript text representing the words that the user spoke.
+  string transcript = 1;
+
+  float start_time = 2;
+  float end_time = 3;
+  float speaking_rate = 4;
+  
+  repeated WordInfo word_timestamps = 5;
+}
+
+// Word-specific information for recognized words.
+message WordInfo {
+  
+  string word = 1;
+
+  float start_time = 2;
+
+  float end_time = 3;
+
+  float confidence = 4;
+
+}
+
+
+message StreamingTranscribeResponse {
+
+  repeated TranscriptionResult results = 1;
+
+  bool is_final = 2;
+
+  
+  string version = 4;
+  float duration = 7;
+}
+
