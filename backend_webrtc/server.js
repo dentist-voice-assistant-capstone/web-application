@@ -7,15 +7,18 @@ const WavFileWriter = require("wav").FileWriter;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
+// Initialize Socket
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
+  // Create CORS, in order to give an access to front-end server
   cors: {
-    origin: `http://127.0.0.1:${process.env.CLIENT_PORT}`,
+    origin: `http://${process.env.IP_ADDRESS}:${process.env.CLIENT_PORT}`,
     methods: ["GET", "POST"],
   },
 });
 
+// Open Socket Connection
 io.on("connection", (socket) => {
   // Initialize parameter in socket section
   let sink = null;
