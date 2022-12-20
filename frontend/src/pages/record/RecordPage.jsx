@@ -1,5 +1,5 @@
 import TopInformationBar from "../../components/record/TopInformationBar";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./RecordPage.module.css";
@@ -10,11 +10,24 @@ import RecordControlBar from "../../components/record/RecordControlBar";
 
 import RecordInformation from "../../components/record/RecordInformation";
 
+import SocketWebRTCContext from "../../store/socket-webRTC-context";
+
 const RecordPage = () => {
+  /* React Context for handling socket and WebRTC Connection with backend streaming server */
+  const socketWebRTCCtx = useContext(SocketWebRTCContext);
+
   const [quadrant, setQuadrant] = useState("1");
   const handleSelect = (e) => {
     setQuadrant(e);
   };
+
+  useEffect(() => {
+    /* This function is used to initiate socket.io connection
+     * and the Client's RTCPeerConnection in order to stream audio to the backend server.
+     */
+    socketWebRTCCtx.initiateConnection();
+  }, []);
+
   return (
     <div className="landing-page">
       <TopInformationBar />

@@ -5,4 +5,16 @@ const NAME_MAX_LENGTH = 45;
 const SURNAME_MAX_LENGTH = 45;
 const DENTISTID_MAX_LENGTH = 45;
 
-export { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, NAME_MAX_LENGTH, SURNAME_MAX_LENGTH, DENTISTID_MAX_LENGTH }
+// RTCPeerConnection Configuration Object
+const RTC_CONFIG = {
+  iceServers: [
+    {
+      urls: ["stun:stun.l.google.com:19302"],
+    },
+  ],
+};
+
+// Backend Streaming URL
+const URL_BACKEND_STREAMING = "http://localhost:3001";
+
+export { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, NAME_MAX_LENGTH, SURNAME_MAX_LENGTH, DENTISTID_MAX_LENGTH, RTC_CONFIG, URL_BACKEND_STREAMING }
