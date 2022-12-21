@@ -1,4 +1,8 @@
-import { RTC_CONFIG, URL_BACKEND_STREAMING } from "../utils/constants";
+import {
+  RTC_CONFIG, URL_BACKEND_STREAMING,
+  SOCKET_RECONNECTION_ATTEMPTS,
+  SOCKET_RECONNECTION_DELAY
+} from "../utils/constants";
 
 /* Import modules for using sockets */
 import io from "socket.io-client";
@@ -7,10 +11,26 @@ import io from "socket.io-client";
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
 */
-const initiateConnection = async (setSocket, setPeerConnection, setLocalStream) => {
+const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect) => {
+  let socketFailedToConnectCount = 0
+
   /* 1) initiate RTCPeerConnectionObject and socket object */
   const pc = new RTCPeerConnection(RTC_CONFIG);
-  const s = await io.connect(URL_BACKEND_STREAMING);
+  const s = io.connect(URL_BACKEND_STREAMING, {
+    reconnectionAttempts: SOCKET_RECONNECTION_ATTEMPTS,
+    reconnectionDelay: SOCKET_RECONNECTION_DELAY
+  });
+
+  /* catching socket connection error */
+  s.on("connect_error", (err) => {
+    socketFailedToConnectCount += 1
+    console.log(`socket connection error, trying to reconnect #${socketFailedToConnectCount}`)
+    if (socketFailedToConnectCount == SOCKET_RECONNECTION_ATTEMPTS + 1) {
+      console.log(`maximum reconnect attempts reached, cannot connect socket`)
+      setSocketFailedToConnect(true)
+      return
+    }
+  })
 
   /* 2) set event for socket */
   // receiving SDP answer from backend streaming server
