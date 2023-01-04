@@ -3,9 +3,11 @@ import classes from "./RecordInformation.module.css";
 import RecordSection from "./information/RecordSection";
 import RecordHeader from "./information/RecordHeader";
 
-const RecordInformation = ({ quadrant }) => {
+const RecordInformation = ({ quadrant, information }) => {
   // const idx = [1, 2, 3, 4, 5, 6, 7, 8];
   //   const [quadrant, setQuadrant] = useState("1");
+  const buccal = information[0];
+  const lingual = information[1];
 
   return (
     <div className={classes.direction}>
