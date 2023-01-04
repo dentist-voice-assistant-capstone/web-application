@@ -72,7 +72,7 @@ const RecordPage = () => {
   };
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady) {
+  if (true) {
     return (
       <div className="landing-page">
         <TopInformationBar />
@@ -120,7 +120,7 @@ const RecordPage = () => {
           <div className={classes["center-box"]}>
             <Spinner animation="border" variant="danger" />
             <p className={classes["waiting_text"]}>
-              Connecting to server <br /> Please Wait
+              Connecting to the server <br /> Please Wait
             </p>
           </div>
         </div>
