@@ -4,14 +4,16 @@ import RecordSection from "./information/RecordSection";
 import RecordHeader from "./information/RecordHeader";
 
 const RecordInformation = ({ quadrant }) => {
-  const data = [1, 2, 3, 4, 5, 6, 7, 8];
+  // const idx = [1, 2, 3, 4, 5, 6, 7, 8];
   //   const [quadrant, setQuadrant] = useState("1");
-
+  // const buccal = information[0];
+  // const lingual = information[1];
+  console.log(quadrant);
   return (
     <div className={classes.direction}>
       <RecordHeader />
-      {data.map((id) => (
-        <RecordSection id={`${quadrant}${id}`} />
+      {quadrant.idxArray.map((idx) => (
+        <RecordSection id={`${quadrant.quadrant}${idx.ID}`} />
       ))}
     </div>
   );
