@@ -5,21 +5,17 @@ import Navbar from "react-bootstrap/Navbar";
 import classes from "./RecordControlBar.module.css";
 
 function RecordControlBar(props) {
-  // states for handling initial fetching user's data
-  const [isPaused, setIsPaused] = useState(false);
-
-  function pauseResumeHandler() {
-    setIsPaused(!isPaused);
-  }
-
   return (
     <Navbar bg="black" variant="dark" fixed="bottom">
       <div className={classes.recordControlContainer}>
         <Navbar.Brand className={classes.actions}>
-          <button className={classes.recordButton} onClick={pauseResumeHandler}>
-            {isPaused ? "Resume" : "Pause"}
+          <button
+            className={classes.recordButton}
+            onClick={props.pauseResumeHandler}
+          >
+            {props.isPaused ? "Resume" : "Pause"}
           </button>
-          {!isPaused && (
+          {!props.isPaused && (
             <div className={classes.blinking}>
               <text>test</text>
             </div>
