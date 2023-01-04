@@ -1,0 +1,10 @@
+syntax = "proto3";
+option go_package = "apis.speech.gowajee.ai";
+package gowajee.speech;
+
+enum DecoderType {
+    // Not specified.
+    Greedy = 0;
+    BeamSearch = 1;
+    LMBeamSearch = 2;
+}

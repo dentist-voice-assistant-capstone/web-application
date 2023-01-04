@@ -1,56 +1,85 @@
 .audioStreaming {
-  width: 1000px;
-  height: 800px;
-  padding: 0 2.5% 0 2.5%;
-  /* border: 1px solid black; */
+  width: 75vw;
+  height: 75vh;
+  padding: 2.5% 2.5% 2.5% 2.5%;
   display: flex;
   flex-direction: column;
+  /* border: 1px solid black; */
+}
+
+.audioStreaming__items-grid {
+  display: grid;
+  grid-template-columns: 250px 250px 150px;
+  grid-column-gap: 2.5rem;
+  grid-row-gap: 0.5rem;
+}
+
+.audioStreaming__items {
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+}
+
+.audioStreaming__items-header {
+  font-size: 20px;
+  text-align: left;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin: 0;
+}
+
+.audioStreaming__items-status {
+  width: 100%;
+  height: 40px;
+  display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.actions {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.actions button {
-  border-radius: 10px;
-  font-size: 26px;
-  width: 50%;
-  height: 100px;
-  border: 0;
-  background-color: black;
   color: white;
 }
 
-.actions button:disabled,
-.actions button:disabled:hover {
-  background-color: gray;
-}
-
-.actions button:hover {
+.audioStreaming__items-status.pos {
   background-color: green;
 }
 
-.audio_record_start {
-  border-radius: 10px;
-  font-size: 18px;
-  width: 85%;
-  height: 40px;
-  border: 0;
-  background-color: black;
-  color: white;
-  margin-bottom: 20px;
+.audioStreaming__items-status.neg {
+  background-color: red;
 }
 
-.audio_record_stop {
+.audioStreaming__items-button {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.audioStreaming__items-button button {
+  width: 75%;
+  height: 100%;
+  border: 0px;
   border-radius: 10px;
-  font-size: 18px;
-  width: 85%;
-  height: 40px;
-  border: 0;
   background-color: black;
   color: white;
-  margin-bottom: 20px;
+}
+
+.audioStreaming__items-button button:hover {
+  background-color: #2e2e2e;
+}
+
+#gowajee_prob {
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+#gowajee_prob h6,
+#gowajee_prob p {
+  margin: 0;
+}
+
+#gowajee_prob h6 {
+  padding-left: 8px;
+  font-size: 20px;
 }
