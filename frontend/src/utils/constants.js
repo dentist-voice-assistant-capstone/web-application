@@ -78,8 +78,8 @@ const EX_DATA = [
   },
   {
     quadrant: 1,
-    sIDe: "lingual",
-    IDxArray: [
+    side: "lingual",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -148,8 +148,8 @@ const EX_DATA = [
   },
   {
     quadrant: 2,
-    sIDe: "buccal",
-    IDxArray: [
+    side: "buccal",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -218,8 +218,8 @@ const EX_DATA = [
   },
   {
     quadrant: 2,
-    sIDe: "lingual",
-    IDxArray: [
+    side: "lingual",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -288,8 +288,8 @@ const EX_DATA = [
   },
   {
     quadrant: 3,
-    sIDe: "buccal",
-    IDxArray: [
+    side: "buccal",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -358,8 +358,8 @@ const EX_DATA = [
   },
   {
     quadrant: 3,
-    sIDe: "lingual",
-    IDxArray: [
+    side: "lingual",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -428,8 +428,8 @@ const EX_DATA = [
   },
   {
     quadrant: 4,
-    sIDe: "buccal",
-    IDxArray: [
+    side: "buccal",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
@@ -498,8 +498,8 @@ const EX_DATA = [
   },
   {
     quadrant: 4,
-    sIDe: "lingual",
-    IDxArray: [
+    side: "lingual",
+    idxArray: [
       {
         ID: 1,
         PD: [0, 0, 0],
