@@ -36,7 +36,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -56,7 +56,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -76,7 +76,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -96,7 +96,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -116,7 +116,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -136,7 +136,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -156,7 +156,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -176,7 +176,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -202,7 +202,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -222,7 +222,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -242,7 +242,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -262,7 +262,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -282,7 +282,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -302,7 +302,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -322,7 +322,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -342,7 +342,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -367,7 +367,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -387,7 +387,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -407,7 +407,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -427,7 +427,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -447,7 +447,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -467,7 +467,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -487,7 +487,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -507,7 +507,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -532,7 +532,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -552,7 +552,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -572,7 +572,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -592,7 +592,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -612,7 +612,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -632,7 +632,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -652,7 +652,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
@@ -672,7 +672,7 @@ const EX_DATA = [
             BOP: [true, false, true],
           },
           {
-            side: "ligual",
+            side: "lingual",
             PD: [null, null, null],
             RE: [null, null, null],
             BOP: [true, false, true],
