@@ -27,6 +27,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 1,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -46,6 +47,7 @@ const EX_DATA = [
       },
       {
         ID: 2,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -65,6 +67,7 @@ const EX_DATA = [
       },
       {
         ID: 3,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -84,6 +87,7 @@ const EX_DATA = [
       },
       {
         ID: 4,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -103,6 +107,7 @@ const EX_DATA = [
       },
       {
         ID: 5,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -122,6 +127,7 @@ const EX_DATA = [
       },
       {
         ID: 6,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -141,6 +147,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -160,6 +167,7 @@ const EX_DATA = [
       },
       {
         ID: 8,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -185,6 +193,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 1,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -204,6 +213,7 @@ const EX_DATA = [
       },
       {
         ID: 2,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -223,6 +233,7 @@ const EX_DATA = [
       },
       {
         ID: 3,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -242,6 +253,7 @@ const EX_DATA = [
       },
       {
         ID: 4,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -261,6 +273,7 @@ const EX_DATA = [
       },
       {
         ID: 5,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -280,6 +293,7 @@ const EX_DATA = [
       },
       {
         ID: 6,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -299,6 +313,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -318,6 +333,7 @@ const EX_DATA = [
       },
       {
         ID: 8,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -342,6 +358,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 1,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -361,6 +378,7 @@ const EX_DATA = [
       },
       {
         ID: 2,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -380,6 +398,7 @@ const EX_DATA = [
       },
       {
         ID: 3,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -399,6 +418,7 @@ const EX_DATA = [
       },
       {
         ID: 4,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -418,6 +438,7 @@ const EX_DATA = [
       },
       {
         ID: 5,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -437,6 +458,7 @@ const EX_DATA = [
       },
       {
         ID: 6,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -456,6 +478,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -475,6 +498,7 @@ const EX_DATA = [
       },
       {
         ID: 8,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -499,6 +523,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 1,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -518,6 +543,7 @@ const EX_DATA = [
       },
       {
         ID: 2,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -537,6 +563,7 @@ const EX_DATA = [
       },
       {
         ID: 3,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -556,6 +583,7 @@ const EX_DATA = [
       },
       {
         ID: 4,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -575,6 +603,7 @@ const EX_DATA = [
       },
       {
         ID: 5,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -594,6 +623,7 @@ const EX_DATA = [
       },
       {
         ID: 6,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -613,6 +643,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -632,6 +663,7 @@ const EX_DATA = [
       },
       {
         ID: 8,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
