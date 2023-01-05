@@ -40,36 +40,56 @@ const RecordPage = () => {
   };
 
   const [information, setInformation] = useState(EX_DATA);
-  console.log(EX_DATA);
-  // const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
-  //   const newInformation = information.map((obj) => {
-  //     if (obj.quadrant === q && obj.side === side) {
-  //       obj.idxArray.map((data) => {
-  //         const newData = data;
-  //         if (data.ID === i) {
-  //           if (mode === "PD") {
-  //             newData.PD[spec_id] = target;
-  //             return newData;
-  //           } else if (mode === "RE") {
-  //             newData.RE[spec_id] = target;
-  //             return newData;
-  //           } else if (mode === "BOP") {
-  //             newData.BOP[spec_id] = target;
-  //             return newData;
-  //           } else if (mode === "MO") {
-  //             newData.MO = target;
-  //           } else if (mode === "MGJ") {
-  //             newData.MGJ = target;
-  //           }
-  //         }
-  //         return data;
-  //       });
-  //     }
-  //     return obj;
-  //   });
 
-  //   setInformation(newInformation);
-  // };
+  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
+    const newInformation = information.map((obj) => {
+      if (obj.quadrant === q) {
+        obj.idxArray.map((data) => {
+          if (data.ID === i) {
+            if (mode === "PD") {
+              const newPD = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.PD[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newPD;
+            } else if (mode === "RE") {
+              const newRE = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.RE[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newRE;
+            } else if (mode === "BOP") {
+              const newBOP = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.BOP[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newBOP;
+            } else if (mode === "MO") {
+              data.MO = target;
+              return data;
+            } else if (mode === "MGJ") {
+              data.MGJ = target;
+              return data;
+            }
+          }
+          return data;
+        });
+      }
+      return obj;
+    });
+
+    setInformation(newInformation);
+  };
+
   // ========================================================================
 
   /* determine the socket's connection status */
@@ -105,7 +125,7 @@ const RecordPage = () => {
   };
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady) {
+  if (true) {
     return (
       <div className="landing-page">
         <TopInformationBar />
@@ -122,10 +142,30 @@ const RecordPage = () => {
           </DropdownButton>
         </div>
         <div className="centered">
-          {quadrant === 1 && <RecordInformation quadrant={information[0]} />}
-          {quadrant === 2 && <RecordInformation quadrant={information[2]} />}
-          {quadrant === 3 && <RecordInformation quadrant={information[4]} />}
-          {quadrant === 4 && <RecordInformation quadrant={information[6]} />}
+          {quadrant === 1 && (
+            <RecordInformation
+              information={information[0]}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 2 && (
+            <RecordInformation
+              information={information[1]}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 3 && (
+            <RecordInformation
+              information={information[2]}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 4 && (
+            <RecordInformation
+              information={information[3]}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
         </div>
         <RecordControlBar
           isPaused={isPaused}

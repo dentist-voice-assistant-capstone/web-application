@@ -3,10 +3,19 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./DropdownSm.module.css";
 
-function DropdownSm(props) {
-  const [value, setValue] = useState("");
-  const handleSelect = (e) => {
-    setValue(e);
+function DropdownSm({
+  quadrant,
+  side,
+  id,
+  mode,
+  specific_id,
+  data,
+  handleSetInformation,
+}) {
+  const [value, setValue] = useState(data);
+  const handleSelect = (target) => {
+    handleSetInformation(quadrant, id, side, mode, target, specific_id);
+    setValue(target);
   };
   return (
     <DropdownButton
