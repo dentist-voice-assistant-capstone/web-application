@@ -4,12 +4,36 @@ import { useState } from "react";
 import classes from "./CheckboxBox.module.css";
 import Checkbox from "./Checkbox";
 
-function CheckboxBox(props) {
+function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
   return (
     <div className={classes.direction}>
-      <Checkbox />
-      <Checkbox />
-      <Checkbox />
+      <Checkbox
+        quadrant={quadrant}
+        side={side}
+        id={id}
+        mode={mode}
+        specific_id={0}
+        data={data[0]}
+        handleSetInformation={handleSetInformation}
+      />
+      <Checkbox
+        quadrant={quadrant}
+        side={side}
+        id={id}
+        mode={mode}
+        specific_id={1}
+        data={data[1]}
+        handleSetInformation={handleSetInformation}
+      />
+      <Checkbox
+        quadrant={quadrant}
+        side={side}
+        id={id}
+        mode={mode}
+        specific_id={2}
+        data={data[2]}
+        handleSetInformation={handleSetInformation}
+      />
     </div>
   );
 }
