@@ -7,23 +7,44 @@ import classes from "./RecordControlBar.module.css";
 function RecordControlBar(props) {
   return (
     <Navbar bg="black" variant="dark" fixed="bottom">
-      <div className={classes.recordControlContainer}>
-        <Navbar.Brand className={classes.actions}>
-          <button
-            className={classes.recordButton}
-            onClick={props.pauseResumeHandler}
-          >
-            {props.isPaused ? "Resume" : "Pause"}
-          </button>
-          {!props.isPaused && (
-            <div className={classes.blinking}>
-              <text>test</text>
-            </div>
-          )}
+      {props.isFinish && (
+        <div className={classes.recordControlContainer}>
+          <Navbar.Brand className={classes.actions}>
+            <button
+              className={classes.recordButton}
+              onClick={props.pauseResumeHandler}
+            >
+              {props.isPaused ? "Resume" : "Pause"}
+            </button>
+            {!props.isPaused && (
+              <div className={classes.blinking}>
+                <text>test</text>
+              </div>
+            )}
 
-          <button className={classes.finishButton}>Finish</button>
-        </Navbar.Brand>
-      </div>
+            <button
+              className={classes.finishButton}
+              onClick={props.finishHandler}
+            >
+              Finish
+            </button>
+          </Navbar.Brand>
+        </div>
+      )}
+
+      {!props.isFinish && (
+        <div className={classes.recordControlContainer}>
+          <Navbar.Brand className={classes.actions}>
+            <button className={classes.summaryButton}>{"Summary"}</button>
+            <button
+              className={classes.finishButton}
+              onClick={props.finishHandler}
+            >
+              Back
+            </button>
+          </Navbar.Brand>
+        </div>
+      )}
     </Navbar>
   );
 }

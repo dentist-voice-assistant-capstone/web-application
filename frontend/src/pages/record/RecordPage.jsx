@@ -41,6 +41,14 @@ const RecordPage = () => {
 
   const [information, setInformation] = useState(EX_DATA);
 
+  const [isFinish, setIsFinish] = useState(true);
+
+  const finishHandler = () => {
+    setIsFinish((prevIsFinished) => {
+      return !prevIsFinished;
+    });
+  };
+
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
       if (obj.quadrant === q) {
@@ -129,11 +137,12 @@ const RecordPage = () => {
     return (
       <div className="landing-page">
         <TopInformationBar />
-        <div className={classes.a}>
+        <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}
             title={quadrant}
             onSelect={handleSelect}
+            disabled={isFinish}
           >
             <Dropdown.Item eventKey="1">1</Dropdown.Item>
             <Dropdown.Item eventKey="2">2</Dropdown.Item>
@@ -146,30 +155,36 @@ const RecordPage = () => {
             <RecordInformation
               information={information[0]}
               handleSetInformation={handleSetInformation}
+              isFinish={isFinish}
             />
           )}
           {quadrant === 2 && (
             <RecordInformation
               information={information[1]}
               handleSetInformation={handleSetInformation}
+              isFinish={isFinish}
             />
           )}
           {quadrant === 3 && (
             <RecordInformation
               information={information[2]}
               handleSetInformation={handleSetInformation}
+              isFinish={isFinish}
             />
           )}
           {quadrant === 4 && (
             <RecordInformation
               information={information[3]}
               handleSetInformation={handleSetInformation}
+              isFinish={isFinish}
             />
           )}
         </div>
         <RecordControlBar
           isPaused={isPaused}
+          isFinish={isFinish}
           pauseResumeHandler={pauseResumeHandler}
+          finishHandler={finishHandler}
         />
       </div>
     );

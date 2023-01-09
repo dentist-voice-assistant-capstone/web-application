@@ -10,6 +10,7 @@ const RecordLingualInformation = ({
   lingualInformation,
   mo,
   handleSetInformation,
+  isFinish,
 }) => {
   const pd = lingualInformation.PD;
   const re = lingualInformation.RE;
@@ -25,6 +26,7 @@ const RecordLingualInformation = ({
         mode={"MO"}
         data={mo}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <CheckboxBox
         quadrant={quadrant}
@@ -33,6 +35,7 @@ const RecordLingualInformation = ({
         mode={"BOP"}
         data={bop}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -41,6 +44,7 @@ const RecordLingualInformation = ({
         mode={"PD"}
         data={pd}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -49,6 +53,7 @@ const RecordLingualInformation = ({
         mode={"RE"}
         data={re}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
     </div>
   );
