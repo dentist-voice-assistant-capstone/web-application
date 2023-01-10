@@ -1,5 +1,5 @@
-const decoder = require('./pbs/decoder_type_pb');
-const encoder = require('./pbs/audio_pb');
+const decoder = require('../pbs/decoder_type_pb');
+const encoder = require('../pbs/audio_pb');
 
 function init_streaming_request() {
     // Gowajee API

@@ -4,7 +4,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const WavFileWriter = require("wav").FileWriter;
-const gowajee_service = reuqire('./utils/gowajee_service.js');
+const gowajee_service = require('./utils/gowajee_service.js');
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
