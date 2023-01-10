@@ -1,5 +1,5 @@
 import TopInformationBar from "../../components/record/TopInformationBar";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, Fragment } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./RecordPage.module.css";
@@ -11,6 +11,7 @@ import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import Spinner from "react-bootstrap/Spinner";
 import { FiCloudOff } from "react-icons/fi";
+import ModalConfirm from "../../components/ui/ModalConfirm";
 
 import {
   initiateConnection,
@@ -40,13 +41,18 @@ const RecordPage = () => {
   };
 
   const [information, setInformation] = useState(EX_DATA);
+  const [checkFinish, setCheckFinish] = useState(false);
+  const [isFinish, setIsFinish] = useState(false);
 
-  const [isFinish, setIsFinish] = useState(true);
-
-  const finishHandler = () => {
-    setIsFinish((prevIsFinished) => {
-      return !prevIsFinished;
+  const checkFinishHandler = () => {
+    setCheckFinish((prevcheckFinish) => {
+      return !prevcheckFinish;
     });
+  };
+
+  const confirmHandler = () => {
+    setIsFinish(true);
+    checkFinishHandler();
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -133,60 +139,72 @@ const RecordPage = () => {
   };
 
   /* connection successful - show PDRE table */
+
   if (true) {
     return (
-      <div className="landing-page">
-        <TopInformationBar />
-        <div className={classes.droplist}>
-          <DropdownButton
-            className={classes.box}
-            title={quadrant}
-            onSelect={handleSelect}
-            disabled={isFinish}
-          >
-            <Dropdown.Item eventKey="1">1</Dropdown.Item>
-            <Dropdown.Item eventKey="2">2</Dropdown.Item>
-            <Dropdown.Item eventKey="3">3</Dropdown.Item>
-            <Dropdown.Item eventKey="4">4</Dropdown.Item>
-          </DropdownButton>
+      <Fragment>
+        {checkFinish && (
+          <ModalConfirm
+            header={"Confirm Information"}
+            content={"asdfasdf"}
+            onOKClick={confirmHandler}
+            onCancelClick={checkFinishHandler}
+            modalType="confirm"
+          />
+        )}
+        <div className="landing-page">
+          <TopInformationBar />
+          <div className={classes.droplist}>
+            <DropdownButton
+              className={classes.box}
+              title={quadrant}
+              onSelect={handleSelect}
+              disabled={!isFinish}
+            >
+              <Dropdown.Item eventKey="1">1</Dropdown.Item>
+              <Dropdown.Item eventKey="2">2</Dropdown.Item>
+              <Dropdown.Item eventKey="3">3</Dropdown.Item>
+              <Dropdown.Item eventKey="4">4</Dropdown.Item>
+            </DropdownButton>
+          </div>
+          <div className="centered">
+            {quadrant === 1 && (
+              <RecordInformation
+                information={information[0]}
+                handleSetInformation={handleSetInformation}
+                isFinish={!isFinish}
+              />
+            )}
+            {quadrant === 2 && (
+              <RecordInformation
+                information={information[1]}
+                handleSetInformation={handleSetInformation}
+                isFinish={!isFinish}
+              />
+            )}
+            {quadrant === 3 && (
+              <RecordInformation
+                information={information[2]}
+                handleSetInformation={handleSetInformation}
+                isFinish={!isFinish}
+              />
+            )}
+            {quadrant === 4 && (
+              <RecordInformation
+                information={information[3]}
+                handleSetInformation={handleSetInformation}
+                isFinish={!isFinish}
+              />
+            )}
+          </div>
+          <RecordControlBar
+            isPaused={isPaused}
+            isFinish={!isFinish}
+            pauseResumeHandler={pauseResumeHandler}
+            checkFinishHandler={checkFinishHandler}
+          />
         </div>
-        <div className="centered">
-          {quadrant === 1 && (
-            <RecordInformation
-              information={information[0]}
-              handleSetInformation={handleSetInformation}
-              isFinish={isFinish}
-            />
-          )}
-          {quadrant === 2 && (
-            <RecordInformation
-              information={information[1]}
-              handleSetInformation={handleSetInformation}
-              isFinish={isFinish}
-            />
-          )}
-          {quadrant === 3 && (
-            <RecordInformation
-              information={information[2]}
-              handleSetInformation={handleSetInformation}
-              isFinish={isFinish}
-            />
-          )}
-          {quadrant === 4 && (
-            <RecordInformation
-              information={information[3]}
-              handleSetInformation={handleSetInformation}
-              isFinish={isFinish}
-            />
-          )}
-        </div>
-        <RecordControlBar
-          isPaused={isPaused}
-          isFinish={isFinish}
-          pauseResumeHandler={pauseResumeHandler}
-          finishHandler={finishHandler}
-        />
-      </div>
+      </Fragment>
     );
 
     /* trying to connect screen (when first load) */
