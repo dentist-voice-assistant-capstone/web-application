@@ -138,130 +138,139 @@ const RecordPage = () => {
     setQuadrant(parseInt(e));
   };
 
-  /* connection successful - show PDRE table */
-
-  if (true) {
-    return (
-      <Fragment>
-        {checkFinish && (
-          <ModalConfirm
-            header={"Confirm Information"}
-            content={"asdfasdf"}
-            onOKClick={confirmHandler}
-            onCancelClick={checkFinishHandler}
-            modalType="confirm"
-          />
-        )}
-        <div className="landing-page">
-          <TopInformationBar />
-          <div className={classes.droplist}>
-            <DropdownButton
-              className={classes.box}
-              title={quadrant}
-              onSelect={handleSelect}
-              disabled={!isFinish}
-            >
-              <Dropdown.Item eventKey="1">1</Dropdown.Item>
-              <Dropdown.Item eventKey="2">2</Dropdown.Item>
-              <Dropdown.Item eventKey="3">3</Dropdown.Item>
-              <Dropdown.Item eventKey="4">4</Dropdown.Item>
-            </DropdownButton>
-          </div>
-          <div className="centered">
-            {quadrant === 1 && (
-              <RecordInformation
-                information={information[0]}
-                handleSetInformation={handleSetInformation}
-                isFinish={!isFinish}
-              />
-            )}
-            {quadrant === 2 && (
-              <RecordInformation
-                information={information[1]}
-                handleSetInformation={handleSetInformation}
-                isFinish={!isFinish}
-              />
-            )}
-            {quadrant === 3 && (
-              <RecordInformation
-                information={information[2]}
-                handleSetInformation={handleSetInformation}
-                isFinish={!isFinish}
-              />
-            )}
-            {quadrant === 4 && (
-              <RecordInformation
-                information={information[3]}
-                handleSetInformation={handleSetInformation}
-                isFinish={!isFinish}
-              />
-            )}
-          </div>
-          <RecordControlBar
-            isPaused={isPaused}
-            isFinish={!isFinish}
-            pauseResumeHandler={pauseResumeHandler}
-            checkFinishHandler={checkFinishHandler}
-          />
+  /* components to be rendered */
+  const PDRETableComponentToBeRendered = (
+    <Fragment>
+      {checkFinish && (
+        <ModalConfirm
+          header={"Confirm Information"}
+          content={"asdfasdf"}
+          onOKClick={confirmHandler}
+          onCancelClick={checkFinishHandler}
+          modalType="confirm"
+        />
+      )}
+      <div className="landing-page">
+        <TopInformationBar />
+        <div className={classes.droplist}>
+          <DropdownButton
+            className={classes.box}
+            title={quadrant}
+            onSelect={handleSelect}
+            disabled={!isFinish}
+          >
+            <Dropdown.Item eventKey="1">1</Dropdown.Item>
+            <Dropdown.Item eventKey="2">2</Dropdown.Item>
+            <Dropdown.Item eventKey="3">3</Dropdown.Item>
+            <Dropdown.Item eventKey="4">4</Dropdown.Item>
+          </DropdownButton>
         </div>
-      </Fragment>
-    );
+        <div className="centered">
+          {quadrant === 1 && (
+            <RecordInformation
+              information={information[0]}
+              handleSetInformation={handleSetInformation}
+              isFinish={!isFinish}
+            />
+          )}
+          {quadrant === 2 && (
+            <RecordInformation
+              information={information[1]}
+              handleSetInformation={handleSetInformation}
+              isFinish={!isFinish}
+            />
+          )}
+          {quadrant === 3 && (
+            <RecordInformation
+              information={information[2]}
+              handleSetInformation={handleSetInformation}
+              isFinish={!isFinish}
+            />
+          )}
+          {quadrant === 4 && (
+            <RecordInformation
+              information={information[3]}
+              handleSetInformation={handleSetInformation}
+              isFinish={!isFinish}
+            />
+          )}
+        </div>
+        <RecordControlBar
+          isPaused={isPaused}
+          isFinish={!isFinish}
+          pauseResumeHandler={pauseResumeHandler}
+          checkFinishHandler={checkFinishHandler}
+        />
+      </div>
+    </Fragment>
+  );
+
+  const ReconnectingScreenToBeRendered = (
+    <div className="landing-page">
+      <TopInformationBar />
+      <div className="centered">
+        <div className={classes["center-box"]}>
+          <Spinner animation="border" variant="danger" />
+          <p className={classes["waiting_text"]}>
+            Connecting to the server <br /> Please Wait
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const FailedToConnectScreenToBeRendered = (
+    <div className="landing-page">
+      <TopInformationBar />
+      <div className="centered">
+        <div className={classes["center-box"]}>
+          <FiCloudOff size="45px" />
+          <p className={classes["waiting_text"]}>
+            <span style={{ color: "red" }}>
+              Failed to connect to the server
+            </span>
+            <br /> Please try again later.
+          </p>
+          <div className={classes["controls"]}>
+            <button
+              className={`${classes["control-button"]} ${classes["back-button"]}`}
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Back
+            </button>
+            <button
+              className={`${classes["control-button"]} ${classes["reconnect-button"]}`}
+              onClick={() => {
+                setSocketFailedToConnect(false);
+                initiateConnection(
+                  setSocket,
+                  setPeerConnection,
+                  setLocalStream,
+                  setSocketFailedToConnect
+                );
+              }}
+            >
+              Reconnect
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* connection successful - show PDRE table */
+  if (isConnectionReady) {
+    return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */
   } else if (!isConnectionReady && !socketFailedToConnect) {
-    return (
-      <div className="landing-page">
-        <div className="centered">
-          <div className={classes["center-box"]}>
-            <Spinner animation="border" variant="danger" />
-            <p className={classes["waiting_text"]}>
-              Connecting to the server <br /> Please Wait
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    return ReconnectingScreenToBeRendered;
+
     /* failed to connect screen (when first load) */
   } else if (socketFailedToConnect) {
-    return (
-      <div className="landing-page">
-        <div className="centered">
-          <div className={classes["center-box"]}>
-            <FiCloudOff size="45px" />
-            <p className={classes["waiting_text"]}>
-              <span style={{ color: "red" }}>
-                Failed to connect to the server
-              </span>
-              <br /> Please try again later.
-            </p>
-            <div className={classes["controls"]}>
-              <button
-                className={`${classes["control-button"]} ${classes["back-button"]}`}
-                onClick={() => {
-                  navigate("/");
-                }}
-              >
-                Back
-              </button>
-              <button
-                className={`${classes["control-button"]} ${classes["reconnect-button"]}`}
-                onClick={() => {
-                  setSocketFailedToConnect(false);
-                  initiateConnection(
-                    setSocket,
-                    setPeerConnection,
-                    setLocalStream,
-                    setSocketFailedToConnect
-                  );
-                }}
-              >
-                Reconnect
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return FailedToConnectScreenToBeRendered;
   }
 };
 
