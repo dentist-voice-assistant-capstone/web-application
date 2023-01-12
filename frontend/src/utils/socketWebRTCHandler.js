@@ -7,6 +7,26 @@ import {
 /* Import modules for using sockets */
 import io from "socket.io-client";
 
+const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, setLocalStream) => {
+  const mediaStream = await navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true,
+  })
+
+  mediaStream.getTracks().forEach((track) => {
+    if (localStream === null) {
+      peerConnection.addTrack(track, mediaStream);
+    } else {
+      localStream.addTrack(track)
+      peerConnection.addTrack(track, localStream);
+    }
+  })
+
+  if (localStream === null) {
+    setLocalStream(mediaStream);
+  }
+}
+
 /* This function is called when the user vist the record page for the first time.
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
@@ -79,18 +99,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
 
   /* 4) get the localStream and then add tracks from the localStream to the peerConnection */
   // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
-  await navigator.mediaDevices
-    .getUserMedia({
-      video: false,
-      audio: true,
-    })
-    .then((mediaStream) => {
-      mediaStream.getTracks().forEach((track) => {
-        pc.addTrack(track, mediaStream);
-      });
-      console.log("add track finished");
-      setLocalStream(mediaStream);
-    });
+  await getAudioTrackAndAddToTheConnection(pc, null, setLocalStream);
 
   setPeerConnection(pc);
   setSocket(s);
