@@ -17,6 +17,7 @@ import {
   initiateConnection,
   startAudioStreaming,
   stopAudioStreaming,
+  terminateConnection,
 } from "../../utils/socketWebRTCHandler";
 
 const RecordPage = () => {
@@ -53,6 +54,14 @@ const RecordPage = () => {
   const confirmHandler = () => {
     setIsFinish(true);
     checkFinishHandler();
+    terminateConnection(
+      socket,
+      peerConnection,
+      localStream,
+      setSocket,
+      setPeerConnection,
+      setLocalStream
+    );
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -103,9 +112,7 @@ const RecordPage = () => {
 
     setInformation(newInformation);
   };
-
   // ========================================================================
-
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
 
@@ -261,15 +268,15 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady) {
+  if (isConnectionReady || isFinish) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */
-  } else if (!isConnectionReady && !socketFailedToConnect) {
+  } else if (!isConnectionReady && !socketFailedToConnect && !isFinish) {
     return ReconnectingScreenToBeRendered;
 
     /* failed to connect screen (when first load) */
-  } else if (socketFailedToConnect) {
+  } else if (socketFailedToConnect && !isFinish) {
     return FailedToConnectScreenToBeRendered;
   }
 };

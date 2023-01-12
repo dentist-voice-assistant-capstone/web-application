@@ -25,7 +25,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   s.on("connect_error", (err) => {
     socketFailedToConnectCount += 1
     console.log(`socket connection error, trying to reconnect #${socketFailedToConnectCount}`)
-    if (socketFailedToConnectCount == SOCKET_RECONNECTION_ATTEMPTS + 1) {
+    if (socketFailedToConnectCount === SOCKET_RECONNECTION_ATTEMPTS + 1) {
       console.log(`maximum reconnect attempts reached, cannot connect socket`)
       setSocketFailedToConnect(true)
       return
@@ -126,8 +126,30 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
   setIsAudioStreaming(false);
 }
 
+/* This function is called when the user finish the recording process by
+ * pressing "finish" button and confirm. This function will terminate the
+ * connection (webRTC and socket) between frontend and backend-streaming.
+ */
+const terminateConnection = (socket, peerConnection, localStream, setSocket, setPeerConnection, setLocalStream) => {
+  socket.disconnect(); // socket disconnect
+
+  if (localStream) {
+    localStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+  }
+  peerConnection.close(); // close webRTCConnection
+
+  console.log("connnection terminated.")
+  // clear states
+  setSocket(null);
+  setPeerConnection(null);
+  setLocalStream(null);
+}
+
 export {
   initiateConnection,
   startAudioStreaming,
-  stopAudioStreaming
+  stopAudioStreaming,
+  terminateConnection
 }
