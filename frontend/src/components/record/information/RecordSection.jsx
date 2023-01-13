@@ -21,24 +21,35 @@ const RecordSection = ({
   const id = information.ID;
 
   return (
-    <div className={classes.direction}>
-      <RecordBuccalInformation
-        quadrant={quadrant}
-        id={id}
-        buccalInformation={buccalInformation}
-        mgj={mgj}
-        handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
-      />
-      <div className={classes.title}>{`${quadrant}${information.ID}`}</div>
-      <RecordLingualInformation
-        quadrant={quadrant}
-        id={id}
-        lingualInformation={lingualInformation}
-        mo={mo}
-        handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
-      />
+    <div>
+      {!information.missing && (
+        <div className={classes.direction}>
+          <RecordBuccalInformation
+            quadrant={quadrant}
+            id={id}
+            buccalInformation={buccalInformation}
+            mgj={mgj}
+            handleSetInformation={handleSetInformation}
+          />
+          <div className={classes.title}>{`${quadrant}${information.ID}`}</div>
+          <RecordLingualInformation
+            quadrant={quadrant}
+            id={id}
+            lingualInformation={lingualInformation}
+            mo={mo}
+            handleSetInformation={handleSetInformation}
+          />
+        </div>
+      )}
+      {information.missing && (
+        <div className={classes.direction}>
+          <div className={classes.missingBox}>
+            <div
+              className={classes.title}
+            >{`${quadrant}${information.ID}`}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
