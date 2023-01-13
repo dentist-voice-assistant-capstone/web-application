@@ -10,6 +10,7 @@ const RecordBuccalInformation = ({
   buccalInformation,
   mgj,
   handleSetInformation,
+  isFinish,
 }) => {
   const pd = buccalInformation.PD;
   const re = buccalInformation.RE;
@@ -25,6 +26,7 @@ const RecordBuccalInformation = ({
         mode={"PD"}
         data={pd}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -33,6 +35,7 @@ const RecordBuccalInformation = ({
         mode={"RE"}
         data={re}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <CheckboxBox
         quadrant={quadrant}
@@ -41,6 +44,7 @@ const RecordBuccalInformation = ({
         mode={"BOP"}
         data={bop}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownLg
         quadrant={quadrant}
@@ -49,6 +53,7 @@ const RecordBuccalInformation = ({
         mode={"MGJ"}
         data={mgj}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
     </div>
   );
