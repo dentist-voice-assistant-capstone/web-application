@@ -145,16 +145,26 @@ const RecordPage = () => {
     setQuadrant(parseInt(e));
   };
 
+  const modalConfirmContent = (
+    <p>
+      Are you sure to finish the recording?
+      <br />
+      Once saved,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
+  );
+
   /* components to be rendered */
   const PDRETableComponentToBeRendered = (
     <Fragment>
       {checkFinish && (
         <ModalConfirm
           header={"Confirm Information"}
-          content={"asdfasdf"}
+          content={modalConfirmContent}
           onOKClick={confirmHandler}
           onCancelClick={checkFinishHandler}
-          modalType="confirm"
         />
       )}
       <div className="landing-page">
@@ -268,7 +278,7 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady || isFinish) {
+  if (true || isConnectionReady || isFinish) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */

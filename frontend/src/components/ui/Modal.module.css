@@ -36,7 +36,7 @@
 }
 
 .modal.info .modal__header {
-  background-color: #494848;
+  background-color: var(--primary-color-info);
 }
 
 .modal .modal__header p {
