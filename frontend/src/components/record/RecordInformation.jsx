@@ -3,7 +3,7 @@ import classes from "./RecordInformation.module.css";
 import RecordSection from "./information/RecordSection";
 import RecordHeader from "./information/RecordHeader";
 
-const RecordInformation = ({ information, handleSetInformation }) => {
+const RecordInformation = ({ information, handleSetInformation, isFinish }) => {
   return (
     <div className={classes.direction}>
       <RecordHeader />
@@ -12,6 +12,7 @@ const RecordInformation = ({ information, handleSetInformation }) => {
           quadrant={information.quadrant}
           information={idx}
           handleSetInformation={handleSetInformation}
+          isFinish={isFinish}
         />
       ))}
     </div>

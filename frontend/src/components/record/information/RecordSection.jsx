@@ -4,7 +4,12 @@ import { useState } from "react";
 
 import classes from "./RecordSection.module.css";
 
-const RecordSection = ({ quadrant, information, handleSetInformation }) => {
+const RecordSection = ({
+  quadrant,
+  information,
+  handleSetInformation,
+  isFinish,
+}) => {
   const [buccalInformation, setBuccalInformation] = useState(
     information.depended_side_data[0]
   );

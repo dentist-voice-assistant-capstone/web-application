@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./DropdownSm.module.css";
@@ -11,7 +11,12 @@ function DropdownSm({
   specific_id,
   data,
   handleSetInformation,
+  isFinish,
 }) {
+  const [i, setI] = useState(isFinish);
+  useEffect(() => {
+    setI(isFinish);
+  }, [isFinish]);
   const [value, setValue] = useState(data);
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
@@ -24,6 +29,7 @@ function DropdownSm({
         className={classes.smallbox}
         title={value}
         onSelect={handleSelect}
+        disabled={i}
       >
         <Dropdown.Item eventKey="-5">-5</Dropdown.Item>
         <Dropdown.Item eventKey="-4">-4</Dropdown.Item>
@@ -54,6 +60,7 @@ function DropdownSm({
         className={classes.smallbox}
         title={value}
         onSelect={handleSelect}
+        disabled={isFinish}
       >
         <Dropdown.Item eventKey="1">1</Dropdown.Item>
         <Dropdown.Item eventKey="2">2</Dropdown.Item>

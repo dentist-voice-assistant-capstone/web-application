@@ -1,4 +1,4 @@
-.a {
+.droplist {
   /* width: 100px;
   height: 100px; */
   padding-top: 5.5%;
@@ -56,4 +56,18 @@
 .reconnect-button:hover {
   background-color: lightgreen;
   color: black;
+}
+
+.recordButton {
+  background-color: white;
+  color: black;
+  border-color: white;
+  border-style: none;
+  border-radius: 5px;
+  margin: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+  width: 90px;
+  margin-left: 17%;
+  position: fixed;
 }

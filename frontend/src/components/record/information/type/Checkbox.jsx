@@ -9,6 +9,7 @@ function Checkbox({
   specific_id,
   data,
   handleSetInformation,
+  isFinish,
 }) {
   const [isChecked, setIsChecked] = useState(data);
 
@@ -24,6 +25,7 @@ function Checkbox({
         onChange={() => {
           handleSelect(!isChecked);
         }}
+        disabled={isFinish}
       />
       <span
         className={`checkbox ${isChecked ? "checkbox--active" : ""}`}

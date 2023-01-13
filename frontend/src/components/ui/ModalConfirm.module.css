@@ -29,14 +29,7 @@
 .modal .modal__header {
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: var(--main-border-radius) var(--main-border-radius) 0px 0px;
-}
-
-.modal.error .modal__header {
-  background-color: var(--primary-color-error);
-}
-
-.modal.info .modal__header {
-  background-color: var(--primary-color-info);
+  background-color: #494848;
 }
 
 .modal .modal__header p {
@@ -64,31 +57,41 @@
 
 .modal .modal__actions {
   display: flex;
-  justify-content: center;
-  margin-top: 40px;
+  justify-content: space-between;
+  margin-top: 20px;
   margin-bottom: 20px;
+  padding-left: 60px;
+  padding-right: 60px;
 }
 
 .modal .modal__actions button {
   border-radius: var(--main-border-radius);
+  text-align: center;
   font-size: 18px;
-  width: 30%;
+  width: 40%;
   padding: 0.3rem 1rem 0.3rem 1rem;
   border: 0;
 }
 
-.modal.info .modal__actions button {
+.modal .modal__actions button.cancel_button {
+  background-color: white;
+  color: black;
+  border: 0.5px solid lightgray;
+}
+
+.modal .modal__actions button.cancel_button:hover {
+  background-color: #ececec;
+  color: black;
+}
+
+.modal .modal__actions button {
   color: white;
   background-color: green;
 }
 
-.modal.error .modal__actions button {
+.modal .modal__actions button:hover {
   color: white;
-  background-color: var(--secondary-color-error);
-}
-
-.modal.error .modal__actions button:hover {
-  background-color: var(--primary-color-error);
+  background-color: #008631;
 }
 
 /* backdrop */
