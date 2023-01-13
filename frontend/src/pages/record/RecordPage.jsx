@@ -46,6 +46,10 @@ const RecordPage = () => {
   const [isFinish, setIsFinish] = useState(false);
 
   const checkFinishHandler = () => {
+    /* if click "Finish" button, if the recording is not paused, pause the recording */
+    if (!isPaused) {
+      pauseResumeHandler();
+    }
     setCheckFinish((prevcheckFinish) => {
       return !prevcheckFinish;
     });
@@ -224,7 +228,6 @@ const RecordPage = () => {
 
   const ReconnectingScreenToBeRendered = (
     <div className="landing-page">
-      <TopInformationBar />
       <div className="centered">
         <div className={classes["center-box"]}>
           <Spinner animation="border" variant="danger" />
@@ -238,7 +241,6 @@ const RecordPage = () => {
 
   const FailedToConnectScreenToBeRendered = (
     <div className="landing-page">
-      <TopInformationBar />
       <div className="centered">
         <div className={classes["center-box"]}>
           <FiCloudOff size="45px" />
@@ -278,7 +280,7 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (true || isConnectionReady || isFinish) {
+  if (isConnectionReady || isFinish) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */

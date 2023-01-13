@@ -6,7 +6,7 @@ import classes from "./RecordControlBar.module.css";
 
 function RecordControlBar(props) {
   return (
-    <Navbar bg="black" variant="dark" fixed="bottom">
+    <Navbar bg="black" variant="dark" fixed="bottom" style={{ zIndex: 0 }}>
       {props.isFinish && (
         <div className={classes.recordControlContainer}>
           <Navbar.Brand className={classes.actions}>
