@@ -3,15 +3,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./DropdownLg.module.css";
 
-function DropdownLg({
-  quadrant,
-  side,
-  id,
-  mode,
-  data,
-  handleSetInformation,
-  isFinish,
-}) {
+function DropdownLg({ quadrant, side, id, mode, data, handleSetInformation }) {
   const [value, setValue] = useState(data);
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target);
@@ -22,7 +14,6 @@ function DropdownLg({
       className={classes.largebox}
       title={value}
       onSelect={handleSelect}
-      disabled={isFinish}
     >
       <Dropdown.Item eventKey="1">1</Dropdown.Item>
       <Dropdown.Item eventKey="2">2</Dropdown.Item>

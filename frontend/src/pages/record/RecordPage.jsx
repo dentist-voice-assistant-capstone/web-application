@@ -178,7 +178,6 @@ const RecordPage = () => {
             className={classes.box}
             title={quadrant}
             onSelect={handleSelect}
-            disabled={!isFinish}
           >
             <Dropdown.Item eventKey="1">1</Dropdown.Item>
             <Dropdown.Item eventKey="2">2</Dropdown.Item>
@@ -191,28 +190,24 @@ const RecordPage = () => {
             <RecordInformation
               information={information[0]}
               handleSetInformation={handleSetInformation}
-              isFinish={!isFinish}
             />
           )}
           {quadrant === 2 && (
             <RecordInformation
               information={information[1]}
               handleSetInformation={handleSetInformation}
-              isFinish={!isFinish}
             />
           )}
           {quadrant === 3 && (
             <RecordInformation
               information={information[2]}
               handleSetInformation={handleSetInformation}
-              isFinish={!isFinish}
             />
           )}
           {quadrant === 4 && (
             <RecordInformation
               information={information[3]}
               handleSetInformation={handleSetInformation}
-              isFinish={!isFinish}
             />
           )}
         </div>
@@ -280,7 +275,7 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady || isFinish) {
+  if (true) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */
