@@ -11,7 +11,7 @@ import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import Spinner from "react-bootstrap/Spinner";
 import { FiCloudOff } from "react-icons/fi";
-import ModalConfirm from "../../components/ui/ModalConfirm";
+import Modal from "../../components/ui/Modal";
 
 import {
   initiateConnection,
@@ -164,11 +164,13 @@ const RecordPage = () => {
   const PDRETableComponentToBeRendered = (
     <Fragment>
       {checkFinish && (
-        <ModalConfirm
-          header={"Confirm Information"}
+        <Modal
+          header="Confirm Information"
           content={modalConfirmContent}
           onOKClick={confirmHandler}
           onCancelClick={checkFinishHandler}
+          okButtonText="Save"
+          modalType="confirm"
         />
       )}
       <div className="landing-page">

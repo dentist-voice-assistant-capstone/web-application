@@ -39,6 +39,10 @@
   background-color: var(--primary-color-info);
 }
 
+.modal.confirm .modal__header {
+  background-color: var(--primary-color-info);
+}
+
 .modal .modal__header p {
   font-size: 20px;
   color: white;
@@ -62,24 +66,43 @@
   font-size: 20px;
 }
 
+/* in case there only 1 button */
 .modal .modal__actions {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
 .modal .modal__actions button {
   border-radius: var(--main-border-radius);
+  text-align: center;
   font-size: 18px;
   width: 30%;
-  padding: 0.3rem 1rem 0.3rem 1rem;
+  padding: 0.25rem 1rem 0.25rem 1rem;
   border: 0;
 }
 
-.modal.info .modal__actions button {
+/* there are 2 buttons */
+.modal.confirm .modal__actions {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.modal.confirm .modal__actions button {
+  width: 40%;
+}
+
+.modal.info .modal__actions button,
+.modal.confirm .modal__actions button.ok_button {
   color: white;
   background-color: green;
+}
+
+.modal.confirm .modal__actions button.ok_button:hover {
+  background-color: #00ab41;
 }
 
 .modal.error .modal__actions button {
@@ -89,6 +112,17 @@
 
 .modal.error .modal__actions button:hover {
   background-color: var(--primary-color-error);
+}
+
+.modal.confirm .modal__actions button.cancel_button {
+  background-color: white;
+  color: black;
+  border: 0.5px solid lightgray;
+}
+
+.modal.confirm .modal__actions button.cancel_button:hover {
+  background-color: #ececec;
+  color: black;
 }
 
 /* backdrop */
