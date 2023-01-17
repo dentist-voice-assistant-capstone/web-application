@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import ner_model_pb2 as ner__model__pb2
+import ner_model_pb2 as proto_dot_ner__model__pb2
 
 
 class NERBackendStub(object):
@@ -16,8 +16,8 @@ class NERBackendStub(object):
         """
         self.StreamingNER = channel.stream_stream(
                 '/ner_backend.NERBackend/StreamingNER',
-                request_serializer=ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
-                response_deserializer=ner__model__pb2.NERResponse.FromString,
+                request_serializer=proto_dot_ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
+                response_deserializer=proto_dot_ner__model__pb2.NERResponse.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_NERBackendServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'StreamingNER': grpc.stream_stream_rpc_method_handler(
                     servicer.StreamingNER,
-                    request_deserializer=ner__model__pb2.StreamingTranscribeResponse.FromString,
-                    response_serializer=ner__model__pb2.NERResponse.SerializeToString,
+                    request_deserializer=proto_dot_ner__model__pb2.StreamingTranscribeResponse.FromString,
+                    response_serializer=proto_dot_ner__model__pb2.NERResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +60,7 @@ class NERBackend(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.stream_stream(request_iterator, target, '/ner_backend.NERBackend/StreamingNER',
-            ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
-            ner__model__pb2.NERResponse.FromString,
+            proto_dot_ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
+            proto_dot_ner__model__pb2.NERResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

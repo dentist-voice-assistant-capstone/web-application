@@ -6,13 +6,28 @@ service NERBackend {
     rpc StreamingNER(stream StreamingTranscribeResponse) returns (stream NERResponse);
 }
 
+message SemanticCommand {
+    string command = 1;
+    CommandData data = 2;
+}
 
-message NERRequest {
-    string message = 1;
+message CommandData {
+    Zee zee = 1;
+    string tooth_side = 2;
+    string position = 3;
+    bool is_number_PD = 4;
+    int32 payload = 5;
+
+    repeated Zee missing = 6;
+}
+
+message Zee {
+  int32 first_zee = 1;
+  int32 second_zee = 2;
 }
 
 message NERResponse {
-    string message = 1;
+    repeated SemanticCommand response = 1;
 }
 
 message TranscriptionResult {
