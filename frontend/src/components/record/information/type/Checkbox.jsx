@@ -1,15 +1,28 @@
 import { useState } from "react";
 import classes from "./Checkbox.module.css";
 
-function Checkbox() {
-  const [isChecked, setIsChecked] = useState(false);
+function Checkbox({
+  quadrant,
+  side,
+  id,
+  mode,
+  specific_id,
+  data,
+  handleSetInformation,
+}) {
+  const [isChecked, setIsChecked] = useState(data);
+
+  const handleSelect = (target) => {
+    handleSetInformation(quadrant, id, side, mode, target, specific_id);
+    setIsChecked(target);
+  };
 
   return (
     <label className={classes.l}>
       <input
         type="checkbox"
         onChange={() => {
-          setIsChecked(!isChecked);
+          handleSelect(!isChecked);
         }}
       />
       <span

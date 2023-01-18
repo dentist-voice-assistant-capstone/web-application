@@ -3,15 +3,16 @@ import classes from "./RecordInformation.module.css";
 import RecordSection from "./information/RecordSection";
 import RecordHeader from "./information/RecordHeader";
 
-const RecordInformation = ({ quadrant }) => {
-  const data = [1, 2, 3, 4, 5, 6, 7, 8];
-  //   const [quadrant, setQuadrant] = useState("1");
-
+const RecordInformation = ({ information, handleSetInformation }) => {
   return (
     <div className={classes.direction}>
       <RecordHeader />
-      {data.map((id) => (
-        <RecordSection id={`${quadrant}${id}`} />
+      {information.idxArray.map((idx) => (
+        <RecordSection
+          quadrant={information.quadrant}
+          information={idx}
+          handleSetInformation={handleSetInformation}
+        />
       ))}
     </div>
   );
