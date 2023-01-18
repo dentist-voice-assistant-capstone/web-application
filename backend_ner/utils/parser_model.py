@@ -30,7 +30,9 @@ class ParserModel:
         if save:
             self.semantic_object_list = new_semantic_object_list
             self.last_pdre_state = new_last_pdre_state
-            self.last_symbol = tokens[-1][1] == "Symbol"
+            self.last_symbol = False
+            if len(tokens) > 0:
+                self.last_symbol = tokens[-1][1] == "Symbol"
         
         return result
 

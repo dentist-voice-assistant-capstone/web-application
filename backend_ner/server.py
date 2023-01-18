@@ -32,6 +32,8 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         Wait for a response from clients, then predict tags from the response using wangchanberta model (ONNX CPU)
         """
         # Reset all the parameter when use this function
+        sentences = []
+        old_is_final = True
         self.parser.reset()
         for request in request_iterator:
             # Concatenate trancripts in the responses
@@ -46,14 +48,26 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             # however if we add space at the end of the sentence it will resolve the problem
             sentence = sentence + " " 
 
+            if old_is_final:
+                sentences.append(sentence)
+            else:
+                sentences[-1] = sentence
+            print(sentences)
+
             # Predict the class of each token in the sentence
             predicted_token = self.token_classifier.inference(sentence)
+            print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
             semantics = self.parser.inference(predicted_token, request.is_final)
+            print(semantics)
 
+            print()
+
+            old_is_final = request.is_final
             # Create a dummy response
-            response = create_ner_response(semantics)
-            yield response
+            if len(semantics) > 0:
+                response = create_ner_response(semantics)
+                yield response
 
 
 address = f"[::]:{config.PORT}"

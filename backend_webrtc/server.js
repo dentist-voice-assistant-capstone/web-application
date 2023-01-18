@@ -1,9 +1,10 @@
+const ToothTable = require("./teeth/ToothTable.js")
+
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const WavFileWriter = require("wav").FileWriter;
 const gowajee_service = require('./utils/gowajee_service.js');
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
@@ -53,6 +54,7 @@ io.on("connection", (socket) => {
   let sink = null;
   let audioTrack = null;
   let is_record = false;
+  let toothTable = new ToothTable();
 
   // Connect to gRPC Gowajee Streaming Backend
   let gowajee_stub = new speech2text_protoc.GowajeeSpeechToText(
@@ -137,8 +139,62 @@ io.on("connection", (socket) => {
     gowajee_call.on('data', (response) => {
       ner_call.write(response);
     });
+
+    ner_call.on('data', (response) => {
+      // console.log(response.response);
+      let semanticList = response.response;
+      let isUpdate = false;
+
+      semanticList.forEach(semantic => {
+        mode = semantic.command;
+        pd_re_bop = ["PDRE", "BOP"];
+        mo_mgj = ["MO", "MGJ"];
+        if (pd_re_bop.includes(mode)) {
+          side = semantic.data.tooth_side.toLowerCase();
+          position = semantic.data.position.toLowerCase();
+          q = semantic.data.zee.first_zee;
+          i = semantic.data.zee.second_zee;
+          target = semantic.data.payload;
+
+          if (mode === "PDRE") { 
+            mode = semantic.data.is_number_PD ? "PD": "RE";
+          }
+
+          // console.log(mode, q, i, side, position, '-->', target)
+          if (toothTable.updateValue(q, i, mode, target, side, position))
+            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position);
+        }
+        else if (mo_mgj.includes(mode)) {
+          q = semantic.data.zee.first_zee;
+          i = semantic.data.zee.second_zee;
+          target = semantic.data.payload;
+
+          // console.log(mode, q, i, '-->', target)
+          if (toothTable.updateValue(q, i, mode, target))
+            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
+        }
+        else if (mode === "Missing"){
+          missing_list = semantic.data.missing;
+          missing_list.forEach(missing_tooth => {
+            q = missing_tooth.first_zee;
+            i = missing_tooth.second_zee;
+            target = true;
+            
+            // console.log(mode, q, i, '-->', target)
+            if (toothTable.updateValue(q, i, mode, target))
+              sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
+          });
+        }
+        toothTable.showPDREValue();
+      });
+    });
   };
 });
+
+const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null) => {
+  data = {q, i, mode, target, side, position}
+  socket.emit("data", data);
+}
 
 server.listen(process.env.SERVER_PORT, () => {
   console.log(`listening on *:${process.env.SERVER_PORT}`);

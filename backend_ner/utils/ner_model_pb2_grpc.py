@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import ner_model_pb2 as proto_dot_ner__model__pb2
+import utils.ner_model_pb2 as proto_dot_ner__model__pb2
 
 
 class NERBackendStub(object):

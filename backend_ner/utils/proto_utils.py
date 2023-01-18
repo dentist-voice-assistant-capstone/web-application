@@ -1,4 +1,4 @@
-from ner_model_pb2 import NERResponse, Zee, CommandData, SemanticCommand
+from utils.ner_model_pb2 import NERResponse, Zee, CommandData, SemanticCommand
 
 def create_ner_response(semantics):
     return NERResponse(
