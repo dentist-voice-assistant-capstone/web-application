@@ -116,6 +116,9 @@ const RecordPage = () => {
 
     setInformation(newInformation);
   };
+  console.log("===============")
+  console.log(information)
+  console.log("===============")
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
@@ -139,7 +142,8 @@ const RecordPage = () => {
       setSocket,
       setPeerConnection,
       setLocalStream,
-      setSocketFailedToConnect
+      setSocketFailedToConnect,
+      handleSetInformation
     );
   }, []);
 

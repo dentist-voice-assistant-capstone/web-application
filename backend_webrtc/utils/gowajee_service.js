@@ -1,6 +1,7 @@
-const decoder = require('./pbs/decoder_type_pb');
-const encoder = require('./pbs/audio_pb');
+const decoder = require('../pbs/decoder_type_pb');
+const encoder = require('../pbs/audio_pb');
 
+const RATE = 48000 
 function init_streaming_request() {
     // Gowajee API
     // Initialize Transcribe Config for API (set to default)
@@ -9,7 +10,7 @@ function init_streaming_request() {
         decoder_type: decoder.DecoderType.LMBEAMSEARCH,
         get_word_timestamps: false,
         get_speaking_rate: false,
-        word_list: [],
+        word_list: ["พีดีอาร์อี", "บีโอพี", "บัคคัล", "มิซซิ่ง", "missing"],
     };
 
     // Initialize Streaming Config for API (set to default)
@@ -24,7 +25,7 @@ function init_streaming_request() {
     request = {
         streaming_config: streamingConfig,
         audio_data: null,
-        is_final: false,
+        is_final: true,
     };
     return request;
 }

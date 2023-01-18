@@ -31,7 +31,7 @@ const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, s
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
 */
-const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect) => {
+const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation) => {
   let socketFailedToConnectCount = 0
 
   /* 1) initiate RTCPeerConnectionObject and socket object */
@@ -69,6 +69,22 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
       await pc.addIceCandidate(candidate);
     }
   });
+
+  s.on("data", async (data) => {
+    console.log(data);
+
+    if (data.mode === "PD" || data.mode === "RE") {
+      let d;
+      if ((data.q === 1) || (data.q === 4)) {
+        d = {"distal": 0, "buccal": 1, "lingual": 1, "mesial": 2}
+      } else if ((data.q === 2 || data.q === 3)) {
+        d = {"distal": 2, "buccal": 1, "lingual": 1, "mesial": 0}
+      }
+      let spec_id = d[data.position];
+      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
+      handleSetInformation(data.q, data.i, data.side, data.mode, data.target, spec_id)
+    }
+  })
 
   /* 3) set event for RTCPeerConnecton */
   // listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
