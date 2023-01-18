@@ -10,3 +10,14 @@
   height: 32px;
   text-align: center;
 }
+
+.missingBox {
+  width: 100px;
+  height: 511px;
+  display: inline-block;
+  background: rgb(222, 222, 222);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

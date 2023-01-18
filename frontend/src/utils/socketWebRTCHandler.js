@@ -7,6 +7,26 @@ import {
 /* Import modules for using sockets */
 import io from "socket.io-client";
 
+const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, setLocalStream) => {
+  const mediaStream = await navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true,
+  })
+
+  mediaStream.getTracks().forEach((track) => {
+    if (localStream === null) {
+      peerConnection.addTrack(track, mediaStream);
+    } else {
+      localStream.addTrack(track)
+      peerConnection.addTrack(track, localStream);
+    }
+  })
+
+  if (localStream === null) {
+    setLocalStream(mediaStream);
+  }
+}
+
 /* This function is called when the user vist the record page for the first time.
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
@@ -25,7 +45,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   s.on("connect_error", (err) => {
     socketFailedToConnectCount += 1
     console.log(`socket connection error, trying to reconnect #${socketFailedToConnectCount}`)
-    if (socketFailedToConnectCount == SOCKET_RECONNECTION_ATTEMPTS + 1) {
+    if (socketFailedToConnectCount === SOCKET_RECONNECTION_ATTEMPTS + 1) {
       console.log(`maximum reconnect attempts reached, cannot connect socket`)
       setSocketFailedToConnect(true)
       return
@@ -79,18 +99,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
 
   /* 4) get the localStream and then add tracks from the localStream to the peerConnection */
   // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
-  await navigator.mediaDevices
-    .getUserMedia({
-      video: false,
-      audio: true,
-    })
-    .then((mediaStream) => {
-      mediaStream.getTracks().forEach((track) => {
-        pc.addTrack(track, mediaStream);
-      });
-      console.log("add track finished");
-      setLocalStream(mediaStream);
-    });
+  await getAudioTrackAndAddToTheConnection(pc, null, setLocalStream);
 
   setPeerConnection(pc);
   setSocket(s);
@@ -126,8 +135,30 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
   setIsAudioStreaming(false);
 }
 
+/* This function is called when the user finish the recording process by
+ * pressing "finish" button and confirm. This function will terminate the
+ * connection (webRTC and socket) between frontend and backend-streaming.
+ */
+const terminateConnection = (socket, peerConnection, localStream, setSocket, setPeerConnection, setLocalStream) => {
+  socket.disconnect(); // socket disconnect
+
+  if (localStream) {
+    localStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+  }
+  peerConnection.close(); // close webRTCConnection
+
+  console.log("connnection terminated.")
+  // clear states
+  setSocket(null);
+  setPeerConnection(null);
+  setLocalStream(null);
+}
+
 export {
   initiateConnection,
   startAudioStreaming,
-  stopAudioStreaming
+  stopAudioStreaming,
+  terminateConnection
 }

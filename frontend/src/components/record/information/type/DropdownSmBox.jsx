@@ -11,6 +11,7 @@ function RecordDropdownBox({
   mode,
   data,
   handleSetInformation,
+  isFinish,
 }) {
   return (
     <div className={classes.direction}>
@@ -22,6 +23,7 @@ function RecordDropdownBox({
         specific_id={0}
         data={data[0]}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownSm
         quadrant={quadrant}
@@ -31,6 +33,7 @@ function RecordDropdownBox({
         specific_id={1}
         data={data[1]}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
       <DropdownSm
         quadrant={quadrant}
@@ -40,6 +43,7 @@ function RecordDropdownBox({
         specific_id={2}
         data={data[2]}
         handleSetInformation={handleSetInformation}
+        isFinish={isFinish}
       />
     </div>
   );
