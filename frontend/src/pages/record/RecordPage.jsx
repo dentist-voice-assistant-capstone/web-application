@@ -116,9 +116,8 @@ const RecordPage = () => {
 
     setInformation(newInformation);
   };
-  console.log("===============")
-  console.log(information)
-  console.log("===============")
+  console.log("===============");
+  console.log(information);
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
@@ -217,6 +216,15 @@ const RecordPage = () => {
             />
           )}
         </div>
+        <button
+          style={{ margin: "50px 20px 0px 50px" }}
+          onClick={() => {
+            console.log("semantic coming");
+            handleSetInformation(1, 5, "lingual", "RE", 10, 2);
+          }}
+        >
+          Test
+        </button>
         <RecordControlBar
           isPaused={isPaused}
           isFinish={!isFinish}
@@ -281,7 +289,7 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (isConnectionReady || isFinish) {
+  if (true || isConnectionReady || isFinish) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */

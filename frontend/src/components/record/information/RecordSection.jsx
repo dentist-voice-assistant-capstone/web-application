@@ -5,12 +5,9 @@ import { useState } from "react";
 import classes from "./RecordSection.module.css";
 
 const RecordSection = ({ quadrant, information, handleSetInformation }) => {
-  const [buccalInformation, setBuccalInformation] = useState(
-    information.depended_side_data[0]
-  );
-  const [lingualInformation, setLingualInformation] = useState(
-    information.depended_side_data[1]
-  );
+  const buccalInformation = information.depended_side_data[0];
+  const lingualInformation = information.depended_side_data[1];
+
   const mo = information.MO;
   const mgj = information.MGJ;
   const id = information.ID;

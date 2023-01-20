@@ -4,15 +4,13 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./DropdownLg.module.css";
 
 function DropdownLg({ quadrant, side, id, mode, data, handleSetInformation }) {
-  const [value, setValue] = useState(data);
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target);
-    setValue(target);
   };
   return (
     <DropdownButton
       className={classes.largebox}
-      title={value}
+      title={data}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="1">1</Dropdown.Item>

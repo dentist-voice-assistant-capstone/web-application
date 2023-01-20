@@ -12,16 +12,14 @@ function DropdownSm({
   data,
   handleSetInformation,
 }) {
-  const [value, setValue] = useState(data);
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
-    setValue(target);
   };
 
   const PDDropdown = (
     <DropdownButton
       className={classes.smallbox}
-      title={value}
+      title={data}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="-5">-5</Dropdown.Item>
@@ -51,7 +49,7 @@ function DropdownSm({
   const REDropdown = (
     <DropdownButton
       className={classes.smallbox}
-      title={value}
+      title={data}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="1">1</Dropdown.Item>
