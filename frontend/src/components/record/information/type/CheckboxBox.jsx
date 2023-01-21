@@ -5,6 +5,11 @@ import classes from "./CheckboxBox.module.css";
 import Checkbox from "./Checkbox";
 
 function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
+  const spec_id =
+    quadrant === 1 || quadrant === 4
+      ? ["distral", "middle", "mesial"]
+      : ["mesial", "middle", "distral"];
+
   return (
     <div className={classes.direction}>
       <Checkbox
@@ -12,8 +17,8 @@ function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
         side={side}
         id={id}
         mode={mode}
-        specific_id={0}
-        data={data[0]}
+        specific_id={spec_id[0]}
+        data={data[spec_id[0]]}
         handleSetInformation={handleSetInformation}
       />
       <Checkbox
@@ -21,8 +26,8 @@ function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
         side={side}
         id={id}
         mode={mode}
-        specific_id={1}
-        data={data[1]}
+        specific_id={spec_id[1]}
+        data={data[spec_id[1]]}
         handleSetInformation={handleSetInformation}
       />
       <Checkbox
@@ -30,8 +35,8 @@ function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
         side={side}
         id={id}
         mode={mode}
-        specific_id={2}
-        data={data[2]}
+        specific_id={spec_id[2]}
+        data={data[spec_id[2]]}
         handleSetInformation={handleSetInformation}
       />
     </div>

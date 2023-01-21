@@ -1,0 +1,17 @@
+table,
+th,
+tr,
+td {
+  border: 1px solid black;
+}
+td {
+  background-color: rgb(176, 176, 176);
+  color: #000;
+  text-align: center;
+  border: 1px solid black;
+}
+
+tr,
+td {
+  padding: 10px;
+}
