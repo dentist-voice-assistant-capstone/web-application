@@ -55,6 +55,13 @@ const RecordPage = () => {
     });
   };
 
+  const summaryHandler = () => {
+    // console.log(information);
+    navigate("/summary", {
+      state: { information: information },
+    });
+  };
+
   const confirmHandler = () => {
     setIsFinish(true);
     checkFinishHandler();
@@ -106,6 +113,9 @@ const RecordPage = () => {
             } else if (mode === "MGJ") {
               data.MGJ = target;
               return data;
+            } else if (mode === "missing") {
+              data.missing = target;
+              return data;
             }
           }
           return data;
@@ -113,6 +123,7 @@ const RecordPage = () => {
       }
       return obj;
     });
+    console.log(newInformation);
 
     setInformation(newInformation);
   };
@@ -230,6 +241,7 @@ const RecordPage = () => {
           isFinish={!isFinish}
           pauseResumeHandler={pauseResumeHandler}
           checkFinishHandler={checkFinishHandler}
+          summaryHandler={summaryHandler}
         />
       </div>
     </Fragment>

@@ -5,6 +5,7 @@ import EmailConfirmPage from "./pages/register/EmailConfirmPage";
 import AccountEditPage from "./pages/account/AccountEditPage";
 import AudioStreamingPage from "./pages/audioStreaming/AudioStreamingPage";
 import RecordPage from "./pages/record/RecordPage";
+import SummaryPage from "./pages/record/SummaryPage";
 
 export const ROUTES = [
   { path: "/", element: <HomePage /> },
@@ -21,6 +22,7 @@ export const ROUTES_NOT_LOGIN = [
   { path: "*", element: <LoginPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
   { path: "/record", element: <RecordPage /> }, //maybe delete later
+  { path: "/summary", element: <SummaryPage /> }, //maybe delete later
 ];
 
 export default ROUTES;
