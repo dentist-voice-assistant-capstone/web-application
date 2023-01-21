@@ -287,7 +287,7 @@ const RecordPage = () => {
   );
 
   /* connection successful - show PDRE table */
-  if (true) {
+  if (isConnectionReady || isFinish) {
     return PDRETableComponentToBeRendered;
 
     /* trying to connect screen (when first load) */
