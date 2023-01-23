@@ -154,10 +154,13 @@ io.on("connection", (socket) => {
           position = semantic.data.position.toLowerCase();
           q = semantic.data.zee.first_zee;
           i = semantic.data.zee.second_zee;
-          target = semantic.data.payload;
 
           if (mode === "PDRE") { 
+            target = semantic.data.payload;
             mode = semantic.data.is_number_PD ? "PD": "RE";
+          }
+          else {
+            target = semantic.data.BOP_payload
           }
 
           // console.log(mode, q, i, side, position, '-->', target)
