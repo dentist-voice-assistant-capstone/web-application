@@ -1,22 +1,30 @@
 from utils.ner_model_pb2 import NERResponse, Zee, CommandData, SemanticCommand
 
 def create_ner_response(semantics):
-    return NERResponse(
-                    response=[
-                        SemanticCommand(
-                            command = semantic.get("command", None),
-                            data = CommandData(
-                                zee = create_zee(semantic.get("data", dict()).get("zee", None)),
-                                tooth_side = semantic.get("data", dict()).get("tooth_side", None),
-                                position = semantic.get("data", dict()).get("position", None),
-                                is_number_PD = semantic.get("data", dict()).get("is_number_PD", None),
-                                payload = semantic.get("data", dict()).get("payload", 100),
-                                missing = create_missing(semantic.get("data", dict()).get("missing", None)),
-                            )
-                        )
-                        for semantic in semantics
-                    ],
-                )
+    response = []
+    for semantic in semantics:
+        command = semantic.get("command", None)
+        if command == "BOP":
+            data = CommandData(
+                        zee = create_zee(semantic.get("data", dict()).get("zee", None)),
+                        tooth_side = semantic.get("data", dict()).get("tooth_side", None),
+                        position = semantic.get("data", dict()).get("position", None),
+                        is_number_PD = semantic.get("data", dict()).get("is_number_PD", None),
+                        BOP_payload = semantic.get("data", dict()).get("payload", []),
+                        missing = create_missing(semantic.get("data", dict()).get("missing", None)),
+                    )
+        else:
+            data = CommandData(
+                        zee = create_zee(semantic.get("data", dict()).get("zee", None)),
+                        tooth_side = semantic.get("data", dict()).get("tooth_side", None),
+                        position = semantic.get("data", dict()).get("position", None),
+                        is_number_PD = semantic.get("data", dict()).get("is_number_PD", None),
+                        payload = semantic.get("data", dict()).get("payload", 100),
+                        missing = create_missing(semantic.get("data", dict()).get("missing", None)),
+                    )
+        semantic_command = SemanticCommand(command=command, data=data)
+        response.append(semantic_command)
+    return NERResponse(response=response)
 
 def create_zee(list_zee):
     if list_zee is None:

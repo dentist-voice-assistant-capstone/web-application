@@ -19,6 +19,7 @@ message CommandData {
     int32 payload = 5;
 
     repeated Zee missing = 6;
+    repeated bool BOP_payload = 7;  
 }
 
 message Zee {
