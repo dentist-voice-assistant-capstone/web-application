@@ -129,7 +129,7 @@ const RecordPage = () => {
             } else if (mode === "MGJ") {
               data.MGJ = target;
               return data;
-            } else if (mode === "missing") {
+            } else if (mode === "Missing") {
               data.missing = target;
               return data;
             }
@@ -241,11 +241,12 @@ const RecordPage = () => {
         <button
           style={{ margin: "50px 20px 0px 50px" }}
           onClick={() => {
-            console.log("semantic coming");
-            handleSetInformation(1, 1, "buccal", "RE", 10, "middle");
-            handleSetInformation(2, 1, "buccal", "PD", 1, "mesial");
-            handleSetInformation(2, 1, "lingual", "RE", -1, "mesial");
-            handleSetInformation(1, 1, "lingual", "PD", 9, "distal");
+            console.log("test button clicked");
+            // handleSetInformation(1, 1, "buccal", "RE", 10, "middle");
+            // handleSetInformation(2, 1, "buccal", "PD", 1, "mesial");
+            // handleSetInformation(2, 1, "lingual", "RE", -1, "mesial");
+            // handleSetInformation(1, 1, "lingual", "PD", 9, "distal");
+            handleSetInformation(1, 8, "buccal", "BOP", true, "distal");
           }}
         >
           Test
