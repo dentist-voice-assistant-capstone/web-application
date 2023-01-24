@@ -71,18 +71,18 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   });
 
   s.on("data", async (data) => {
-    console.log(data);
-
+    /* mapping position */
     if (data.mode === "PD" || data.mode === "RE") {
-      let d;
-      if ((data.q === 1) || (data.q === 4)) {
-        d = {"distal": 0, "buccal": 1, "lingual": 1, "mesial": 2}
-      } else if ((data.q === 2 || data.q === 3)) {
-        d = {"distal": 2, "buccal": 1, "lingual": 1, "mesial": 0}
+      let spec_id;
+      if (data.position === "buccal" || data.position === "lingual") {
+        spec_id = "middle";
+      } else {
+        spec_id = data.position
       }
-      let spec_id = d[data.position];
-      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
       handleSetInformation(data.q, data.i, data.side, data.mode, data.target, spec_id)
+
+      console.log(data);
+      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
     }
   })
 

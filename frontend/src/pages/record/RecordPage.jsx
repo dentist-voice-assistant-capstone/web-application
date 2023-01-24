@@ -45,6 +45,12 @@ const RecordPage = () => {
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
 
+  /* states for quadrant */
+  const [quadrant, setQuadrant] = useState(1);
+  const handleSelect = (e) => {
+    setQuadrant(parseInt(e));
+  };
+
   const checkFinishHandler = () => {
     /* if click "Finish" button, if the recording is not paused, pause the recording */
     if (!isPaused) {
@@ -73,6 +79,16 @@ const RecordPage = () => {
       setPeerConnection,
       setLocalStream
     );
+  };
+
+  const handleAutoChangeQuadrant = (quadrantToChange) => {
+    setQuadrant((prevQuadrant) => {
+      if (prevQuadrant !== quadrantToChange) {
+        console.log(`Current Q${quadrant}, Change To Q${quadrantToChange}`);
+        return quadrantToChange;
+      }
+      return prevQuadrant;
+    });
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -123,12 +139,13 @@ const RecordPage = () => {
       }
       return obj;
     });
-    console.log(newInformation);
+    // console.log(newInformation);
 
     setInformation(newInformation);
+    handleAutoChangeQuadrant(q);
   };
-  console.log("===============");
-  console.log(information);
+  // console.log("===============");
+  // console.log(information);
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
@@ -156,12 +173,6 @@ const RecordPage = () => {
       handleSetInformation
     );
   }, []);
-
-  /* states for quadrant */
-  const [quadrant, setQuadrant] = useState(1);
-  const handleSelect = (e) => {
-    setQuadrant(parseInt(e));
-  };
 
   const modalConfirmContent = (
     <p>
@@ -231,7 +242,10 @@ const RecordPage = () => {
           style={{ margin: "50px 20px 0px 50px" }}
           onClick={() => {
             console.log("semantic coming");
-            handleSetInformation(1, 5, "lingual", "RE", 10, 2);
+            handleSetInformation(1, 1, "buccal", "RE", 10, "middle");
+            handleSetInformation(2, 1, "buccal", "PD", 1, "mesial");
+            handleSetInformation(2, 1, "lingual", "RE", -1, "mesial");
+            handleSetInformation(1, 1, "lingual", "PD", 9, "distal");
           }}
         >
           Test

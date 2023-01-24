@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
 
   // Connect to NER Backend 
   let ner_stub = new ner_protoc.NERBackend(
-    `localhost:${process.env.NER_BACKEND_PORT}`, 
+    `localhost:${process.env.NER_BACKEND_PORT}`,
     grpc.credentials.createInsecure()
   );
 
@@ -109,17 +109,17 @@ io.on("connection", (socket) => {
 
   // When new audio track is added, then assign audio track
   pc.ontrack = (event) => {
-    
+
     // Initilize Parameter for Gowajee Streaming Stub
     request = gowajee_service.init_streaming_request();
 
     // Create call instance for callling an streaming transcribe method (stub module)
     let gowajee_call = gowajee_stub.StreamingTranscribe((err, response) => {
-      if(err) console.log(err);
+      if (err) console.log(err);
     });
 
     let ner_call = ner_stub.StreamingNER((err, response) => {
-      if(err) console.log(err);
+      if (err) console.log(err);
     });
 
 
@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
     sink = new RTCAudioSink(audioTrack);
     // When new data coming, send to Gowajee server
     sink.ondata = (data) => {
-      if (data.samples.buffer && is_record){ // Send request to Gowajee if is_record is true!!
+      if (data.samples.buffer && is_record) { // Send request to Gowajee if is_record is true!!
         request.audio_data = new Uint8Array(data.samples.buffer); // set request's audio data to the income audio
         gowajee_call.write(request); // send/call for streaming transcribe method
       }
@@ -155,9 +155,9 @@ io.on("connection", (socket) => {
           q = semantic.data.zee.first_zee;
           i = semantic.data.zee.second_zee;
 
-          if (mode === "PDRE") { 
+          if (mode === "PDRE") {
             target = semantic.data.payload;
-            mode = semantic.data.is_number_PD ? "PD": "RE";
+            mode = semantic.data.is_number_PD ? "PD" : "RE";
           }
           else {
             target = semantic.data.BOP_payload
@@ -176,26 +176,26 @@ io.on("connection", (socket) => {
           if (toothTable.updateValue(q, i, mode, target))
             sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
         }
-        else if (mode === "Missing"){
+        else if (mode === "Missing") {
           missing_list = semantic.data.missing;
           missing_list.forEach(missing_tooth => {
             q = missing_tooth.first_zee;
             i = missing_tooth.second_zee;
             target = true;
-            
+
             // console.log(mode, q, i, '-->', target)
             if (toothTable.updateValue(q, i, mode, target))
               sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
           });
         }
-        toothTable.showPDREValue();
+        // toothTable.showPDREValue();
       });
     });
   };
 });
 
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null) => {
-  data = {q, i, mode, target, side, position}
+  data = { q, i, mode, target, side, position }
   socket.emit("data", data);
 }
 

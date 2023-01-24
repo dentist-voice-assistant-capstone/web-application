@@ -14,8 +14,8 @@ function RecordDropdownBox({
 }) {
   const spec_id =
     quadrant === 1 || quadrant === 4
-      ? ["distral", "middle", "mesial"]
-      : ["mesial", "middle", "distral"];
+      ? ["distal", "middle", "mesial"]
+      : ["mesial", "middle", "distal"];
   return (
     <div className={classes.direction}>
       <DropdownSm
