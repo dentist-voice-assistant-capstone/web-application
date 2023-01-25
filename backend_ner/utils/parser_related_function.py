@@ -251,15 +251,28 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
                 3: {'Mesial': 0, 'Buccal': 1, 'Lingual': 1, 'Distal': 2},
                 4: {'Distal': 0, 'Buccal': 1, 'Lingual': 1, 'Mesial': 2},} 
 
-  first_q1_tooth = available_teeth_dict[1][0]
-  first_q2_tooth = available_teeth_dict[2][0]
-  first_q3_tooth = available_teeth_dict[3][0]
-  first_q4_tooth = available_teeth_dict[4][0]
+  first_q1_tooth = None
+  first_q2_tooth = None
+  first_q3_tooth = None
+  first_q4_tooth = None
 
-  last_q1_tooth = available_teeth_dict[1][len(available_teeth_dict[1])-1]
-  last_q2_tooth = available_teeth_dict[2][len(available_teeth_dict[2])-1]
-  last_q3_tooth = available_teeth_dict[3][len(available_teeth_dict[3])-1]
-  last_q4_tooth = available_teeth_dict[4][len(available_teeth_dict[4])-1]
+  last_q1_tooth = None
+  last_q2_tooth = None
+  last_q3_tooth = None
+  last_q4_tooth = None
+
+  if len(available_teeth_dict[1])!=0:
+    first_q1_tooth = available_teeth_dict[1][0]
+    last_q1_tooth = available_teeth_dict[1][len(available_teeth_dict[1])-1]
+  if len(available_teeth_dict[2])!=0:
+    first_q2_tooth = available_teeth_dict[2][0]
+    last_q2_tooth = available_teeth_dict[2][len(available_teeth_dict[2])-1]
+  if len(available_teeth_dict[3])!=0:
+    first_q3_tooth = available_teeth_dict[3][0]
+    last_q3_tooth = available_teeth_dict[3][len(available_teeth_dict[3])-1]
+  if len(available_teeth_dict[4])!=0:
+    first_q4_tooth = available_teeth_dict[4][0]
+    last_q4_tooth = available_teeth_dict[4][len(available_teeth_dict[4])-1]
 
   # reversion of available_teeth_dict value in each quadrant
   rev_available_teeth_dict = {}
@@ -303,7 +316,9 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
           semantic_object['data']['tooth_side'] = word_list[i]
         # 3.2.2 tooth_side and zee already filled -> can fill payload value
         elif semantic_object['data']['tooth_side']!=None and semantic_object['data']['zee']!=None and len(semantic_object['data']['zee'])==2:
-          semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]] = not semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]]
+          if (word_list[i] in ['Buccal', 'Lingual'] and semantic_object['data']['tooth_side'] == word_list[i]) or \
+            (word_list[i] not in ['Buccal', 'Lingual']):
+            semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]] = not semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]]
       # 3.3 Side for 'Edit'
       elif semantic_object['command']=='Edit':
         semantic_object['data']['position'] = word_list[i]
@@ -485,8 +500,20 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
     if 'data' in s_object.keys():
       if (None in s_object['data'].values() or [] in s_object['data'].values()):
         new_result.remove(s_object)
+      # Not 'Missing' command
+      elif 'zee' in s_object['data'].keys() and len(s_object['data']['zee'])==1:
+        new_result.remove(s_object)
       if 'missing' in s_object['data'].keys():
         for e in s_object['data']['missing']:
           if None in e:
             new_result.remove(s_object)
-  return new_result
+  ## BOP special
+  final_result = copy.deepcopy(new_result)
+  latest_zee = [None, None]
+  for k in range(len(new_result)-1, -1, -1):
+    if new_result[k]['command'] == 'BOP':
+      if new_result[k]['data']['zee'] != latest_zee:
+        latest_zee = new_result[k]['data']['zee']
+      else:
+        final_result.remove(new_result[k])
+  return final_result
