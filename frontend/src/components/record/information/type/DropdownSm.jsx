@@ -11,6 +11,7 @@ function DropdownSm({
   specific_id,
   data,
   handleSetInformation,
+  isHighlighted,
 }) {
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
@@ -18,7 +19,9 @@ function DropdownSm({
 
   const PDDropdown = (
     <DropdownButton
-      className={classes.smallbox}
+      className={`${classes["smallbox"]} ${
+        isHighlighted ? classes["highlighted"] : ""
+      }`}
       title={data}
       onSelect={handleSelect}
     >
@@ -48,7 +51,9 @@ function DropdownSm({
 
   const REDropdown = (
     <DropdownButton
-      className={classes.smallbox}
+      className={`${classes["smallbox"]} ${
+        isHighlighted ? classes["highlighted"] : ""
+      }`}
       title={data}
       onSelect={handleSelect}
     >

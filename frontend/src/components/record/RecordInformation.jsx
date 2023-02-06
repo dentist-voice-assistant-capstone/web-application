@@ -14,9 +14,17 @@ const RecordInformation = ({
       <RecordHeader currentCommand={currentCommand} />
       {information.idxArray.map((idx) => (
         <RecordSection
+          key={information.quadrant.toString() + idx.ID.toString()}
+          tooth={information.quadrant.toString() + idx.ID.toString()}
           quadrant={information.quadrant}
           information={idx}
           handleSetInformation={handleSetInformation}
+          currentCommand={
+            information.quadrant.toString() + idx.ID.toString() ===
+            currentCommand.tooth
+              ? currentCommand
+              : null
+          }
         />
       ))}
     </div>

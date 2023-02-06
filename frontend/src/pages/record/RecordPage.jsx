@@ -1,6 +1,6 @@
 /* import React Libraries */
-import { useState, useContext, useEffect, Fragment } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
@@ -52,9 +52,9 @@ const RecordPage = () => {
   const [isFinish, setIsFinish] = useState(false);
   const [currentCommand, setCurrentCommand] = useState({
     command: "PDRE",
-    zee: "18",
-    side: "Buccal",
-    position: null, //should be "distal", "middle" or "mesial" !!
+    tooth: "15",
+    side: "buccal",
+    position: "distal", //should be "distal", "middle" or "mesial" !!
   });
 
   /* states for quadrant */
@@ -215,7 +215,7 @@ const RecordPage = () => {
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}
-            tooth={currentCommand.zee}
+            tooth={currentCommand.tooth}
           />
         </div>
         <div className={classes.droplist}>

@@ -16,24 +16,18 @@ const RecordHeader = ({ currentCommand }) => {
   if (command === "PDRE") {
     commandToHighLight.PDREBuccal = true;
     commandToHighLight.PDRELingual = true;
-    switch (side) {
-      case "buccal":
-        commandToHighLight.PDRELingual = false;
-        break;
-      case "lingual":
-        commandToHighLight.PDREBuccal = false;
-        break;
+    if (side === "buccal") {
+      commandToHighLight.PDRELingual = false;
+    } else if (side === "lingual") {
+      commandToHighLight.PDREBuccal = false;
     }
-  } else if (command == "BOP") {
+  } else if (command === "BOP") {
     commandToHighLight.BOPBuccal = true;
     commandToHighLight.BOPLingual = true;
-    switch (side) {
-      case "buccal":
-        commandToHighLight.BOPLingual = false;
-        break;
-      case "lingual":
-        commandToHighLight.BOPBuccal = false;
-        break;
+    if (side === "buccal") {
+      commandToHighLight.BOPLingual = false;
+    } else if (side === "lingual") {
+      commandToHighLight.BOPBuccal = false;
     }
   }
 

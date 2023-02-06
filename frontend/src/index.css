@@ -4,7 +4,8 @@
   --primary-color-error: #ef5350;
   --secondary-color-error: #e57373;
   --primary-color-info: #494848;
-  --primary-color-highlight: yellow;
+  --primary-color-highlight: #fff154;
+  --secondary-color-highlight: #fff9ba;
 }
 
 * {

@@ -11,6 +11,7 @@ function RecordDropdownBox({
   mode,
   data,
   handleSetInformation,
+  positionToBeHighlighted,
 }) {
   const spec_id =
     quadrant === 1 || quadrant === 4
@@ -26,6 +27,7 @@ function RecordDropdownBox({
         specific_id={spec_id[0]}
         data={data[spec_id[0]]}
         handleSetInformation={handleSetInformation}
+        isHighlighted={positionToBeHighlighted === spec_id[0] ? true : false}
       />
       <DropdownSm
         quadrant={quadrant}
@@ -35,6 +37,7 @@ function RecordDropdownBox({
         specific_id={spec_id[1]}
         data={data[spec_id[1]]}
         handleSetInformation={handleSetInformation}
+        isHighlighted={positionToBeHighlighted === spec_id[1] ? true : false}
       />
       <DropdownSm
         quadrant={quadrant}
@@ -44,6 +47,7 @@ function RecordDropdownBox({
         specific_id={spec_id[2]}
         data={data[spec_id[2]]}
         handleSetInformation={handleSetInformation}
+        isHighlighted={positionToBeHighlighted === spec_id[2] ? true : false}
       />
     </div>
   );

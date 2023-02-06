@@ -3,13 +3,23 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import classes from "./DropdownLg.module.css";
 
-function DropdownLg({ quadrant, side, id, mode, data, handleSetInformation }) {
+function DropdownLg({
+  quadrant,
+  side,
+  id,
+  mode,
+  data,
+  handleSetInformation,
+  isHighlighted,
+}) {
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target);
   };
   return (
     <DropdownButton
-      className={classes.largebox}
+      className={`${classes["largebox"]} ${
+        isHighlighted ? classes["highlighted"] : ""
+      }`}
       title={data}
       onSelect={handleSelect}
     >

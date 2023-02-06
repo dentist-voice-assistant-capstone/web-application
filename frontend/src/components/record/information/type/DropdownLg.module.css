@@ -2,3 +2,7 @@
   width: 100px;
   height: 32px;
 }
+
+.largebox.highlighted button {
+  background: var(--secondary-color-highlight);
+}

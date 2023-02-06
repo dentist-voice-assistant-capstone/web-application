@@ -2,3 +2,7 @@
   width: 32px;
   height: 32px;
 }
+
+.smallbox.highlighted button {
+  background: var(--secondary-color-highlight);
+}
