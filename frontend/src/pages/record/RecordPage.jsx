@@ -51,10 +51,10 @@ const RecordPage = () => {
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
   const [currentCommand, setCurrentCommand] = useState({
-    command: null,
-    zee: null,
-    side: null,
-    position: null,
+    command: "PDRE",
+    zee: "18",
+    side: "Buccal",
+    position: null, //should be "distal", "middle" or "mesial" !!
   });
 
   /* states for quadrant */
@@ -213,7 +213,10 @@ const RecordPage = () => {
       <div className="landing-page">
         <TopInformationBar />
         <div className={classes.current_command_box}>
-          <CurrentCommandBox />
+          <CurrentCommandBox
+            command={currentCommand.command}
+            tooth={currentCommand.zee}
+          />
         </div>
         <div className={classes.droplist}>
           <DropdownButton
@@ -231,24 +234,28 @@ const RecordPage = () => {
           {quadrant === 1 && (
             <RecordInformation
               information={information[0]}
+              currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
             />
           )}
           {quadrant === 2 && (
             <RecordInformation
               information={information[1]}
+              currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
             />
           )}
           {quadrant === 3 && (
             <RecordInformation
               information={information[2]}
+              currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
             />
           )}
           {quadrant === 4 && (
             <RecordInformation
               information={information[3]}
+              currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
             />
           )}

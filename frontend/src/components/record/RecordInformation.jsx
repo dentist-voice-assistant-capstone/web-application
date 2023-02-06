@@ -3,10 +3,15 @@ import classes from "./RecordInformation.module.css";
 import RecordSection from "./information/RecordSection";
 import RecordHeader from "./information/RecordHeader";
 
-const RecordInformation = ({ information, handleSetInformation, isFinish }) => {
+const RecordInformation = ({
+  information,
+  handleSetInformation,
+  currentCommand,
+  isFinish,
+}) => {
   return (
     <div className={classes.direction}>
-      <RecordHeader />
+      <RecordHeader currentCommand={currentCommand} />
       {information.idxArray.map((idx) => (
         <RecordSection
           quadrant={information.quadrant}
