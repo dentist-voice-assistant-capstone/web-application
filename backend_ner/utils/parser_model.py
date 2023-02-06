@@ -39,4 +39,11 @@ class ParserModel:
     def reset(self):
         self.semantic_object_list = []
         self.last_pdre_state = {'command': None}
+        self.available_teeth_dict = {
+            1: [[1, x] for x in range(8, 0, -1)], 
+            2: [[2, x] for x in range(1, 9)], 
+            3: [[3, x] for x in range(8, 0, -1)], 
+            4: [[4, x] for x in range(1, 9)]
+        }
+        self.last_symbol = False
 

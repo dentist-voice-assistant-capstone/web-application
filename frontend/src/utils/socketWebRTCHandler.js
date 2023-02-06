@@ -73,16 +73,32 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   s.on("data", async (data) => {
     console.log(data);
 
-    if (data.mode === "PD" || data.mode === "RE") {
-      let d;
-      if ((data.q === 1) || (data.q === 4)) {
-        d = {"distal": 0, "buccal": 1, "lingual": 1, "mesial": 2}
-      } else if ((data.q === 2 || data.q === 3)) {
-        d = {"distal": 2, "buccal": 1, "lingual": 1, "mesial": 0}
+    if (data.mode !== "BOP") {
+      // [for "PD", "RE", "Missing", "MGJ", "MO" data]
+      let spec_id = null;
+      /* mapping position for PD, RE */
+      if (data.mode === "PD" || data.mode === "RE") {
+        if (data.position === "buccal" || data.position === "lingual") {
+          spec_id = "middle";
+        } else {
+          spec_id = data.position
+        }
       }
-      let spec_id = d[data.position];
-      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
       handleSetInformation(data.q, data.i, data.side, data.mode, data.target, spec_id)
+      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
+    } else {
+      // for "BOP" data[]
+      let positionArray;
+      if (data.q === 1 || data.q === 4) {
+        positionArray = ["distal", "middle", "mesial"]
+      } else if (data.q === 2 || data.q === 3) {
+        positionArray = ["mesial", "middle", "distal"]
+      }
+
+      for (let i = 0; i < 3; i++) {
+        handleSetInformation(data.q, data.i, data.side, data.mode, data.target[i], positionArray[i])
+        console.log(data.q, data.i, data.side, data.mode, data.target[i], positionArray[i])
+      }
     }
   })
 

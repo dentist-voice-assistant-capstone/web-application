@@ -35,13 +35,12 @@ function RecordControlBar(props) {
       {!props.isFinish && (
         <div className={classes.recordControlContainer}>
           <Navbar.Brand className={classes.actions}>
-            <button className={classes.summaryButton}>{"Summary"}</button>
-            {/* <button
-              className={classes.finishButton}
-              onClick={props.checkFinishHandler}
+            <button
+              className={classes.summaryButton}
+              onClick={props.summaryHandler}
             >
-              Back
-            </button> */}
+              {"Summary"}
+            </button>
           </Navbar.Brand>
         </div>
       )}

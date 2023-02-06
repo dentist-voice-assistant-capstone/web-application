@@ -10,7 +10,7 @@ function init_streaming_request() {
         decoder_type: decoder.DecoderType.LMBEAMSEARCH,
         get_word_timestamps: false,
         get_speaking_rate: false,
-        word_list: ["พีดีอาร์อี", "บีโอพี", "บัคคัล", "ลิงกัว", "มิซซิ่ง", "missing"],
+        word_list: ["พีดีอาร์อี", "บีโอพี", "บัคคัล", "ลิงกัว", "มิซซิ่ง"],
     };
 
     // Initialize Streaming Config for API (set to default)

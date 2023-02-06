@@ -12,7 +12,6 @@ const RecordInformation = ({ information, handleSetInformation, isFinish }) => {
           quadrant={information.quadrant}
           information={idx}
           handleSetInformation={handleSetInformation}
-          isFinish={isFinish}
         />
       ))}
     </div>

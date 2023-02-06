@@ -4,15 +4,12 @@ import { useState } from "react";
 import classes from "./CheckboxBox.module.css";
 import Checkbox from "./Checkbox";
 
-function CheckboxBox({
-  quadrant,
-  side,
-  id,
-  mode,
-  data,
-  handleSetInformation,
-  isFinish,
-}) {
+function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
+  const spec_id =
+    quadrant === 1 || quadrant === 4
+      ? ["distal", "middle", "mesial"]
+      : ["mesial", "middle", "distal"];
+
   return (
     <div className={classes.direction}>
       <Checkbox
@@ -20,30 +17,27 @@ function CheckboxBox({
         side={side}
         id={id}
         mode={mode}
-        specific_id={0}
-        data={data[0]}
+        specific_id={spec_id[0]}
+        data={data[spec_id[0]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
       />
       <Checkbox
         quadrant={quadrant}
         side={side}
         id={id}
         mode={mode}
-        specific_id={1}
-        data={data[1]}
+        specific_id={spec_id[1]}
+        data={data[spec_id[1]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
       />
       <Checkbox
         quadrant={quadrant}
         side={side}
         id={id}
         mode={mode}
-        specific_id={2}
-        data={data[2]}
+        specific_id={spec_id[2]}
+        data={data[spec_id[2]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
       />
     </div>
   );
