@@ -32,3 +32,5 @@ backend_ner/model/onnx_model-quantized.onnx
 # ignore all Python cache files
 **/__pycache__/
 *.pyc
+backend_ner/__pycache__
+backend_ner/utils/__pycache__

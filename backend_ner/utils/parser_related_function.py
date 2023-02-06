@@ -200,11 +200,11 @@ def find_next_available_tooth(latest_semantic_object, available_teeth_dict, mode
   latest_quadrant = latest_semantic_object['data']['zee'][0]
   if latest_semantic_object['data']['zee'] not in available_teeth_dict[latest_quadrant]:
     print('Teeth not available.')
-    return 'Error'
+    return None # 'Error'
   old_index = available_teeth_dict[latest_quadrant].index(latest_semantic_object['data']['zee'])
   if old_index == -1:
     print('Teeth not available.')
-    return 'Error'
+    return None # 'Error'
   else:
     # Case 1: not cross to other quadrant
     if old_index+1 < len(available_teeth_dict[latest_quadrant]):
@@ -217,7 +217,7 @@ def find_next_available_tooth(latest_semantic_object, available_teeth_dict, mode
       elif mode=='rev':
         if latest_quadrant > 1:
           return available_teeth_dict[latest_quadrant-1][0]
-  return 'Error'
+  return None # 'Error'
 
 def choose_start_tooth_position(semantic_object):
   # INPUT:  semantic_object

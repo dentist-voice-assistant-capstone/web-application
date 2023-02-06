@@ -54,6 +54,8 @@ io.on("connection", (socket) => {
   let sink = null;
   let audioTrack = null;
   let is_record = false;
+  let gowajee_call = null;
+  let ner_call = null;
   let toothTable = new ToothTable();
 
   // Connect to gRPC Gowajee Streaming Backend
@@ -103,6 +105,8 @@ io.on("connection", (socket) => {
     console.log("disconnect");
     if (sink) {
       sink.stop();
+      // gowajee_call.cancel();
+      // ner_call.cancel()
       sink = null;
     }
   });
@@ -114,11 +118,11 @@ io.on("connection", (socket) => {
     request = gowajee_service.init_streaming_request();
 
     // Create call instance for callling an streaming transcribe method (stub module)
-    let gowajee_call = gowajee_stub.StreamingTranscribe((err, response) => {
+    gowajee_call = gowajee_stub.StreamingTranscribe((err, response) => {
       if (err) console.log(err);
     });
 
-    let ner_call = ner_stub.StreamingNER((err, response) => {
+    ner_call = ner_stub.StreamingNER((err, response) => {
       if (err) console.log(err);
     });
 
@@ -138,6 +142,8 @@ io.on("connection", (socket) => {
     // When receive response from Gowajee Server, Send it to ner backend server
     gowajee_call.on('data', (response) => {
       ner_call.write(response);
+    // }).once('error', () => {
+    //   console.log("end grpc streaming");
     });
 
     ner_call.on('data', (response) => {
@@ -190,7 +196,9 @@ io.on("connection", (socket) => {
         }
         // toothTable.showPDREValue();
       });
-    });
+    // }).once('error', () => {
+    //   console.log("end grpc streaming");
+    });;
   };
 });
 

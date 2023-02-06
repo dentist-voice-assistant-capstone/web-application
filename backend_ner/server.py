@@ -46,6 +46,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             sentence = sentence.replace("สองสาม", "สอง สาม")
             sentence = sentence.replace("บัคเคิล", "บัคคัล")
             sentence = sentence.replace("missing", "มิซซิ่ง")
+            sentence = sentence.replace("macro", "บัคคัล")
             # hack, token classifier model cannot predict single number text, 
             # however if we add space at the end of the sentence it will resolve the problem
             sentence = sentence + " " 
