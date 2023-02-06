@@ -1,18 +1,23 @@
-import TopInformationBar from "../../components/record/TopInformationBar";
+/* import React Libraries */
 import { useState, useContext, useEffect, Fragment } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+/* import React Components */
+import TopInformationBar from "../../components/record/TopInformationBar";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import classes from "./RecordPage.module.css";
-import { EX_DATA } from "../../utils/constants";
-// import NavBar from "../../components/ui/NavBar";
-import { useNavigate, useLocation } from "react-router-dom";
-// import { startAPIHandler } from "../../utils/apiHandler";
 import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import Spinner from "react-bootstrap/Spinner";
 import { FiCloudOff } from "react-icons/fi";
 import Modal from "../../components/ui/Modal";
+import CurrentCommandBox from "../../components/record/CurrentCommandBox";
 
+/* import css styles */
+import classes from "./RecordPage.module.css";
+
+/* import related data and functions */
+import { EX_DATA } from "../../utils/constants";
 import {
   initiateConnection,
   startAudioStreaming,
@@ -41,9 +46,16 @@ const RecordPage = () => {
     });
   };
 
+  /* states for teeth information */
   const [information, setInformation] = useState(EX_DATA);
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
+  const [currentCommand, setCurrentCommand] = useState({
+    command: null,
+    zee: null,
+    side: null,
+    position: null,
+  });
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -200,6 +212,9 @@ const RecordPage = () => {
       )}
       <div className="landing-page">
         <TopInformationBar />
+        <div className={classes.current_command_box}>
+          <CurrentCommandBox />
+        </div>
         <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}

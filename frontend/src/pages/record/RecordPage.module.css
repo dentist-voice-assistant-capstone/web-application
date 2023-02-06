@@ -6,6 +6,26 @@
   right: 5%;
 }
 
+/* iPad */
+@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .current_command_box {
+    width: 40%;
+    position: absolute;
+    top: 10vh;
+    left: 35%;
+  }
+}
+
+/* WideScreen */
+@media (min-width: 1201px) or (min-height: 1001px) {
+  .current_command_box {
+    width: 35%;
+    position: absolute;
+    top: 20vh;
+    left: 37.5%;
+  }
+}
+
 .box {
   width: 80px;
   height: 80px;
