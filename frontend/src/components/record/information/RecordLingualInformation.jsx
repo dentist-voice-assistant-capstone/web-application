@@ -10,11 +10,25 @@ const RecordLingualInformation = ({
   lingualInformation,
   mo,
   handleSetInformation,
+  currentCommand,
 }) => {
   const pd = lingualInformation.PD;
   const re = lingualInformation.RE;
   const bop = lingualInformation.BOP;
   const side = lingualInformation.side;
+
+  const command =
+    !!currentCommand && !!currentCommand.command
+      ? currentCommand.command
+      : null;
+
+  const positionToBeHighlighted =
+    !!currentCommand && !!currentCommand.position
+      ? currentCommand.position
+      : null;
+
+  const isMOHighlighted = !!currentCommand && command == "MO" ? true : false;
+  const isBOPHighlighted = !!currentCommand && command == "BOP" ? true : false;
 
   return (
     <div className={classes.direction}>
@@ -25,6 +39,7 @@ const RecordLingualInformation = ({
         mode={"MO"}
         data={mo}
         handleSetInformation={handleSetInformation}
+        isHighlighted={isMOHighlighted}
       />
       <CheckboxBox
         quadrant={quadrant}
@@ -33,6 +48,7 @@ const RecordLingualInformation = ({
         mode={"BOP"}
         data={bop}
         handleSetInformation={handleSetInformation}
+        isHighlighted={isBOPHighlighted}
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -41,6 +57,9 @@ const RecordLingualInformation = ({
         mode={"PD"}
         data={pd}
         handleSetInformation={handleSetInformation}
+        positionToBeHighlighted={
+          command == "PDRE" ? positionToBeHighlighted : null
+        }
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -49,6 +68,9 @@ const RecordLingualInformation = ({
         mode={"RE"}
         data={re}
         handleSetInformation={handleSetInformation}
+        positionToBeHighlighted={
+          command == "PDRE" ? positionToBeHighlighted : null
+        }
       />
     </div>
   );

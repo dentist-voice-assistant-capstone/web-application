@@ -52,8 +52,8 @@ const RecordPage = () => {
   const [isFinish, setIsFinish] = useState(false);
   const [currentCommand, setCurrentCommand] = useState({
     command: "BOP",
-    tooth: "17",
-    side: "buccal",
+    tooth: "15",
+    side: "Buccal",
     position: null, //should be "distal", "middle" or "mesial" !!
   });
 
