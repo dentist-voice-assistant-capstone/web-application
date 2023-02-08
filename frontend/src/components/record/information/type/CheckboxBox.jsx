@@ -4,14 +4,26 @@ import { useState } from "react";
 import classes from "./CheckboxBox.module.css";
 import Checkbox from "./Checkbox";
 
-function CheckboxBox({ quadrant, side, id, mode, data, handleSetInformation }) {
+function CheckboxBox({
+  quadrant,
+  side,
+  id,
+  mode,
+  data,
+  handleSetInformation,
+  isHighlighted,
+}) {
   const spec_id =
     quadrant === 1 || quadrant === 4
       ? ["distal", "middle", "mesial"]
       : ["mesial", "middle", "distal"];
 
   return (
-    <div className={classes.direction}>
+    <div
+      className={`${classes["direction"]} ${
+        isHighlighted ? classes["highlighted"] : ""
+      }`}
+    >
       <Checkbox
         quadrant={quadrant}
         side={side}

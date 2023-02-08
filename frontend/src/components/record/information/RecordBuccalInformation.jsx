@@ -28,6 +28,7 @@ const RecordBuccalInformation = ({
       : null;
 
   const isMGJHighlighted = !!currentCommand && command == "MGJ" ? true : false;
+  const isBOPHighlighted = !!currentCommand && command == "BOP" ? true : false;
 
   return (
     <div className={classes.direction}>
@@ -60,6 +61,7 @@ const RecordBuccalInformation = ({
         mode={"BOP"}
         data={bop}
         handleSetInformation={handleSetInformation}
+        isHighlighted={isBOPHighlighted}
       />
       <DropdownLg
         quadrant={quadrant}

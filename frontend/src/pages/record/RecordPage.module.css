@@ -21,7 +21,7 @@
   .current_command_box {
     width: 35%;
     position: absolute;
-    top: 20vh;
+    top: 10vh;
     left: 37.5%;
   }
 }

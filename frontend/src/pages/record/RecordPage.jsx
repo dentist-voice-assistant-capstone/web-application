@@ -51,10 +51,10 @@ const RecordPage = () => {
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
   const [currentCommand, setCurrentCommand] = useState({
-    command: "PDRE",
-    tooth: "15",
+    command: "BOP",
+    tooth: "17",
     side: "buccal",
-    position: "distal", //should be "distal", "middle" or "mesial" !!
+    position: null, //should be "distal", "middle" or "mesial" !!
   });
 
   /* states for quadrant */
