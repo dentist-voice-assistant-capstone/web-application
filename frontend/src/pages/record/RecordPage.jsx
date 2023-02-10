@@ -1,5 +1,5 @@
 /* import React Libraries */
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useReducer, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* import React Components */
@@ -24,6 +24,85 @@ import {
   stopAudioStreaming,
   terminateConnection,
 } from "../../utils/socketWebRTCHandler";
+
+const defaultCurrentCommand = {
+  command: null,
+  tooth: null,
+  side: null,
+  position: null,
+};
+
+const currentCommandReducer = (prevCommand, action) => {
+  switch (action.type) {
+    case "CLEAR_COMMAND":
+      return defaultCurrentCommand;
+    case "UPDATE_COMMAND":
+      return action.payload;
+    case "UPDATE_PDRE_POSITION":
+      /* this action will work when the system receive the RE value of 
+        the latest tooth position
+      */
+      if (
+        prevCommand.command !== "PDRE" ||
+        !!!prevCommand.side ||
+        !!!prevCommand.tooth ||
+        !!!prevCommand.position ||
+        !!!action.payload ||
+        !!!action.payload.tooth ||
+        !!!action.payload.side ||
+        !!!action.payload.position
+      ) {
+        return prevCommand;
+      }
+
+      let tooth = prevCommand.tooth;
+      let q = parseInt(tooth.slice(0, 1));
+      let currentSide = prevCommand.side.toLowerCase();
+      let currentPosition = prevCommand.position.toLowerCase();
+
+      if (
+        tooth !== action.payload.tooth ||
+        currentSide !== action.payload.side.toLowerCase() ||
+        currentPosition !== action.payload.position.toLowerCase()
+      ) {
+        return prevCommand;
+      }
+
+      let positionArray;
+      if (
+        ((q === 1 || q === 4) && currentSide === "buccal") ||
+        ((q === 2 || q === 3) && currentSide === "lingual")
+      ) {
+        positionArray = ["distal", "middle", "mesial"];
+      } else if (
+        ((q === 1 || q === 4) && currentSide === "lingual") ||
+        ((q === 2 || q === 3) && currentSide === "buccal")
+      ) {
+        positionArray = ["mesial", "middle", "distal"];
+      }
+
+      let currentPositionIndex = positionArray.findIndex(
+        (p) => p === currentPosition
+      );
+
+      // console.log("currentPositionIndex", currentPositionIndex);
+
+      // stay at the same zee, just move the position
+      if (currentPositionIndex < 2) {
+        let newPosition = positionArray[currentPositionIndex + 1];
+        return {
+          command: "PDRE",
+          tooth: tooth,
+          side: currentSide,
+          position: newPosition,
+        };
+      } else {
+        return prevCommand;
+      }
+    default:
+      return prevCommand;
+  }
+};
 
 const RecordPage = () => {
   const navigate = useNavigate();
@@ -50,12 +129,18 @@ const RecordPage = () => {
   const [information, setInformation] = useState(EX_DATA);
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
-  const [currentCommand, setCurrentCommand] = useState({
-    command: "BOP",
-    tooth: "15",
-    side: "Buccal",
-    position: null, //should be "distal", "middle" or "mesial" !!
-  });
+
+  const [currentCommand, dispatchCurrentCommand] = useReducer(
+    currentCommandReducer,
+    defaultCurrentCommand
+  );
+
+  // const [currentCommand, setCurrentCommand] = useState({
+  //   command: "MO",
+  //   tooth: "17",
+  //   side: null,
+  //   position: "middle", //should be "distal", "middle" or "mesial" !!
+  // });
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -182,7 +267,8 @@ const RecordPage = () => {
       setPeerConnection,
       setLocalStream,
       setSocketFailedToConnect,
-      handleSetInformation
+      handleSetInformation,
+      dispatchCurrentCommand
     );
   }, []);
 
@@ -263,15 +349,33 @@ const RecordPage = () => {
         <button
           style={{ margin: "50px 20px 0px 50px" }}
           onClick={() => {
-            console.log("test button clicked");
-            // handleSetInformation(1, 1, "buccal", "RE", 10, "middle");
-            // handleSetInformation(2, 1, "buccal", "PD", 1, "mesial");
-            // handleSetInformation(2, 1, "lingual", "RE", -1, "mesial");
-            // handleSetInformation(1, 1, "lingual", "PD", 9, "distal");
-            handleSetInformation(1, 8, "buccal", "BOP", true, "distal");
+            dispatchCurrentCommand({
+              type: "UPDATE_COMMAND",
+              payload: {
+                command: "PDRE",
+                tooth: "15",
+                side: "lingual",
+                position: "mesial",
+              },
+            });
           }}
         >
-          Test
+          Initialize
+        </button>
+        <button
+          style={{ margin: "50px 20px 0px 50px" }}
+          onClick={() => {
+            dispatchCurrentCommand({
+              type: "UPDATE_PDRE_POSITION",
+              payload: {
+                tooth: "15",
+                side: "lingual",
+                position: "middle",
+              },
+            });
+          }}
+        >
+          Move
         </button>
         <RecordControlBar
           isPaused={isPaused}

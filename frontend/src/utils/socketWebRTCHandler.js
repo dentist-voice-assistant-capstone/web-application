@@ -31,7 +31,7 @@ const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, s
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
 */
-const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation) => {
+const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation, dispatchCurrentCommand) => {
   let socketFailedToConnectCount = 0
 
   /* 1) initiate RTCPeerConnectionObject and socket object */
@@ -84,6 +84,19 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
           spec_id = data.position
         }
       }
+
+      // update highlight when receive "RE" command
+      if (data.mode === "RE") {
+        dispatchCurrentCommand({
+          type: "UPDATE_PDRE_POSITION",
+          payload: {
+            tooth: data.q.toString() + data.i.toString(),
+            side: data.side,
+            position: spec_id,
+          },
+        });
+      }
+
       handleSetInformation(data.q, data.i, data.side, data.mode, data.target, spec_id)
       console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
     } else {
