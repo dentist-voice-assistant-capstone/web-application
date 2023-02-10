@@ -36,6 +36,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         # Reset all the parameter when use this function
         sentences = []
         old_is_final = True
+        old_command, old_tooth, old_tooth_side = None, None, None
         self.parser.reset()
         for request in request_iterator:
             # Concatenate trancripts in the responses
@@ -58,16 +59,29 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 sentences.append(sentence)
             else:
                 sentences[-1] = sentence
-            # print(sentences)
+            print(sentences)
 
             # Predict the class of each token in the sentence
             predicted_token = self.token_classifier.inference(sentence)
-            # print(predicted_token)
+            print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
             semantics = self.parser.inference(predicted_token, request.is_final)
-            # print(semantics)
+            command, tooth, tooth_side, semantics = semantics.values()
+            print(semantics)
+            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or tooth != old_tooth or tooth_side != old_tooth_side):
+                update_display = {
+                    "command": command,
+                    "data": {
+                        "zee": tooth,
+                        "tooth_side": tooth_side,
+                    },
+                    "is_complete": False
+                }
+                old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
+                semantics.append(update_display)
 
-            # print()
+
+            print()
 
             old_is_final = request.is_final
             # Create a dummy response

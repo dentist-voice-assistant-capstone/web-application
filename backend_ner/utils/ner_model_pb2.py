@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/ner_model.proto\x12\x0bner_backend\"J\n\x0fSemanticCommand\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12&\n\x04\x64\x61ta\x18\x02 \x01(\x0b\x32\x18.ner_backend.CommandData\"\xb1\x01\n\x0b\x43ommandData\x12\x1d\n\x03zee\x18\x01 \x01(\x0b\x32\x10.ner_backend.Zee\x12\x12\n\ntooth_side\x18\x02 \x01(\t\x12\x10\n\x08position\x18\x03 \x01(\t\x12\x14\n\x0cis_number_PD\x18\x04 \x01(\x08\x12\x0f\n\x07payload\x18\x05 \x01(\x05\x12!\n\x07missing\x18\x06 \x03(\x0b\x32\x10.ner_backend.Zee\x12\x13\n\x0b\x42OP_payload\x18\x07 \x03(\x08\",\n\x03Zee\x12\x11\n\tfirst_zee\x18\x01 \x01(\x05\x12\x12\n\nsecond_zee\x18\x02 \x01(\x05\"=\n\x0bNERResponse\x12.\n\x08response\x18\x01 \x03(\x0b\x32\x1c.ner_backend.SemanticCommand\"\x96\x01\n\x13TranscriptionResult\x12\x12\n\ntranscript\x18\x01 \x01(\t\x12\x12\n\nstart_time\x18\x02 \x01(\x02\x12\x10\n\x08\x65nd_time\x18\x03 \x01(\x02\x12\x15\n\rspeaking_rate\x18\x04 \x01(\x02\x12.\n\x0fword_timestamps\x18\x05 \x03(\x0b\x32\x15.ner_backend.WordInfo\"R\n\x08WordInfo\x12\x0c\n\x04word\x18\x01 \x01(\t\x12\x12\n\nstart_time\x18\x02 \x01(\x02\x12\x10\n\x08\x65nd_time\x18\x03 \x01(\x02\x12\x12\n\nconfidence\x18\x04 \x01(\x02\"\x85\x01\n\x1bStreamingTranscribeResponse\x12\x31\n\x07results\x18\x01 \x03(\x0b\x32 .ner_backend.TranscriptionResult\x12\x10\n\x08is_final\x18\x02 \x01(\x08\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x10\n\x08\x64uration\x18\x07 \x01(\x02\x32\x64\n\nNERBackend\x12V\n\x0cStreamingNER\x12(.ner_backend.StreamingTranscribeResponse\x1a\x18.ner_backend.NERResponse(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15proto/ner_model.proto\x12\x0bner_backend\"_\n\x0fSemanticCommand\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12&\n\x04\x64\x61ta\x18\x02 \x01(\x0b\x32\x18.ner_backend.CommandData\x12\x13\n\x0bis_complete\x18\x03 \x01(\x08\"\xb1\x01\n\x0b\x43ommandData\x12\x1d\n\x03zee\x18\x01 \x01(\x0b\x32\x10.ner_backend.Zee\x12\x12\n\ntooth_side\x18\x02 \x01(\t\x12\x10\n\x08position\x18\x03 \x01(\t\x12\x14\n\x0cis_number_PD\x18\x04 \x01(\x08\x12\x0f\n\x07payload\x18\x05 \x01(\x05\x12!\n\x07missing\x18\x06 \x03(\x0b\x32\x10.ner_backend.Zee\x12\x13\n\x0b\x42OP_payload\x18\x07 \x03(\x08\",\n\x03Zee\x12\x11\n\tfirst_zee\x18\x01 \x01(\x05\x12\x12\n\nsecond_zee\x18\x02 \x01(\x05\"=\n\x0bNERResponse\x12.\n\x08response\x18\x01 \x03(\x0b\x32\x1c.ner_backend.SemanticCommand\"\x96\x01\n\x13TranscriptionResult\x12\x12\n\ntranscript\x18\x01 \x01(\t\x12\x12\n\nstart_time\x18\x02 \x01(\x02\x12\x10\n\x08\x65nd_time\x18\x03 \x01(\x02\x12\x15\n\rspeaking_rate\x18\x04 \x01(\x02\x12.\n\x0fword_timestamps\x18\x05 \x03(\x0b\x32\x15.ner_backend.WordInfo\"R\n\x08WordInfo\x12\x0c\n\x04word\x18\x01 \x01(\t\x12\x12\n\nstart_time\x18\x02 \x01(\x02\x12\x10\n\x08\x65nd_time\x18\x03 \x01(\x02\x12\x12\n\nconfidence\x18\x04 \x01(\x02\"\x85\x01\n\x1bStreamingTranscribeResponse\x12\x31\n\x07results\x18\x01 \x03(\x0b\x32 .ner_backend.TranscriptionResult\x12\x10\n\x08is_final\x18\x02 \x01(\x08\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x10\n\x08\x64uration\x18\x07 \x01(\x02\x32\x64\n\nNERBackend\x12V\n\x0cStreamingNER\x12(.ner_backend.StreamingTranscribeResponse\x1a\x18.ner_backend.NERResponse(\x01\x30\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'proto.ner_model_pb2', globals())
@@ -21,19 +21,19 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _SEMANTICCOMMAND._serialized_start=38
-  _SEMANTICCOMMAND._serialized_end=112
-  _COMMANDDATA._serialized_start=115
-  _COMMANDDATA._serialized_end=292
-  _ZEE._serialized_start=294
-  _ZEE._serialized_end=338
-  _NERRESPONSE._serialized_start=340
-  _NERRESPONSE._serialized_end=401
-  _TRANSCRIPTIONRESULT._serialized_start=404
-  _TRANSCRIPTIONRESULT._serialized_end=554
-  _WORDINFO._serialized_start=556
-  _WORDINFO._serialized_end=638
-  _STREAMINGTRANSCRIBERESPONSE._serialized_start=641
-  _STREAMINGTRANSCRIBERESPONSE._serialized_end=774
-  _NERBACKEND._serialized_start=776
-  _NERBACKEND._serialized_end=876
+  _SEMANTICCOMMAND._serialized_end=133
+  _COMMANDDATA._serialized_start=136
+  _COMMANDDATA._serialized_end=313
+  _ZEE._serialized_start=315
+  _ZEE._serialized_end=359
+  _NERRESPONSE._serialized_start=361
+  _NERRESPONSE._serialized_end=422
+  _TRANSCRIPTIONRESULT._serialized_start=425
+  _TRANSCRIPTIONRESULT._serialized_end=575
+  _WORDINFO._serialized_start=577
+  _WORDINFO._serialized_end=659
+  _STREAMINGTRANSCRIBERESPONSE._serialized_start=662
+  _STREAMINGTRANSCRIBERESPONSE._serialized_end=795
+  _NERBACKEND._serialized_start=797
+  _NERBACKEND._serialized_end=897
 # @@protoc_insertion_point(module_scope)
