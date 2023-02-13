@@ -46,7 +46,7 @@ class ToothTable {
     return isUpdate;
   }
 
-  findNextAvailableTooth(q, i, side) {
+  findNextAvailableTooth(q, i, side = null) {
     // instantiate toothArray that represents the order of recording PDRE values 
     // based on the quadrant, side that being recorded
     let toothArray = [];
@@ -76,7 +76,7 @@ class ToothTable {
       }
     }
     // reverse the toothArray if side is "lingual"
-    if (side === "lingual") {
+    if (!!side && side === "lingual") {
       toothArray.reverse();
     }
 

@@ -18,7 +18,7 @@ const RecordSection = ({
   const mgj = information.MGJ;
   const id = information.ID;
 
-  console.log(tooth, currentCommand);
+  // console.log(tooth, currentCommand);
 
   let highlightCommandBuccalSide = false;
   let highlightCommandLingualSide = false;

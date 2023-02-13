@@ -98,7 +98,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
       }
 
       handleSetInformation(data.q, data.i, data.side, data.mode, data.target, spec_id)
-      console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
+      // console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
     } else {
       // for "BOP" data[]
       let positionArray;

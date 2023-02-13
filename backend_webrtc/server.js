@@ -142,8 +142,8 @@ io.on("connection", (socket) => {
     // When receive response from Gowajee Server, Send it to ner backend server
     gowajee_call.on('data', (response) => {
       ner_call.write(response);
-    // }).once('error', () => {
-    //   console.log("end grpc streaming");
+      // }).once('error', () => {
+      //   console.log("end grpc streaming");
     });
 
     ner_call.on('data', (response) => {
@@ -185,8 +185,13 @@ io.on("connection", (socket) => {
           }
 
           // console.log(mode, q, i, side, position, '-->', target)
-          if (toothTable.updateValue(q, i, mode, target, side, position))
-            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position);
+          let next_tooth = null;
+          if (toothTable.updateValue(q, i, mode, target, side, position)) {
+            if (mode === "RE" && (((((q === 1 || q === 4) && side === "buccal") || ((q === 2 || q === 3) && side === "lingual")) && position === "mesial") || ((((q === 1 || q === 4) && side === "lingual") || ((q === 2 || q === 3) && side === "buccal")) && position === "distal"))) {
+              next_tooth = toothTable.findNextAvailableTooth(q, i, side)
+            }
+            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position, next_tooth);
+          }
         }
         else if (mo_mgj.includes(mode)) {
           q = semantic.data.zee.first_zee;
@@ -194,8 +199,13 @@ io.on("connection", (socket) => {
           target = semantic.data.payload;
 
           // console.log(mode, q, i, '-->', target)
-          if (toothTable.updateValue(q, i, mode, target))
-            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
+          let next_tooth = null;
+          if (toothTable.updateValue(q, i, mode, target)) {
+            if (mode === "MGJ") {
+              next_tooth = toothTable.findNextAvailableTooth(q, i)
+            }
+            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, position = null, next_tooth);
+          }
         }
         else if (mode === "Missing") {
           missing_list = semantic.data.missing;
@@ -211,14 +221,15 @@ io.on("connection", (socket) => {
         }
         // toothTable.showPDREValue();
       });
-    // }).once('error', () => {
-    //   console.log("end grpc streaming");
+      // }).once('error', () => {
+      //   console.log("end grpc streaming");
     });;
   };
 });
 
-const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null) => {
-  data = { q, i, mode, target, side, position }
+const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
+  data = { q, i, mode, target, side, position, next_tooth }
+  console.log("data", data);
   socket.emit("data", data);
 }
 
