@@ -13,14 +13,16 @@ from transformers import AutoTokenizer
 from utils.model import TokenClassifier
 from utils.parser_model import ParserModel
 from utils.proto_utils import create_ner_response
+from utils.dictionary_mapping import DictionaryMapping
 
 import config
 
 
 class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
-    def __init__(self, token_classifier, parser):
+    def __init__(self, token_classifier, parser, dict_map):
         self.token_classifier = token_classifier
         self.parser = parser
+        self.dict_map = dict_map
 
     # Insert a logic of StreamingNER function
     def StreamingNER(
@@ -34,6 +36,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         # Reset all the parameter when use this function
         sentences = []
         old_is_final = True
+        old_command, old_tooth, old_tooth_side = None, None, None
         self.parser.reset()
         for request in request_iterator:
             # Concatenate trancripts in the responses
@@ -42,11 +45,12 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 sentence += str(transcript.transcript)
 
             # hard code for handle token classifier error
-            sentence = sentence.replace("ที่", "ซี่")
-            sentence = sentence.replace("สองสาม", "สอง สาม")
-            sentence = sentence.replace("บัคเคิล", "บัคคัล")
-            sentence = sentence.replace("missing", "มิซซิ่ง")
-            sentence = sentence.replace("macro", "บัคคัล")
+            # sentence = sentence.replace("ที่", "ซี่")
+            # sentence = sentence.replace("สองสาม", "สอง สาม")
+            # sentence = sentence.replace("บัคเคิล", "บัคคัล")
+            # sentence = sentence.replace("missing", "มิซซิ่ง")
+            # sentence = sentence.replace("macro", "บัคคัล")
+            sentence = self.dict_map.normalize(sentence)
             # hack, token classifier model cannot predict single number text, 
             # however if we add space at the end of the sentence it will resolve the problem
             sentence = sentence + " " 
@@ -62,7 +66,20 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
             semantics = self.parser.inference(predicted_token, request.is_final)
+            command, tooth, tooth_side, semantics = semantics.values()
             print(semantics)
+            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or tooth != old_tooth or tooth_side != old_tooth_side):
+                update_display = {
+                    "command": command,
+                    "data": {
+                        "zee": tooth,
+                        "tooth_side": tooth_side,
+                    },
+                    "is_complete": False
+                }
+                old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
+                semantics.append(update_display)
+
 
             print()
 
@@ -84,13 +101,14 @@ def main():
     # Create token classifier and parser model
     token_classifier = TokenClassifier(tokenizer, "model/onnx_model-quantized.onnx", "model/model_args.json")
     parser = ParserModel()
+    dict_map = DictionaryMapping("dictionary_mapping.csv")
 
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
 
     # Add NERBackendServicer to the server
     ner_model_pb2_grpc.add_NERBackendServicer_to_server(
-        NERBackendServicer(token_classifier, parser), server
+        NERBackendServicer(token_classifier, parser, dict_map), server
     )
 
     # Start the server

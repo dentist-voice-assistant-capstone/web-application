@@ -1,5 +1,19 @@
 import copy
 
+MISSING = 'Missing'
+PDRE = 'PDRE'
+BOP = 'BOP'
+MGJ = 'MGJ'
+MO = 'MO'
+EDIT = 'Edit'
+ZEE = 'Zee'
+YOK = 'Yok'
+SYMBOL = 'Symbol'
+BUCCAL = 'Buccal'
+MESIAL = 'Mesial'
+DISTAL = 'Distal'
+LINGUAL = 'Lingual'
+
 # Semantic Parser model
 number_mapper = {'ศูนย์': 0,
                  'หนึ่ง': 1,
@@ -20,21 +34,21 @@ number_mapper = {'ศูนย์': 0,
                  }
 
 # Add vocabulary here
-command_mapper = {'Missing': ['missing', 'มิซซิ่ง'],
-                  'PDRE': ['พีดีอาร์อี'],
-                  'BOP': ['บีโอพี'],
-                  'MGJ': ['เอ็มจีเจ'],
-                  'MO': ['เอ็มโอ'],
-                  'Edit': ['แก้'],
-                  'Zee': ['ซี่'],
-                  'Yok': ['โยก'],
-                  'Symbol': ['ลบ'],
+command_mapper = {MISSING: ['มิซซิ่ง', 'มิชซิ่ง', 'มิซชิ่ง', 'มิสซิ่ง', 'missing', 'miss ing'],
+                  PDRE: ['พีดีอาร์อี', 'พีดีอาอี', 'พีดีอาร์อีร'],
+                  BOP: ['บีโอพี', 'บีโอที', 'บีโอพีย'],
+                  MGJ: ['เอ็มจีเจ', 'เอมจีเจ', 'เองจีเจ', 'เอ็มจีเจย'],
+                  MO: ['เอ็มโอ', 'เอมโอ', 'เอ็มโอน'],
+                  EDIT: ['แก้', 'แจ้', 'แก่', 'แค่', 'แก้อ่'],
+                  ZEE: ['ซี่', 'ซี', 'ที่', 'จี้', 'ขี้', 'ซี่ย'],
+                  YOK: ['โยก', 'ยก', 'โยค', 'โยกค'],
+                  SYMBOL: ['ลบ'],
                   }
 
-side_mapper = {'บัคคอล': 'Buccal',
-               'มีเซี่ยว': 'Mesial',
-               'ดิสทรัล': 'Distal',
-               'ลิงกวล': 'Lingual',
+side_mapper = {'บัคเคิล': BUCCAL, 'บัคคอล': BUCCAL, 'บัคคัร': BUCCAL, 'บักคัล': BUCCAL,
+               'มีเซี่ยว': MESIAL, 'มีเสี้ยว': MESIAL, 'มีเสี่ยว': MESIAL, 'มิเซี่ยว': MESIAL, 'มีเซี่ยวย': MESIAL,
+               'ดิสทรัล': DISTAL, 'ดิสทอล': DISTAL, 'ดิสทัล': DISTAL, 'ดิสทรอล': DISTAL,
+               'ลิงกวล': LINGUAL,'ลิงกัว': LINGUAL, 'ลิงเกิล': LINGUAL, 'ลิงโก้': LINGUAL, 'ลิงกลัว': LINGUAL,
                }
 
 def editDistDP(str1, str2):
@@ -125,7 +139,7 @@ def create_result_list(sentence_list, threshold, have_symbol):
       related_word_list = command_mapper[entity]
       # check if distance below threshold 
       if check_text_misspelling(word, related_word_list, threshold):
-        if entity == 'Symbol':
+        if entity == SYMBOL:
           have_symbol = True
         else:
           result.append(entity)
@@ -158,7 +172,7 @@ def create_empty_semantic_object(command):
 
   semantic_object = {'command': command}
   # 'Missing'
-  if command=='Missing':
+  if command==MISSING:
     semantic_object['data'] = {
         'missing': []
         }
@@ -168,20 +182,20 @@ def create_empty_semantic_object(command):
         'zee': None,
         'payload': None,
     }
-    if command in ['PDRE', 'BOP', 'Edit']:
+    if command in [PDRE, BOP, EDIT]:
       semantic_object['data']['tooth_side'] = None # 'Buccal' or 'Lingual'
       # 'BOP'
-      if command=='BOP':
+      if command==BOP:
         semantic_object['data']['payload'] = [False, False, False] # [False, True, True]; For Q1, Q4: ['Distal', 'Buccal'/'Lingual', 'Mesial']
                                                                   # For Q2, Q3: ['Mesial', 'Buccal'/'Lingual', 'Distal']
       # 'PDRE'
-      elif command=='PDRE':
+      elif command==PDRE:
         semantic_object['data']['position'] = None # 'Mesial' or ['Lingual', 'Buccal'] or 'Distal'
         semantic_object['data']['is_number_PD'] = True # True or False
       # 'Edit'
       else:
         semantic_object['data']['position'] = None # 'Mesial' or ['Lingual', 'Buccal'] or 'Distal'
-        semantic_object['data']['type'] = 'PDRE' # 'PDRE'
+        semantic_object['data']['type'] = PDRE
   return semantic_object
 
 # def create_error_semantic_object(invalid_word):
@@ -199,12 +213,12 @@ def find_next_available_tooth(latest_semantic_object, available_teeth_dict, mode
 
   latest_quadrant = latest_semantic_object['data']['zee'][0]
   if latest_semantic_object['data']['zee'] not in available_teeth_dict[latest_quadrant]:
-    print('Teeth not available.')
-    return None # 'Error'
+    print('Teeth '+str(latest_semantic_object['data']['zee'])+' is not available.')
+    return None
   old_index = available_teeth_dict[latest_quadrant].index(latest_semantic_object['data']['zee'])
   if old_index == -1:
-    print('Teeth not available.')
-    return None # 'Error'
+    print('Teeth '+str(latest_semantic_object['data']['zee'])+' is not available.')
+    return None
   else:
     # Case 1: not cross to other quadrant
     if old_index+1 < len(available_teeth_dict[latest_quadrant]):
@@ -212,23 +226,40 @@ def find_next_available_tooth(latest_semantic_object, available_teeth_dict, mode
     # Case 2: cross to other quadrant and not exceed Q4
     elif old_index+1 >= len(available_teeth_dict[latest_quadrant]):
       if mode=='not_rev':
-        if latest_quadrant < 4:
+        if latest_quadrant < 4 and len(available_teeth_dict[latest_quadrant+1])!=0:
           return available_teeth_dict[latest_quadrant+1][0]
       elif mode=='rev':
-        if latest_quadrant > 1:
+        if latest_quadrant > 1 and len(available_teeth_dict[latest_quadrant-1])!=0:
           return available_teeth_dict[latest_quadrant-1][0]
-  return None # 'Error'
+  return None
+
+def append_zee_to_available_teeth_dict(zee, available_teeth_dict):
+  # INPUT:  zee: tooth that you want to insert back to available_teeth_dict ex. [1, 4]
+  #         available_teeth_dict: dict of available teeth
+  # OUTPUT: available_teeth_dict
+  quadrant = zee[0]
+  # Append zee to the quadrant if not already exists
+  if 1<=quadrant<=4:
+    if zee not in available_teeth_dict[quadrant]:
+      available_teeth_dict[quadrant].append(zee)
+      # Sort value in that quardrant
+      # Case 1: Q1 and Q3 -> sort by descending order
+      if quadrant == 1 or quadrant == 3:
+        available_teeth_dict[quadrant].sort(reverse=True) 
+      else:
+        available_teeth_dict[quadrant].sort()    
+  return available_teeth_dict
 
 def choose_start_tooth_position(semantic_object):
   # INPUT:  semantic_object
   # OUTPUT: appropriate start tooth position
 
   if semantic_object['data']['zee'] != None and len(semantic_object['data']['zee'])==2 and semantic_object['data']['tooth_side']!=None:
-    if (semantic_object['data']['tooth_side']=='Buccal' and semantic_object['data']['zee'][0] in [1, 3]) \
-      or (semantic_object['data']['tooth_side']=='Lingual' and semantic_object['data']['zee'][0] in [2, 4]):
-      return 'Distal'
+    if (semantic_object['data']['tooth_side']==BUCCAL and semantic_object['data']['zee'][0] in [1, 3]) \
+      or (semantic_object['data']['tooth_side']==LINGUAL and semantic_object['data']['zee'][0] in [2, 4]):
+      return DISTAL
     else:
-      return 'Mesial'
+      return MESIAL
   return None
 
 def create_semantic_object(semantic_object_list, word_list, available_teeth_dict, last_pdre_state):
@@ -236,20 +267,20 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
   #         word_list: list of processed word from token classification model
   #         available_teeth_dict: list of available teeth in each quadrant
   #         last_pdre_state: semantic object of last PDRE command
-  # OUTPUT: new_result: list contains preprocessed and updated semantic object
+  # OUTPUT: result_dict: dict contains 'command', 'zee', 'tooth_side', 'semantic_list' 
 
   result = []
 
   # get latest semantic object list if not empty
   if len(semantic_object_list)!=0:
-    latest_semantic_object = semantic_object_list[len(semantic_object_list)-1]
+    latest_semantic_object = copy.deepcopy(semantic_object_list[len(semantic_object_list)-1])
   else:
     latest_semantic_object = {'command': None}
   
-  bop_mapper = {1: {'Distal': 0, 'Buccal': 1, 'Lingual': 1, 'Mesial': 2},
-                2: {'Mesial': 0, 'Buccal': 1, 'Lingual': 1, 'Distal': 2},
-                3: {'Mesial': 0, 'Buccal': 1, 'Lingual': 1, 'Distal': 2},
-                4: {'Distal': 0, 'Buccal': 1, 'Lingual': 1, 'Mesial': 2},} 
+  bop_mapper = {1: {DISTAL: 0, BUCCAL: 1, LINGUAL: 1, MESIAL: 2},
+                2: {MESIAL: 0, BUCCAL: 1, LINGUAL: 1, DISTAL: 2},
+                3: {MESIAL: 0, BUCCAL: 1, LINGUAL: 1, DISTAL: 2},
+                4: {DISTAL: 0, BUCCAL: 1, LINGUAL: 1, MESIAL: 2},} 
 
   first_q1_tooth = None
   first_q2_tooth = None
@@ -283,53 +314,53 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
   for i in range(len(word_list)):
     semantic_object = copy.deepcopy(latest_semantic_object)
     # 1. command -> Append new empty semantic object in result list
-    if word_list[i] in ['PDRE', 'BOP', 'MGJ', 'MO', 'Missing', 'Edit']:
+    if word_list[i] in [PDRE, BOP, MGJ, MO, MISSING, EDIT]:
       semantic_object = copy.deepcopy(create_empty_semantic_object(word_list[i]))
       # 1.1 command = 'Edit'
-      if word_list[i] == 'Edit':
+      if word_list[i] == EDIT:
         # if latest command is pdre -> get latest tooth_side
-        if latest_semantic_object['command'] == 'PDRE':
+        if latest_semantic_object['command'] == PDRE:
           semantic_object['data']['tooth_side'] = latest_semantic_object['data']['tooth_side']
     # 2. 'Zee'
-    elif word_list[i] == 'Zee':
-      if semantic_object['command'] in ['PDRE', 'BOP', 'MGJ', 'MO', 'Edit']:
+    elif word_list[i] == ZEE:
+      if semantic_object['command'] in [PDRE, BOP, MGJ, MO, EDIT]:
         semantic_object['data']['zee'] = []
         # Reset payload value for BOP command
-        if semantic_object['command']=='BOP':
+        if semantic_object['command']==BOP:
           semantic_object['data']['payload'] = [False, False, False]
         # Reset payload value for other command
         else:
           semantic_object['data']['payload'] = None
     # 3. 'Side'
-    elif word_list[i] in ['Buccal', 'Mesial', 'Distal', 'Lingual']:
+    elif word_list[i] in [BUCCAL, MESIAL, DISTAL, LINGUAL]:
       # 3.1 Side for 'PDRE'
-      if semantic_object['command']=='PDRE':
+      if semantic_object['command']==PDRE:
         # 3.1.1 tooth_side not filled yet -> fill tooth_side and tooth position
-        if semantic_object['data']['tooth_side']==None and word_list[i] in ['Buccal', 'Lingual']:
+        if semantic_object['data']['tooth_side']==None and word_list[i] in [BUCCAL, LINGUAL]:
           semantic_object['data']['tooth_side'] = word_list[i]
           # Choose start tooth position based on tooth_side and quadrant
           semantic_object['data']['position'] = choose_start_tooth_position(semantic_object)
       # 3.2 Side for 'BOP'
-      elif semantic_object['command']=='BOP':
+      elif semantic_object['command']==BOP:
         # 3.2.1 tooth_side not filled yet -> fill tooth_side first
-        if semantic_object['data']['tooth_side']==None and word_list[i] in ['Buccal', 'Lingual']:
+        if semantic_object['data']['tooth_side']==None and word_list[i] in [BUCCAL, LINGUAL]:
           semantic_object['data']['tooth_side'] = word_list[i]
         # 3.2.2 tooth_side and zee already filled -> can fill payload value
         elif semantic_object['data']['tooth_side']!=None and semantic_object['data']['zee']!=None and len(semantic_object['data']['zee'])==2:
-          if (word_list[i] in ['Buccal', 'Lingual'] and semantic_object['data']['tooth_side'] == word_list[i]) or \
-            (word_list[i] not in ['Buccal', 'Lingual']):
-            semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]] = not semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]]
+          if (word_list[i] in [BUCCAL, LINGUAL] and semantic_object['data']['tooth_side'] == word_list[i]) or \
+            (word_list[i] not in [BUCCAL, LINGUAL]):
+            semantic_object['data']['payload'][bop_mapper[semantic_object['data']['zee'][0]][word_list[i]]] = True
       # 3.3 Side for 'Edit'
-      elif semantic_object['command']=='Edit':
+      elif semantic_object['command']==EDIT:
         semantic_object['data']['position'] = word_list[i]
         semantic_object['data']['payload'] = []
     # 4. 'Yok'
-    elif word_list[i] == 'Yok':
+    elif word_list[i] == YOK:
       continue
     # 5. 'Number'
     else: 
       # 5.1 Number for 'Missing' 
-      if semantic_object['command']=='Missing':
+      if semantic_object['command']==MISSING:
         # 5.1.1 missing = []
         if len(semantic_object['data']['missing'])==0:
           if 1<=word_list[i]<=4:
@@ -353,7 +384,7 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
           else:
             print('Wrong input '+str(word_list[i])+' for Missing command. Please try again.')
       # 5.2 Number for 'PDRE'
-      elif semantic_object['command']=='PDRE':
+      elif semantic_object['command']==PDRE:
         # 5.2.1 zee not filled yet and in range 1-4 and 1-8 -> fill zee first
         if semantic_object['data']['zee']!=None and ((len(semantic_object['data']['zee'])==0 and 1<=word_list[i]<=4) or (len(semantic_object['data']['zee'])==1 and 1<=word_list[i]<=8)):
           semantic_object['data']['zee'].append(word_list[i])
@@ -364,9 +395,9 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
         elif semantic_object['data']['zee']!=None and len(semantic_object['data']['zee'])==2 and semantic_object['data']['tooth_side']!=None:
           latest_quadrant = latest_semantic_object['data']['zee'][0]
           # choose appropriate available_teeth_dict
-          if semantic_object['data']['tooth_side'] == 'Buccal':
+          if semantic_object['data']['tooth_side'] == BUCCAL:
             using_available_teeth_dict = available_teeth_dict
-          elif semantic_object['data']['tooth_side'] == 'Lingual':
+          elif semantic_object['data']['tooth_side'] == LINGUAL:
             using_available_teeth_dict = rev_available_teeth_dict
           # 5.2.2.1 if number already filled in payload -> move to next teeth side/ value
           if semantic_object['data']['payload']!=None:
@@ -379,29 +410,29 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
               # Q1 and Q3
               if semantic_object['data']['zee'][0] == 1 or semantic_object['data']['zee'][0] == 3:
                 ## Buccal side
-                if semantic_object['data']['tooth_side'] == 'Buccal':
+                if semantic_object['data']['tooth_side'] == BUCCAL:
                   ###  if 'position' != 'Mesial' -> change only 'position', no need to change 'zee'
-                  if semantic_object['data']['position'] == 'Distal':
+                  if semantic_object['data']['position'] == DISTAL:
                     semantic_object['data']['position'] = semantic_object['data']['tooth_side']
-                  elif semantic_object['data']['position'] == 'Buccal' or semantic_object['data']['position'] == 'Lingual':
-                    semantic_object['data']['position'] = 'Mesial'
+                  elif semantic_object['data']['position'] == BUCCAL or semantic_object['data']['position'] == LINGUAL:
+                    semantic_object['data']['position'] = MESIAL
                   ### if 'position' == 'Mesial' -> change 'position' and 'zee' to next tooth that does not missing
-                  elif semantic_object['data']['position'] == 'Mesial':
-                    semantic_object['data']['position'] = 'Distal'
+                  elif semantic_object['data']['position'] == MESIAL:
+                    semantic_object['data']['position'] = DISTAL
                     #### Special Case: if tooth is on the middle ex. [1, 1] or [3, 1] -> change tooth position order
                     if semantic_object['data']['zee'] in [last_q1_tooth, last_q3_tooth]:
-                      semantic_object['data']['position'] = 'Mesial'
+                      semantic_object['data']['position'] = MESIAL
                     semantic_object['data']['zee'] = find_next_available_tooth(latest_semantic_object, using_available_teeth_dict, 'not_rev')
                 ## Lingual side
-                elif semantic_object['data']['tooth_side'] == 'Lingual':
+                elif semantic_object['data']['tooth_side'] == LINGUAL:
                   ### if 'position' != 'Distal' -> change only 'position', no need to change 'zee'
-                  if semantic_object['data']['position'] == 'Mesial':
+                  if semantic_object['data']['position'] == MESIAL:
                     semantic_object['data']['position'] = semantic_object['data']['tooth_side']
-                  elif semantic_object['data']['position'] == 'Buccal' or semantic_object['data']['position'] == 'Lingual':
-                    semantic_object['data']['position'] = 'Distal'
+                  elif semantic_object['data']['position'] == BUCCAL or semantic_object['data']['position'] == LINGUAL:
+                    semantic_object['data']['position'] = DISTAL
                   ### if 'position' == 'Distal' -> change 'position' and 'zee' to next tooth that does not missing
-                  elif semantic_object['data']['position'] == 'Distal':
-                    semantic_object['data']['position'] = 'Mesial'
+                  elif semantic_object['data']['position'] == DISTAL:
+                    semantic_object['data']['position'] = MESIAL
                     #### Special Case: if tooth is on the edge ex. [1, 8] or [3, 8] -> return payload on that tooth 
                     if semantic_object['data']['zee'] in [first_q1_tooth, first_q3_tooth]:
                       semantic_object['data']['zee'] = latest_semantic_object['data']['zee'].copy()
@@ -410,41 +441,41 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
               # Q2 and Q4
               elif semantic_object['data']['zee'][0] == 2 or semantic_object['data']['zee'][0] == 4:
                 ## Buccal side
-                if semantic_object['data']['tooth_side'] == 'Buccal':
+                if semantic_object['data']['tooth_side'] == BUCCAL:
                   ### if 'position' != 'Distal' -> change only 'position', no need to change 'zee'
-                  if semantic_object['data']['position'] == 'Mesial':
+                  if semantic_object['data']['position'] == MESIAL:
                     semantic_object['data']['position'] = semantic_object['data']['tooth_side']
-                  elif semantic_object['data']['position'] == 'Buccal' or semantic_object['data']['position'] == 'Lingual':
-                    semantic_object['data']['position'] = 'Distal'
+                  elif semantic_object['data']['position'] == BUCCAL or semantic_object['data']['position'] == LINGUAL:
+                    semantic_object['data']['position'] = DISTAL
                   ### if 'position' == 'Distal' -> change 'position' and 'zee' to next tooth that does not missing
-                  elif semantic_object['data']['position'] == 'Distal':
-                    semantic_object['data']['position'] = 'Mesial'
+                  elif semantic_object['data']['position'] == DISTAL:
+                    semantic_object['data']['position'] = MESIAL
                     #### Special Case: if tooth is on the edge ex. [2, 8] or [4, 8] -> change tooth_side and reverse using_available_teeth_dict
                     if semantic_object['data']['zee'] in [last_q2_tooth, last_q4_tooth]:
                       # change tooth side
-                      semantic_object['data']['position'] = 'Distal'
-                      semantic_object['data']['tooth_side'] = 'Lingual'
+                      semantic_object['data']['position'] = DISTAL
+                      semantic_object['data']['tooth_side'] = LINGUAL
                       using_available_teeth_dict = rev_available_teeth_dict
                     else:
                       semantic_object['data']['zee'] = find_next_available_tooth(latest_semantic_object, using_available_teeth_dict, 'not_rev')
                 ## Lingual side
-                elif semantic_object['data']['tooth_side'] == 'Lingual':
+                elif semantic_object['data']['tooth_side'] == LINGUAL:
                   ### if 'position' != 'Mesial' -> change only 'position', no need to change 'zee'
-                  if semantic_object['data']['position'] == 'Distal':
+                  if semantic_object['data']['position'] == DISTAL:
                     semantic_object['data']['position'] = semantic_object['data']['tooth_side']
-                  elif semantic_object['data']['position'] == 'Buccal' or semantic_object['data']['position'] == 'Lingual':
-                    semantic_object['data']['position'] = 'Mesial'
+                  elif semantic_object['data']['position'] == BUCCAL or semantic_object['data']['position'] == LINGUAL:
+                    semantic_object['data']['position'] = MESIAL
                   ### if 'position' == 'Mesial' -> change 'position' and 'zee' to next tooth that does not missing
-                  elif semantic_object['data']['position'] == 'Mesial':
-                    semantic_object['data']['position'] = 'Distal'
+                  elif semantic_object['data']['position'] == MESIAL:
+                    semantic_object['data']['position'] = DISTAL
                     #### Special Case: if tooth is on the middle ex. [2, 1] or [4, 1] -> change tooth position order and change mode find_next_available_tooth
                     if semantic_object['data']['zee'] in [first_q2_tooth, first_q4_tooth]:
-                      semantic_object['data']['position'] = 'Mesial'
+                      semantic_object['data']['position'] = MESIAL
                     semantic_object['data']['zee'] = find_next_available_tooth(latest_semantic_object, using_available_teeth_dict, 'rev')
           # Fill the current payload
           semantic_object['data']['payload'] = word_list[i]
       # 5.3 Number for 'MGJ'
-      elif semantic_object['command']=='MGJ':
+      elif semantic_object['command']==MGJ:
         # 5.3.1 zee not filled yet -> fill zee first
         if semantic_object['data']['zee']!=None and ((len(semantic_object['data']['zee'])==0 and 1<=word_list[i]<=4) or (len(semantic_object['data']['zee'])==1 and 1<=word_list[i]<=8)):
           semantic_object['data']['zee'].append(word_list[i])
@@ -456,19 +487,21 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
           # Fill the current payload
           semantic_object['data']['payload'] = word_list[i]
       # 5.4 Number for 'BOP'
-      elif semantic_object['command']=='BOP':
+      elif semantic_object['command']==BOP:
         # 5.4.1 zee not filled yet -> fill zee first
         if semantic_object['data']['zee']!=None and ((len(semantic_object['data']['zee'])==0 and 1<=word_list[i]<=4) or (len(semantic_object['data']['zee'])==1 and 1<=word_list[i]<=8)):
           semantic_object['data']['zee'].append(word_list[i])
       # 5.5 Number for 'MO'
-      elif semantic_object['command']=='MO':
+      elif semantic_object['command']==MO:
         # 5.5.1 zee not filled yet -> fill zee first
         if semantic_object['data']['zee']!=None and ((len(semantic_object['data']['zee'])==0 and 1<=word_list[i]<=4) or (len(semantic_object['data']['zee'])==1 and 1<=word_list[i]<=8)):
           semantic_object['data']['zee'].append(word_list[i])
         elif semantic_object['data']['zee']!=None and len(semantic_object['data']['zee'])==2 and semantic_object['data']['payload']==None:
           semantic_object['data']['payload'] = word_list[i]
+        else:
+          continue
       # 5.6 Number for 'Edit'
-      elif semantic_object['command']=='Edit':
+      elif semantic_object['command']==EDIT:
         # 5.6.1 zee not filled yet -> fill zee first
         if semantic_object['data']['zee']!=None and ((len(semantic_object['data']['zee'])==0 and 1<=word_list[i]<=4) or (len(semantic_object['data']['zee'])==1 and 1<=word_list[i]<=8)):
           semantic_object['data']['zee'].append(word_list[i])
@@ -479,41 +512,78 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
           semantic_object['data']['payload'].append(word_list[i])
 
     # Append semantic object to result list
+    # if semantic got updated -> append to the result
+    if semantic_object != latest_semantic_object:
+      semantic_object_list.append(semantic_object)
+      result.append(semantic_object)
     latest_semantic_object = copy.deepcopy(semantic_object)
-    semantic_object_list.append(semantic_object)
-    result.append(semantic_object)
     # if payload completely filled -> append latest pdre semantic in to result list
-    if semantic_object['command']=='Edit' and semantic_object['data']['payload']!=None and len(semantic_object['data']['payload'])==2:
+    if semantic_object['command']==EDIT and semantic_object['data']['payload']!=None and len(semantic_object['data']['payload'])==2:
       for j in range(len(semantic_object_list)):
-        if semantic_object_list[len(semantic_object_list)-j-1]['command']=='PDRE':
+        if semantic_object_list[len(semantic_object_list)-j-1]['command']==PDRE:
           last_pdre_state = copy.deepcopy(semantic_object_list[len(semantic_object_list)-j-1])
           latest_semantic_object = copy.deepcopy(semantic_object_list[len(semantic_object_list)-j-1])
           semantic_object_list.append(last_pdre_state)
-          result.append(semantic_object)
           break
   
+  # get 'command', 'zee', 'tooth_side' for result_dict
+  command = None
+  zee = None
+  tooth_side = None
+  if len(semantic_object_list)!=0:
+    last_s_object = semantic_object_list[len(semantic_object_list)-1]
+    command = last_s_object['command']
+    if 'data' in last_s_object.keys():
+      if 'zee' in last_s_object['data'].keys() and last_s_object['data']['zee']!=None:
+        if len(last_s_object['data']['zee'])==2:
+          zee = last_s_object['data']['zee']
+      if 'tooth_side' in last_s_object['data'].keys():
+        tooth_side = last_s_object['data']['tooth_side']
+      # special for 'Missing' case
+      if 'missing' in last_s_object['data'].keys():
+        missing_list = last_s_object['data']['missing']
+        if len(missing_list)!=0:
+          if None not in missing_list[len(missing_list)-1]:
+            zee = missing_list[len(missing_list)-1]
+          else:
+            if len(missing_list) >= 2:
+              zee = missing_list[len(missing_list)-2]
+            
   # Remove incompleted semantic object from result
   new_result = copy.deepcopy(result)
-  for s_object in result:
-    if s_object['command'] == None:
-      new_result.remove(s_object)
-    if 'data' in s_object.keys():
-      if (None in s_object['data'].values() or [] in s_object['data'].values()):
-        new_result.remove(s_object)
+  for i in range(len(result)):
+    if result[i]['command'] == None:
+      new_result.remove(result[i])
+    if 'data' in result[i].keys() and result[i] in new_result:
+      if (None in result[i]['data'].values() or [] in result[i]['data'].values()): 
+        new_result.remove(result[i])
       # Not 'Missing' command
-      elif 'zee' in s_object['data'].keys() and len(s_object['data']['zee'])==1:
-        new_result.remove(s_object)
-      if 'missing' in s_object['data'].keys():
-        for e in s_object['data']['missing']:
+      elif 'zee' in result[i]['data'].keys() and len(result[i]['data']['zee'])==1:
+        new_result.remove(result[i])
+      # 'Missing' command
+      if 'missing' in result[i]['data'].keys():
+        for e in result[i]['data']['missing']:
           if None in e:
-            new_result.remove(s_object)
+            new_result.remove(result[i])
+      # special for 'Edit' case
+      if result[i]['command'] == 'Edit':
+        if isinstance(result[i]['data']['payload'], list):
+          if len(result[i]['data']['payload'])!=2 and result[i] in new_result:
+            new_result.remove(result[i])
+
   ## BOP special
   final_result = copy.deepcopy(new_result)
   latest_zee = [None, None]
   for k in range(len(new_result)-1, -1, -1):
-    if new_result[k]['command'] == 'BOP':
+    if new_result[k]['command'] == BOP:
       if new_result[k]['data']['zee'] != latest_zee:
         latest_zee = new_result[k]['data']['zee']
       else:
         final_result.remove(new_result[k])
-  return final_result
+  
+  result_dict = {'command': command,
+                 'tooth': zee,
+                 'tooth_side': tooth_side,
+                 'semantic_list': final_result,
+                 }
+  return result_dict

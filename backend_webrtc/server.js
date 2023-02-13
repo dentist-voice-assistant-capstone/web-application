@@ -155,6 +155,21 @@ io.on("connection", (socket) => {
         mode = semantic.command;
         pd_re_bop = ["PDRE", "BOP"];
         mo_mgj = ["MO", "MGJ"];
+
+        // console.log(semantic);
+        if (!semantic.is_complete) {
+          q = null;
+          i = null;
+          if (!(semantic.data.zee === null)) {
+            q = semantic.data.zee.first_zee;
+            i = semantic.data.zee.second_zee;
+          }
+          tooth_side = semantic.data.tooth_side;
+          sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
+          return;
+        }
+
+
         if (pd_re_bop.includes(mode)) {
           side = semantic.data.tooth_side.toLowerCase();
           position = semantic.data.position.toLowerCase();
@@ -205,6 +220,12 @@ io.on("connection", (socket) => {
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null) => {
   data = { q, i, mode, target, side, position }
   socket.emit("data", data);
+}
+
+const sendUpdateDisplayToFrontEnd = (socket, command, q, i, tooth_side) => {
+  data = { command, q, i, tooth_side }
+  console.log(data);
+  socket.emit("update_command", data);
 }
 
 server.listen(process.env.SERVER_PORT, () => {

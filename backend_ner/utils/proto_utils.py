@@ -22,7 +22,8 @@ def create_ner_response(semantics):
                         payload = semantic.get("data", dict()).get("payload", 100),
                         missing = create_missing(semantic.get("data", dict()).get("missing", None)),
                     )
-        semantic_command = SemanticCommand(command=command, data=data)
+        is_complete = semantic.get("is_complete", True)
+        semantic_command = SemanticCommand(command=command, data=data, is_complete=is_complete)
         response.append(semantic_command)
     return NERResponse(response=response)
 
