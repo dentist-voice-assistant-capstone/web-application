@@ -38,6 +38,14 @@ const currentCommandReducer = (prevCommand, action) => {
     case "CLEAR_COMMAND":
       return defaultCurrentCommand;
     case "UPDATE_COMMAND":
+      // -- if the same command, use the old command ??? --
+      // if (
+      //   action.payload.command === prevCommand.command &&
+      //   action.payload.tooth === prevCommand.tooth &&
+      //   action.payload.side === prevCommand.side
+      // ) {
+      //   return prevCommand;
+      // }
       return action.payload;
     case "NEXT_TOOTH":
       if (!!action.payload.next_tooth) {

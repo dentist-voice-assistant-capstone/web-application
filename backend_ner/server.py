@@ -43,13 +43,10 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             sentence = ""
             for transcript in request.results:
                 sentence += str(transcript.transcript)
+                for word in transcript.word_timestamps:
+                    print(word.word, word.confidence)
 
-            # hard code for handle token classifier error
-            # sentence = sentence.replace("ที่", "ซี่")
-            # sentence = sentence.replace("สองสาม", "สอง สาม")
-            # sentence = sentence.replace("บัคเคิล", "บัคคัล")
-            # sentence = sentence.replace("missing", "มิซซิ่ง")
-            # sentence = sentence.replace("macro", "บัคคัล")
+            # print(request.results)
             sentence = self.dict_map.normalize(sentence)
             # hack, token classifier model cannot predict single number text, 
             # however if we add space at the end of the sentence it will resolve the problem
@@ -62,13 +59,14 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             print(sentences)
 
             # Predict the class of each token in the sentence
-            predicted_token = self.token_classifier.inference(sentence)
-            print(predicted_token)
+            # predicted_token = self.token_classifier.inference(sentence)
+            # print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
-            semantics = self.parser.inference(predicted_token, request.is_final)
-            command, tooth, tooth_side, semantics = semantics.values()
+            semantics = self.parser.inference(sentence, self.token_classifier, request.is_final)
             print(semantics)
-            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or tooth != old_tooth or tooth_side != old_tooth_side):
+            command, tooth, tooth_side, semantics, _ = semantics.values()    
+            # print(semantics)
+            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or old_tooth is None or old_tooth_side is None): # or tooth != old_tooth or tooth_side != old_tooth_side):
                 update_display = {
                     "command": command,
                     "data": {
@@ -81,7 +79,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 semantics.append(update_display)
 
 
-            print()
+            # print()
 
             old_is_final = request.is_final
             # Create a dummy response
