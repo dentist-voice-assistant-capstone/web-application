@@ -204,7 +204,7 @@ io.on("connection", (socket) => {
             if (mode === "MGJ") {
               next_tooth = toothTable.findNextAvailableTooth(q, i)
             }
-            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, position = null, next_tooth);
+            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side = null, position = null, next_tooth = next_tooth);
           }
         }
         else if (mode === "Missing") {
@@ -229,13 +229,13 @@ io.on("connection", (socket) => {
 
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
   data = { q, i, mode, target, side, position, next_tooth }
-  console.log("data", data);
+  // console.log("data", data);
   socket.emit("data", data);
 }
 
 const sendUpdateDisplayToFrontEnd = (socket, command, q, i, tooth_side) => {
   data = { command, q, i, tooth_side }
-  console.log(data);
+  console.log("update_command", data);
   socket.emit("update_command", data);
 }
 

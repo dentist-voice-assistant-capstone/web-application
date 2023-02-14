@@ -3,6 +3,7 @@ import {
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY
 } from "../utils/constants";
+import { getToothStartPosition } from "./toothLogic";
 
 /* Import modules for using sockets */
 import io from "socket.io-client";
@@ -63,6 +64,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
       alert(err);
     }
   });
+
   // receiving candidate from backend streaming server
   s.on("candidate", async (candidate) => {
     if (candidate) {
@@ -70,6 +72,28 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
     }
   });
 
+  // receiving updated command from backend streaming server
+  s.on("update_command", async (data) => {
+    console.log("update_command", data);
+
+    // automatically determine the start position of the tooth for PDRE command (from given tooth's quadrant, id)
+    let position = null;
+    if (data.command === "PDRE" && data.q && data.i && data.tooth_side) {
+      position = getToothStartPosition(data.q, data.i, data.tooth_side)
+    }
+
+    dispatchCurrentCommand({
+      type: "UPDATE_COMMAND",
+      payload: {
+        command: data.command,
+        tooth: !!data.q && !!data.i ? data.q.toString() + data.i.toString() : null,
+        side: !!data.tooth_side ? data.tooth_side : null,
+        position: !!position ? position : null
+      }
+    })
+  })
+
+  // receiving recorded data from backend streaming server
   s.on("data", async (data) => {
     console.log(data);
 
@@ -85,8 +109,9 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
         }
       }
 
-      // update highlight when receive "RE" command
+      // shift the cursor when receive "RE" command
       if (data.mode === "RE") {
+        console.log("cursor shifted !")
         dispatchCurrentCommand({
           type: "UPDATE_PDRE_POSITION",
           payload: {
@@ -112,6 +137,18 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
         handleSetInformation(data.q, data.i, data.side, data.mode, data.target[i], positionArray[i])
         console.log(data.q, data.i, data.side, data.mode, data.target[i], positionArray[i])
       }
+    }
+
+    // shift the cursor to the next tooth available (PDRE, MGJ command) when receiving
+    // 'next_tooth' field
+    if (!!data.next_tooth) {
+      dispatchCurrentCommand({
+        type: "NEXT_TOOTH",
+        payload: {
+          mode: data.mode,
+          next_tooth: data.next_tooth
+        }
+      })
     }
   })
 

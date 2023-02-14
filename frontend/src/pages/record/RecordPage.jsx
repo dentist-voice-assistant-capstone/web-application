@@ -24,6 +24,7 @@ import {
   stopAudioStreaming,
   terminateConnection,
 } from "../../utils/socketWebRTCHandler";
+import { getToothStartPosition } from "../../utils/toothLogic";
 
 const defaultCurrentCommand = {
   command: null,
@@ -38,6 +39,27 @@ const currentCommandReducer = (prevCommand, action) => {
       return defaultCurrentCommand;
     case "UPDATE_COMMAND":
       return action.payload;
+    case "NEXT_TOOTH":
+      if (!!action.payload.next_tooth) {
+        let position = null;
+        if (action.payload.mode === "RE") {
+          position = getToothStartPosition(
+            action.payload.next_tooth.q,
+            action.payload.next_tooth.i,
+            prevCommand.side
+          );
+        }
+        return {
+          command: prevCommand.command,
+          tooth:
+            action.payload.next_tooth.q.toString() +
+            action.payload.next_tooth.i.toString(),
+          side: prevCommand.side,
+          position: position,
+        };
+      } else {
+        return prevCommand;
+      }
     case "UPDATE_PDRE_POSITION":
       /* this action will work when the system receive the RE value of 
         the latest tooth position
@@ -349,15 +371,15 @@ const RecordPage = () => {
         <button
           style={{ margin: "50px 20px 0px 50px" }}
           onClick={() => {
-            dispatchCurrentCommand({
-              type: "UPDATE_COMMAND",
-              payload: {
-                command: "PDRE",
-                tooth: "15",
-                side: "lingual",
-                position: "mesial",
-              },
-            });
+            // dispatchCurrentCommand({
+            //   type: "UPDATE_COMMAND",
+            //   payload: {
+            //     command: "PDRE",
+            //     tooth: "15",
+            //     side: "lingual",
+            //     position: "mesial",
+            //   },
+            // });
           }}
         >
           Initialize
@@ -365,14 +387,14 @@ const RecordPage = () => {
         <button
           style={{ margin: "50px 20px 0px 50px" }}
           onClick={() => {
-            dispatchCurrentCommand({
-              type: "UPDATE_PDRE_POSITION",
-              payload: {
-                tooth: "15",
-                side: "lingual",
-                position: "middle",
-              },
-            });
+            // dispatchCurrentCommand({
+            //   type: "UPDATE_PDRE_POSITION",
+            //   payload: {
+            //     tooth: "15",
+            //     side: "lingual",
+            //     position: "middle",
+            //   },
+            // });
           }}
         >
           Move
