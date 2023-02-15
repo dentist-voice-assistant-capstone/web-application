@@ -1,0 +1,58 @@
+{
+    "0": {
+        "MO": {
+            "MO": 0,
+            "Zee": 1,
+            "Number": 0,
+            "Side": 0
+        }
+    },
+    "1": {
+        "Zee": {
+            "MO": 0,
+            "Zee": 0,
+            "Number": 1,
+            "Side": 0
+        }
+    },
+    "2": {
+        "Number": {
+            "MO": 0,
+            "Zee": 0,
+            "Number": 1,
+            "Side": 0
+        }
+    },
+    "3": {
+        "Number": {
+            "MO": 0,
+            "Zee": 0,
+            "Number": 0,
+            "Side": 1
+        }
+    },
+    "4": {
+        "Side": {
+            "MO": 0,
+            "Zee": 0.2,
+            "Number": 0,
+            "Side": 0.8
+        }
+    },
+    "5": {
+        "Side": {
+            "MO": 0,
+            "Zee": 0.25,
+            "Number": 0,
+            "Side": 0.75
+        }
+    },
+    "6": {
+        "Side": {
+            "MO": 0,
+            "Zee": 0.3,
+            "Number": 0,
+            "Side": 0.7
+        }
+    }
+}

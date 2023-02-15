@@ -12,7 +12,7 @@ from transformers import AutoTokenizer
 
 from utils.model import TokenClassifier
 from utils.parser_model import ParserModel
-from utils.proto_utils import create_ner_response
+from utils.proto_utils import create_ner_response, create_incomplete_semantic
 from utils.dictionary_mapping import DictionaryMapping
 
 import config
@@ -35,6 +35,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         """
         # Reset all the parameter when use this function
         sentences = []
+        old_tooth_list = []
         old_is_final = True
         old_command, old_tooth, old_tooth_side = None, None, None
         self.parser.reset()
@@ -54,6 +55,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
 
             if old_is_final:
                 sentences.append(sentence)
+                old_tooth_list = []
             else:
                 sentences[-1] = sentence
             print(sentences)
@@ -66,15 +68,11 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             print(semantics)
             command, tooth, tooth_side, semantics, _ = semantics.values()    
             # print(semantics)
-            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or old_tooth is None or old_tooth_side is None): # or tooth != old_tooth or tooth_side != old_tooth_side):
-                update_display = {
-                    "command": command,
-                    "data": {
-                        "zee": tooth,
-                        "tooth_side": tooth_side,
-                    },
-                    "is_complete": False
-                }
+            if ((len(semantics) == 0) or \
+            (len(semantics) > 0 and (semantics[-1]["command"] != command or tooth is None or tooth_side is None))) \
+            and command and (command != old_command or old_tooth is None or old_tooth_side is None or \
+            (command == old_command and (tooth is None or tooth_side is None))): # or tooth != old_tooth or tooth_side != old_tooth_side):
+                update_display = create_incomplete_semantic(command, tooth, tooth_side)
                 old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
                 semantics.append(update_display)
 
