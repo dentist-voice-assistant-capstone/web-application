@@ -56,8 +56,6 @@ io.on("connection", (socket) => {
   let is_record = false;
   let gowajee_call = null;
   let ner_call = null;
-  let old_q = null;
-  let old_i = null;
   let toothTable = new ToothTable();
 
   // Connect to gRPC Gowajee Streaming Backend
@@ -169,11 +167,6 @@ io.on("connection", (socket) => {
           tooth_side = semantic.data.tooth_side;
           sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
           return;
-        } else if (semantic.data.zee.first_zee !== old_q || semantic.data.zee.second_zee !== old_i) {
-          q = semantic.data.zee.first_zee;
-          i = semantic.data.zee.second_zee;
-          tooth_side = semantic.data.tooth_side;
-          sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
         }
 
         if (pd_re_bop.includes(mode)) {
@@ -225,8 +218,6 @@ io.on("connection", (socket) => {
               sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target);
           });
         }
-        old_q = q;
-        old_i = i;
         // toothTable.showPDREValue();
       });
       // }).once('error', () => {
