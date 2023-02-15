@@ -56,6 +56,10 @@ io.on("connection", (socket) => {
   let is_record = false;
   let gowajee_call = null;
   let ner_call = null;
+  let old_command = null;
+  let old_q = null;
+  let old_i = null;
+  let old_side = "";
   let toothTable = new ToothTable();
 
   // Connect to gRPC Gowajee Streaming Backend
@@ -165,7 +169,15 @@ io.on("connection", (socket) => {
             i = semantic.data.zee.second_zee;
           }
           tooth_side = semantic.data.tooth_side;
-          sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
+
+          if (!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side)) {
+            sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
+          }
+
+          old_command = mode;
+          old_q = q;
+          old_i = i;
+          old_side = tooth_side;
           return;
         }
 

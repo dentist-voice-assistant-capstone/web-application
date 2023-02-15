@@ -8,9 +8,9 @@ function init_streaming_request() {
     transcribeConfig = {
         // language_code: "th-TH",
         decoder_type: decoder.DecoderType.LMBEAMSEARCH,
-        get_word_timestamps: false,
+        get_word_timestamps: true,
         get_speaking_rate: false,
-        word_list: ["พีดีอาร์อี", "บีโอพี", "บัคคัล", "ลิงกัว", "มิซซิ่ง"],
+        word_list: ["พีดีอาร์อี", "บีโอพี", "บัคคัล", "ลิงกัว", "มิซซิ่ง", "เอ็มโอ"],
     };
 
     // Initialize Streaming Config for API (set to default)

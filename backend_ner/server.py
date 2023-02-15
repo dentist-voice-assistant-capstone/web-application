@@ -12,7 +12,7 @@ from transformers import AutoTokenizer
 
 from utils.model import TokenClassifier
 from utils.parser_model import ParserModel
-from utils.proto_utils import create_ner_response
+from utils.proto_utils import create_ner_response, create_incomplete_semantic
 from utils.dictionary_mapping import DictionaryMapping
 
 import config
@@ -35,6 +35,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         """
         # Reset all the parameter when use this function
         sentences = []
+        old_tooth_list = []
         old_is_final = True
         old_command, old_tooth, old_tooth_side = None, None, None
         self.parser.reset()
@@ -44,12 +45,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             for transcript in request.results:
                 sentence += str(transcript.transcript)
 
-            # hard code for handle token classifier error
-            # sentence = sentence.replace("ที่", "ซี่")
-            # sentence = sentence.replace("สองสาม", "สอง สาม")
-            # sentence = sentence.replace("บัคเคิล", "บัคคัล")
-            # sentence = sentence.replace("missing", "มิซซิ่ง")
-            # sentence = sentence.replace("macro", "บัคคัล")
+            # print(request.results)
             sentence = self.dict_map.normalize(sentence)
             # hack, token classifier model cannot predict single number text, 
             # however if we add space at the end of the sentence it will resolve the problem
@@ -57,31 +53,46 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
 
             if old_is_final:
                 sentences.append(sentence)
+                old_tooth_list = []
             else:
                 sentences[-1] = sentence
             print(sentences)
 
             # Predict the class of each token in the sentence
-            predicted_token = self.token_classifier.inference(sentence)
-            print(predicted_token)
+            # predicted_token = self.token_classifier.inference(sentence)
+            # print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
-            semantics = self.parser.inference(predicted_token, request.is_final)
-            command, tooth, tooth_side, semantics = semantics.values()
+            semantics = self.parser.inference(sentence, self.token_classifier, request.is_final)
             print(semantics)
-            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command))) and command and (command != old_command or tooth != old_tooth or tooth_side != old_tooth_side):
-                update_display = {
-                    "command": command,
-                    "data": {
-                        "zee": tooth,
-                        "tooth_side": tooth_side,
-                    },
-                    "is_complete": False
-                }
+            command, tooth, tooth_side, semantics, _ = semantics.values()    
+            # print(semantics)
+            if ((len(semantics) == 0) or \
+            (len(semantics) > 0 and (semantics[-1]["command"] != command or tooth is None or tooth_side is None))) \
+            and command and (command != old_command or old_tooth is None or old_tooth_side is None or \
+            (command == old_command and (tooth is None or tooth_side is None))): # or tooth != old_tooth or tooth_side != old_tooth_side):
+                update_display = create_incomplete_semantic(command, tooth, tooth_side)
                 old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
                 semantics.append(update_display)
+            else:
+                new_semantics = []
+                prev_zee = None
+                idx_tooth_list = 0
+                for semantic in semantics:
+                    zee = semantic.get("data").get("zee")
+                    if zee != prev_zee:
+                        idx_tooth_list += 1
+
+                    if len(old_tooth_list) < idx_tooth_list:
+                        update_display = create_incomplete_semantic(command, tooth, tooth_side)
+                        old_tooth_list.append(zee)
+                        new_semantics.append(update_display)
+                    
+                    new_semantics.append(semantic)
+                    prev_zee = zee
+                semantics = new_semantics
 
 
-            print()
+            # print()
 
             old_is_final = request.is_final
             # Create a dummy response

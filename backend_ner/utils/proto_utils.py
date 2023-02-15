@@ -49,3 +49,13 @@ def create_missing(list_missing):
     for missing in list_missing:
         result.append(create_zee(missing))
     return result
+
+def create_incomplete_semantic(command, tooth, tooth_side):
+    return {
+                "command": command,
+                "data": {
+                    "zee": tooth,
+                    "tooth_side": tooth_side,
+                },
+                "is_complete": False
+            }
