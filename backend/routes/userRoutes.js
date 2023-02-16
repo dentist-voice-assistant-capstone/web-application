@@ -29,6 +29,7 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 router.post("/sendEmailConfirm", authController.sendEmailConfirm);
 router.patch("/activateAccount/:token", authController.activateAccount);
 
+router.post("/sendReportExcel", authController.sendReportExcel);
 router.post("/saveLocalExcel", authController.saveLocalExcel);
 
 module.exports = router;

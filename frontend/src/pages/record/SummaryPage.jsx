@@ -1,255 +1,211 @@
 import classes from "./SummaryPage.module.css";
-import { saveAs } from "file-saver";
-import { EX_DATA } from "../../utils/constants";
-import { saveLocalExcelAPIHandler } from "../../utils/apiHandler";
+/* import React Libraries */
+import { useState, useEffect, useReducer, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
+/* import React Components */
+import TopInformationBar from "../../components/record/TopInformationBar";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import RecordControlBar from "../../components/record/RecordControlBar";
+import RecordInformation from "../../components/record/RecordInformation";
+import Spinner from "react-bootstrap/Spinner";
+import { FiCloudOff } from "react-icons/fi";
+import Modal from "../../components/ui/Modal";
+import CurrentCommandBox from "../../components/record/CurrentCommandBox";
+import { EX_DATA } from "../../utils/constants";
 
 const SummaryPage = () => {
-  return (
-    <div>
-      <button
-        className={classes.recordButton}
-        onClick={saveLocalExcelAPIHandler({ data: EX_DATA })}
-      >
-        save as
-      </button>
-    </div>
+  const [information, setInformation] = useState(EX_DATA);
+  const [checkFinish, setCheckFinish] = useState(false);
+  const [isFinish, setIsFinish] = useState(false);
+
+  /* states for quadrant */
+  const [quadrant, setQuadrant] = useState(1);
+  const handleSelect = (e) => {
+    setQuadrant(parseInt(e));
+  };
+
+  // const checkFinishHandler = () => {
+  //   /* if click "Finish" button, if the recording is not paused, pause the recording */
+  //   if (!isPaused) {
+  //     pauseResumeHandler();
+  //   }
+  //   setCheckFinish((prevcheckFinish) => {
+  //     return !prevcheckFinish;
+  //   });
+  // };
+
+  // const summaryHandler = () => {
+  //   // console.log(information);
+  //   navigate("/summary", {
+  //     state: { information: information },
+  //   });
+  // };
+
+  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
+    const newInformation = information.map((obj) => {
+      if (obj.quadrant === q) {
+        obj.idxArray.map((data) => {
+          if (data.ID === i) {
+            if (mode === "PD") {
+              const newPD = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.PD[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newPD;
+            } else if (mode === "RE") {
+              const newRE = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.RE[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newRE;
+            } else if (mode === "BOP") {
+              const newBOP = data.depended_side_data.map((checkSide) => {
+                if (checkSide.side === side) {
+                  checkSide.BOP[spec_id] = target;
+                }
+                return checkSide;
+              });
+
+              return newBOP;
+            } else if (mode === "MO") {
+              data.MO = target;
+              return data;
+            } else if (mode === "MGJ") {
+              data.MGJ = target;
+              return data;
+            } else if (mode === "Missing") {
+              data.missing = target;
+              return data;
+            }
+          }
+          return data;
+        });
+      }
+      return obj;
+    });
+    // console.log(newInformation);
+
+    setInformation(newInformation);
+  };
+
+  const modalConfirmContent = (
+    <p>
+      Are you sure to finish the recording?
+      <br />
+      Once saved,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
   );
-  //userEmailConfirmationAPIHandler(EX_DATA)
-  //   const Excel = require("exceljs");
-  //   const addBorder = (ws, col, row) => {
-  //     ws.getCell(`${col}${row}`).border = {
-  //       top: { style: "thin" },
-  //       left: { style: "thin" },
-  //       bottom: { style: "thin" },
-  //       right: { style: "thin" },
-  //     };
-  //   };
-  //   const setCenter = (ws, col, row) => {
-  //     ws.getCell(`${col}${row}`).alignment = {
-  //       vertical: "middle",
-  //       horizontal: "center",
-  //       wrapText: true,
-  //     };
-  //   };
-  //   const setFont = (ws, col, row) => {
-  //     ws.getCell(`${col}${row}`).font = {
-  //       size: 8.5,
-  //     };
-  //   };
-  //   const setGrayColor = (ws, col, row) => {
-  //     ws.getCell(`${col}${row}`).fill = {
-  //       type: "pattern",
-  //       pattern: "solid",
-  //       fgColor: { argb: "cccccc" },
-  //     };
-  //   };
-  //   const setExcelProperties = (ws, col, row) => {
-  //     addBorder(ws, col, row);
-  //     setCenter(ws, col, row);
-  //     setFont(ws, col, row);
-  //   };
-  //   const merge = (ws, r) => {
-  //     ws.mergeCells(`${colID[1]}${r}:${colID[3]}${r}`);
-  //     ws.mergeCells(`${colID[4]}${r}:${colID[6]}${r}`);
-  //     ws.mergeCells(`${colID[7]}${r}:${colID[9]}${r}`);
-  //     ws.mergeCells(`${colID[10]}${r}:${colID[12]}${r}`);
-  //     ws.mergeCells(`${colID[13]}${r}:${colID[15]}${r}`);
-  //     ws.mergeCells(`${colID[16]}${r}:${colID[18]}${r}`);
-  //     ws.mergeCells(`${colID[19]}${r}:${colID[21]}${r}`);
-  //     ws.mergeCells(`${colID[22]}${r}:${colID[24]}${r}`);
-  //     ws.mergeCells(`${colID[26]}${r}:${colID[28]}${r}`);
-  //     ws.mergeCells(`${colID[29]}${r}:${colID[31]}${r}`);
-  //     ws.mergeCells(`${colID[32]}${r}:${colID[34]}${r}`);
-  //     ws.mergeCells(`${colID[35]}${r}:${colID[37]}${r}`);
-  //     ws.mergeCells(`${colID[38]}${r}:${colID[40]}${r}`);
-  //     ws.mergeCells(`${colID[41]}${r}:${colID[43]}${r}`);
-  //     ws.mergeCells(`${colID[44]}${r}:${colID[46]}${r}`);
-  //     ws.mergeCells(`${colID[47]}${r}:${colID[49]}${r}`);
-  //   };
-  //   const colID = [
-  //     "A",
-  //     "B",
-  //     "C",
-  //     "D",
-  //     "E",
-  //     "F",
-  //     "G",
-  //     "H",
-  //     "I",
-  //     "J",
-  //     "K",
-  //     "L",
-  //     "M",
-  //     "N",
-  //     "O",
-  //     "P",
-  //     "Q",
-  //     "R",
-  //     "S",
-  //     "T",
-  //     "U",
-  //     "V",
-  //     "W",
-  //     "X",
-  //     "Y",
-  //     "Z",
-  //     "AA",
-  //     "AB",
-  //     "AC",
-  //     "AD",
-  //     "AE",
-  //     "AF",
-  //     "AG",
-  //     "AH",
-  //     "AI",
-  //     "AJ",
-  //     "AK",
-  //     "AL",
-  //     "AM",
-  //     "AN",
-  //     "AO",
-  //     "AP",
-  //     "AQ",
-  //     "AR",
-  //     "AS",
-  //     "AT",
-  //     "AU",
-  //     "AV",
-  //     "AW",
-  //     "AX",
-  //   ];
-  //   const wb = new Excel.Workbook();
-  //   const ws = wb.addWorksheet("My Sheet");
-  //   ws.views = [{}];
-  //   for (let i = 0; i < colID.length; i++) {
-  //     setGrayColor(ws, colID[i], 10);
-  //   }
-  //   for (let i = 1; i < 20; i++) {
-  //     setGrayColor(ws, `Z`, i);
-  //   }
-  //   const colW = [{ width: 4.5 }];
-  //   // const rowH = [{ height: 20 }];
-  //   for (let i = 1; i <= colID.length; i++) {
-  //     colW.push(colW[0]);
-  //   }
-  //   for (let i = 1; i <= 19; i++) {
-  //     ws.getRow(i).height = 20;
-  //   }
-  //   ws.columns = colW;
-  //   merge(ws, "1");
-  //   merge(ws, "5");
-  //   merge(ws, "9");
-  //   merge(ws, "11");
-  //   merge(ws, "15");
-  //   merge(ws, "19");
-  //   ws.mergeCells("A10:AX10");
-  //   ws.mergeCells(`Z1:Z4`);
-  //   ws.mergeCells(`Z6:Z9`);
-  //   ws.mergeCells(`Z11:Z14`);
-  //   ws.mergeCells(`Z16:Z19`);
-  //   ws.getCell(`Z1`).value = `B\nU\nC\nC\nA\nL`;
-  //   ws.getCell(`Z6`).value = `L\nI\nN\nG\nU\nA\nL`;
-  //   ws.getCell(`Z11`).value = `L\nI\nN\nG\nU\nA\nL`;
-  //   ws.getCell(`Z16`).value = `B\nU\nC\nC\nA\nL`;
-  //   setExcelProperties(ws, `Z`, 1);
-  //   setExcelProperties(ws, `Z`, 6);
-  //   setExcelProperties(ws, `Z`, 11);
-  //   setExcelProperties(ws, `Z`, 16);
-  //   const row_header = ws.getColumn(1);
-  //   row_header.values = [
-  //     "MGJ",
-  //     "BOP",
-  //     "PD",
-  //     "RE",
-  //     "",
-  //     "RE",
-  //     "PD",
-  //     "BOP",
-  //     "MO",
-  //     "",
-  //     "MO",
-  //     "BOP",
-  //     "PD",
-  //     "RE",
-  //     "",
-  //     "RE",
-  //     "PD",
-  //     "BOP",
-  //     "MGJ",
-  //   ];
-  //   for (let row = 1; row < 20; row++) {
-  //     setExcelProperties(ws, `A`, row);
-  //   }
-  //   const mo_mode = [9, 11];
-  //   const mgj_mode = [1, 19];
-  //   const tooth_mode = [5, 15];
-  //   const pd_mode = { buccal: [3, 17], lingual: [7, 13] };
-  //   const re_mode = { buccal: [4, 16], lingual: [6, 14] };
-  //   const bop_mode = { buccal: [2, 18], lingual: [8, 12] };
-  //   const pattern_flag = [
-  //     { 0: "distal", 1: "middle", 2: "mesial" },
-  //     { 0: "mesial", 1: "middle", 2: "distal" },
-  //   ];
-  //   EX_DATA.forEach((data) => {
-  //     const flag = data.quadrant === 1 || data.quadrant === 4 ? 0 : 1;
-  //     let start_col = data.quadrant === 1 || data.quadrant === 4 ? 1 : 26;
-  //     const mode = data.quadrant === 1 || data.quadrant === 2 ? 0 : 1;
-  //     const mo_row = mo_mode[mode];
-  //     const mgj_row = mgj_mode[mode];
-  //     const tooth_row = tooth_mode[mode];
-  //     data.idxArray.forEach((idx) => {
-  //       ws.getCell(
-  //         `${colID[start_col]}${tooth_row}`
-  //       ).value = `${data.quadrant}${idx.ID}`;
-  //       ws.getCell(`${colID[start_col]}${mo_row}`).value = idx.MO;
-  //       ws.getCell(`${colID[start_col]}${mgj_row}`).value = idx.MGJ;
-  //       setExcelProperties(ws, colID[start_col], tooth_row);
-  //       setExcelProperties(ws, colID[start_col], mo_row);
-  //       setExcelProperties(ws, colID[start_col], mgj_row);
-  //       idx.depended_side_data.forEach((side_data) => {
-  //         // console.log(data.quadrant, side.PD[pattern_flag[flag][1]]);
-  //         // // side_data.PD[pattern_flag[flag].i
-  //         for (let id = 0; id < 3; id++) {
-  //           ws.getCell(
-  //             `${colID[start_col + id]}${pd_mode[side_data.side][mode]}`
-  //           ).value = side_data.PD[pattern_flag[flag][id]];
-  //           ws.getCell(
-  //             `${colID[start_col + id]}${re_mode[side_data.side][mode]}`
-  //           ).value = side_data.RE[pattern_flag[flag][id]];
-  //           ws.getCell(
-  //             `${colID[start_col + id]}${bop_mode[side_data.side][mode]}`
-  //           ).value = side_data.BOP[pattern_flag[flag][id]] | 0;
-  //           setExcelProperties(
-  //             ws,
-  //             colID[start_col + id],
-  //             pd_mode[side_data.side][mode]
-  //           );
-  //           setExcelProperties(
-  //             ws,
-  //             colID[start_col + id],
-  //             re_mode[side_data.side][mode]
-  //           );
-  //           setExcelProperties(
-  //             ws,
-  //             colID[start_col + id],
-  //             bop_mode[side_data.side][mode]
-  //           );
-  //         }
-  //       });
-  //       start_col = start_col + 3;
-  //     });
-  //   });
-  //   wb.xlsx.writeBuffer().then(function (buffer) {
-  //     // done
-  //     // console.log(buffer);
-  //     const blob = new Blob([buffer], { type: "applicationi/xlsx" });
-  //     saveAs(blob, "myexcel.xlsx");
-  //   });
+
+  /* components to be rendered */
+  const PDRETableComponentToBeRendered = (
+    <Fragment>
+      {/* {checkFinish && (
+        <Modal
+          header="Confirm Information"
+          content={modalConfirmContent}
+          onOKClick={confirmHandler}
+          onCancelClick={checkFinishHandler}
+          okButtonText="Save"
+          modalType="confirm"
+        />
+      )} */}
+      <div className="landing-page">
+        <TopInformationBar />
+        <div className={classes.current_command_box}></div>
+        <div className={classes.droplist}>
+          <DropdownButton
+            className={classes.box}
+            title={quadrant}
+            onSelect={handleSelect}
+          >
+            <Dropdown.Item eventKey="1">1</Dropdown.Item>
+            <Dropdown.Item eventKey="2">2</Dropdown.Item>
+            <Dropdown.Item eventKey="3">3</Dropdown.Item>
+            <Dropdown.Item eventKey="4">4</Dropdown.Item>
+          </DropdownButton>
+        </div>
+        <div className="centered">
+          {quadrant === 1 && (
+            <RecordInformation
+              information={information[0]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 2 && (
+            <RecordInformation
+              information={information[1]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 3 && (
+            <RecordInformation
+              information={information[2]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+          {quadrant === 4 && (
+            <RecordInformation
+              information={information[3]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+            />
+          )}
+        </div>
+        <button
+          style={{ margin: "50px 20px 0px 50px" }}
+          onClick={() => {
+            // dispatchCurrentCommand({
+            //   type: "UPDATE_COMMAND",
+            //   payload: {
+            //     command: "PDRE",
+            //     tooth: "15",
+            //     side: "lingual",
+            //     position: "mesial",
+            //   },
+            // });
+          }}
+        >
+          Initialize
+        </button>
+        <button
+          style={{ margin: "50px 20px 0px 50px" }}
+          onClick={() => {
+            // dispatchCurrentCommand({
+            //   type: "UPDATE_PDRE_POSITION",
+            //   payload: {
+            //     tooth: "15",
+            //     side: "lingual",
+            //     position: "middle",
+            //   },
+            // });
+          }}
+        >
+          Move
+        </button>
+        <RecordControlBar
+          isFinish={!isFinish}
+          // checkFinishHandler={checkFinishHandler}
+          // summaryHandler={summaryHandler}
+        />
+      </div>
+    </Fragment>
+  );
+
+  return PDRETableComponentToBeRendered;
 };
 
 export default SummaryPage;

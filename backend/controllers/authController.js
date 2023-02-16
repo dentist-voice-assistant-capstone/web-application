@@ -6,6 +6,8 @@ const User = require("./../models/userModel");
 const AppError = require("./../utils/appError");
 const sendEmail = require("./../utils/email");
 const createExcel = require("./../utils/createExcelFile");
+const FileSaver = require("file-saver");
+const Blob = require("node-blob");
 
 function signToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -106,13 +108,10 @@ exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
     );
   }
 });
-
 exports.saveLocalExcel = catchAsync(async (req, res, next) => {
   const data = req.body.data;
-  const email = req.body.email;
 
   try {
-    const user = await User.findOne({ email }).select("+active");
     const wb = await createExcel.createReport(data);
 
     //   res.sendFile(wb, options, function (err) {
@@ -123,22 +122,15 @@ exports.saveLocalExcel = catchAsync(async (req, res, next) => {
     //     }
     // });
     const buffer = await wb.xlsx.writeBuffer();
-    await sendEmail({
-      email: user.email,
-      subject: "Report summary",
-      message: "Report summary",
-      attachments: [
-        {
-          filename: "report.xlsx",
-          content: buffer,
-          contentType:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        },
-      ],
-    });
-    // wb.xlsx.writeBuffer().then(function(buffer) {
-    //   const blob = new Blob([buffer], { type: "applicationi/xlsx" });
-    //   FileSaver.saveAs(blob, "myexcel.xlsx");
+    // console.log(buffer);
+    // // wb.xlsx.writeBuffer().then(function(buffer) {
+    // const blob = new Blob([buffer], { type: "application/xlsx" });
+    // console.log(blob);
+    // var file = new File(blob, "myexcel.xlsx", { type: "application/xlsx" });
+    // console.log(file);
+
+    // FileSaver.saveAs(file);
+    // FileSaver.saveAs(blob, "myexcel.xlsx");
     // });
     // var options = {
     //   root: path.join(__dirname, "public"),
@@ -161,6 +153,42 @@ exports.saveLocalExcel = catchAsync(async (req, res, next) => {
     //   });
     // });
 
+    /* prepare response headers */
+    res.end(buffer);
+    // console.log(buffer);
+
+    res.status(200).json({
+      status: "success",
+      message: "Created Report",
+    });
+  } catch (err) {
+    return next(new AppError("Unable to create Report"), 500);
+  }
+});
+
+exports.sendReportExcel = catchAsync(async (req, res, next) => {
+  const data = req.body.data;
+  const email = req.body.email;
+
+  try {
+    const user = await User.findOne({ email }).select("+active");
+
+    const wb = await createExcel.createReport(data);
+    const buffer = await wb.xlsx.writeBuffer();
+
+    await sendEmail({
+      email: user.email,
+      subject: "Report summary",
+      message: "Report summary",
+      attachments: [
+        {
+          filename: "report.xlsx",
+          content: buffer,
+          contentType:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      ],
+    });
     res.status(200).json({
       status: "success",
       message: "Created Report",

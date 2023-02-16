@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 const backendBaseURL = "http://localhost:3000";
 
@@ -69,10 +70,20 @@ const userEmailConfirmationAPIHandler = (userEmail) => {
   axios.post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail);
 };
 
-const saveLocalExcelAPIHandler = (data) => {
-  console.log(data);
-  axios.post(USER_SAVE_LOCAL_EXCEL_ENDPOINT, data);
-};
+// const saveLocalExcelAPIHandler = (data) => {
+//   console.log(data);
+//   axios.post(USER_SAVE_LOCAL_EXCEL_ENDPOINT, data).then(function (response) {
+//     console.log(response.data);
+//     console.log(response.status);
+//     console.log(response.statusText);
+//     console.log(response.headers);
+//     console.log(response.config);
+//     const blob = new Blob([response.data], {
+//       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//     });
+//     saveAs(blob, "myexcel.xlsx");
+//   });
+// };
 
 const userLoginAPIHandler = (
   userLoginData,
@@ -252,5 +263,5 @@ export {
   fetchUserInfoAPIHandler,
   updateUserProfileAPIHandler,
   updateUserPasswordAPIHandler,
-  saveLocalExcelAPIHandler,
+  // saveLocalExcelAPIHandler,
 };
