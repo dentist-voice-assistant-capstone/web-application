@@ -7,18 +7,20 @@ import { useNavigate } from "react-router-dom";
 import TopInformationBar from "../../components/record/TopInformationBar";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import RecordControlBar from "../../components/record/RecordControlBar";
+import RecordControlSummaryBar from "../../components/record/RecordControlSummaryBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import Spinner from "react-bootstrap/Spinner";
 import { FiCloudOff } from "react-icons/fi";
 import Modal from "../../components/ui/Modal";
 import CurrentCommandBox from "../../components/record/CurrentCommandBox";
 import { EX_DATA } from "../../utils/constants";
+import { createReport } from "../../utils/createExcel";
+import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
 
 const SummaryPage = () => {
   const [information, setInformation] = useState(EX_DATA);
   const [checkFinish, setCheckFinish] = useState(false);
-  const [isFinish, setIsFinish] = useState(false);
+  const [isFinish, setIsFinish] = useState(true);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -196,8 +198,11 @@ const SummaryPage = () => {
         >
           Move
         </button>
-        <RecordControlBar
-          isFinish={!isFinish}
+        <RecordControlSummaryBar
+          createReport={createReport}
+          data={EX_DATA}
+          sendReportExcelAPIHandler={sendReportExcelAPIHandler}
+          email={"test7@mail.com"}
           // checkFinishHandler={checkFinishHandler}
           // summaryHandler={summaryHandler}
         />

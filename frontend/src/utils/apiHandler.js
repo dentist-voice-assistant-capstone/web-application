@@ -10,6 +10,7 @@ const USER_INFO_ENDPOINT = `${backendBaseURL}/user/userInfo`;
 const USER_UPDATE_PROFILE_ENDPOINT = `${backendBaseURL}/user/updateProfile`;
 const USER_UPDATE_PASSWORD_ENDPOINT = `${backendBaseURL}/user/updatePassword`;
 const USER_SAVE_LOCAL_EXCEL_ENDPOINT = `${backendBaseURL}/user/saveLocalExcel`;
+const USER_SEND_REPORT_EXCEL_ENDPOINT = `${backendBaseURL}/user/sendReportExcel`;
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -85,6 +86,16 @@ const userEmailConfirmationAPIHandler = (userEmail) => {
 //   });
 // };
 
+const sendReportExcelAPIHandler = (data, email) => {
+  axios
+    .post(USER_SEND_REPORT_EXCEL_ENDPOINT, { data: data, email: email })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 const userLoginAPIHandler = (
   userLoginData,
   setLoginError,
@@ -264,4 +275,5 @@ export {
   updateUserProfileAPIHandler,
   updateUserPasswordAPIHandler,
   // saveLocalExcelAPIHandler,
+  sendReportExcelAPIHandler,
 };
