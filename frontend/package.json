@@ -13,6 +13,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.1.3",
     "bootstrap": "^5.2.2",
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "html-to-react": "^1.5.0",
     "json-as-xlsx": "^2.5.3",
     "jsonrawtoxlsx": "^1.0.8",
