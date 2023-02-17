@@ -15,110 +15,15 @@ tr,
 td {
   padding: 10px;
 }
-
-/* .column {
-  float: left;
-  width: 50%;
-} */
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.droplist {
+  /* width: 100px;
+  height: 100px; */
+  padding-top: 5.5%;
+  position: absolute;
+  right: 5%;
 }
 
-.actions {
-  border-radius: 10px;
-  font-size: 18px;
-  border: 0;
-  color: white;
-  width: 100%;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-}
-
-.actions button:disabled,
-/* .actions button:disabled:hover {
-  background-color: gray;
-} */
-
-.recordButton {
-  background-color: white;
-  color: black;
-  border-color: white;
-  border-style: none;
-  border-radius: 5px;
-  margin: auto;
-  padding-left: 6px;
-  padding-right: 6px;
-  width: 110px;
-  margin-left: 17%;
-  position: fixed;
-}
-
-.finishButton {
-  background-color: green;
-  color: white;
-  border-color: white;
-  border-style: none;
-  border-radius: 5px;
-  margin: auto;
-  margin-right: 8%;
-  width: 110px;
-}
-
-.summaryButton {
-  background-color: green;
-  color: white;
-  border-color: white;
-  border-style: none;
-  border-radius: 5px;
-  margin: auto;
-  margin-left: 25%;
-  width: 110px;
-}
-
-.recordControlContainer {
-  display: flex;
-  flex-wrap: inherit;
-  align-items: center;
-  justify-content: space-between;
-  margin-left: 31%;
-  width: 100%;
-}
-
-.blinking {
-  display: flex;
-  height: auto;
-  width: auto;
-  background-color: red;
-  border-radius: 50%;
-  margin-left: 40%;
-  color: transparent;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  animation: blinkingBackground 1s infinite;
-}
-@keyframes blinkingBackground {
-  0% {
-    background-color: #000000;
-  }
-  /* 25% {
-    background-color: #480000;
-  }
-  50% {
-    background-color: #780008;
-  }
-  75% {
-    background-color: #c50000;
-  } */
-  100% {
-    background-color: #ff0000;
-  }
+.box {
+  width: 80px;
+  height: 80px;
 }

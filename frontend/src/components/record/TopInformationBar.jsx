@@ -11,7 +11,6 @@ function TopInformationBar(props) {
   // states for handling initial fetching user's data
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
-  const [userData, setUserData] = useState(null);
   const [patienceData] = useState("55555555");
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -20,10 +19,10 @@ function TopInformationBar(props) {
     current.getMonth() + 1
   }/${current.getFullYear()}`;
 
-  // fetching user data, when loaded page =========================
-  useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
-  }, [token]);
+  // // fetching user data, when loaded page =========================
+  // useEffect(() => {
+  //   fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+  // }, [token]);
   // =============================================================
 
   return (
@@ -41,7 +40,7 @@ function TopInformationBar(props) {
           <Navbar.Brand className={classes.actions}>
             <div>
               {"Dentist ID: "}
-              {userData.dentistID}
+              {props.userData.dentistID}
             </div>
 
             <div className="patienceID">

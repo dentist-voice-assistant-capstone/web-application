@@ -43,6 +43,10 @@
   background-color: var(--primary-color-info);
 }
 
+.modal.export .modal__header {
+  background-color: var(--primary-color-info);
+}
+
 .modal .modal__header p {
   font-size: 20px;
   color: white;
@@ -102,7 +106,18 @@
 }
 
 .modal.confirm .modal__actions button.ok_button:hover {
-  background-color: #00ab41;
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
+}
+
+.modal.confirm .modal__actions button.export_button {
+  color: white;
+  background-color: green;
+}
+
+.modal.confirm .modal__actions button.export_button:hover {
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
 }
 
 .modal.error .modal__actions button {
@@ -121,7 +136,53 @@
 }
 
 .modal.confirm .modal__actions button.cancel_button:hover {
-  background-color: #ececec;
+  background-color: var(--secondary-color-hover);
+  transition: 0.7s;
+  color: black;
+}
+
+/* there are 2 buttons */
+.modal.export .modal__actions {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.modal.export .modal__actions button {
+  width: 40%;
+}
+
+.modal.info .modal__actions button,
+.modal.export .modal__actions button.ok_button {
+  color: white;
+  background-color: green;
+}
+
+.modal.export .modal__actions button.ok_button:hover {
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
+}
+
+.modal.export .modal__actions button.export_button {
+  color: white;
+  background-color: green;
+}
+
+.modal.export .modal__actions button.export_button:hover {
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
+}
+
+.modal.export .modal__actions button.cancel_button {
+  background-color: white;
+  color: black;
+  border: 0.5px solid lightgray;
+}
+
+.modal.export .modal__actions button.cancel_button:hover {
+  background-color: var(--secondary-color-hover);
+  transition: 0.7s;
   color: black;
 }
 

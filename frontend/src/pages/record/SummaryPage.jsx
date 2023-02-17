@@ -1,13 +1,14 @@
 import classes from "./SummaryPage.module.css";
 /* import React Libraries */
 import { useState, useEffect, useReducer, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import RecordControlSummaryBar from "../../components/record/RecordControlSummaryBar";
+import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import Spinner from "react-bootstrap/Spinner";
 import { FiCloudOff } from "react-icons/fi";
@@ -18,9 +19,13 @@ import { createReport } from "../../utils/createExcel";
 import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
 
 const SummaryPage = () => {
-  const [information, setInformation] = useState(EX_DATA);
-  const [checkFinish, setCheckFinish] = useState(false);
-  const [isFinish, setIsFinish] = useState(true);
+  const state = useLocation();
+  console.log(state);
+  const userData = state.state.userData;
+
+  const [information, setInformation] = useState(state.state.information);
+  const [checkMailExport, setCheckMailExport] = useState(false);
+  // const [isMailExport, setIsMailExport] = useState(true);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -28,22 +33,17 @@ const SummaryPage = () => {
     setQuadrant(parseInt(e));
   };
 
-  // const checkFinishHandler = () => {
-  //   /* if click "Finish" button, if the recording is not paused, pause the recording */
-  //   if (!isPaused) {
-  //     pauseResumeHandler();
-  //   }
-  //   setCheckFinish((prevcheckFinish) => {
-  //     return !prevcheckFinish;
-  //   });
-  // };
+  const checkMailExportHandler = () => {
+    /* if click "MailExport" button, if the recording is not paused, pause the recording */
+    setCheckMailExport((prevcheckMailExport) => {
+      return !prevcheckMailExport;
+    });
+  };
 
-  // const summaryHandler = () => {
-  //   // console.log(information);
-  //   navigate("/summary", {
-  //     state: { information: information },
-  //   });
-  // };
+  const sendEmailHandler = () => {
+    sendReportExcelAPIHandler(information, userData.email);
+    checkMailExportHandler();
+  };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
@@ -100,28 +100,28 @@ const SummaryPage = () => {
 
   const modalConfirmContent = (
     <p>
-      Are you sure to finish the recording?
-      <br />
-      Once saved,{" "}
-      <span style={{ color: "red" }}>
+      report will send to {userData.email}
+      {/* <br />
+      Once export,{" "} */}
+      {/* <span style={{ color: "red" }}>
         <b> this procedure cannot be reversed.</b>
-      </span>
+      </span> */}
     </p>
   );
 
   /* components to be rendered */
   const PDRETableComponentToBeRendered = (
     <Fragment>
-      {/* {checkFinish && (
+      {checkMailExport && (
         <Modal
-          header="Confirm Information"
+          header="Exporting report"
           content={modalConfirmContent}
-          onOKClick={confirmHandler}
-          onCancelClick={checkFinishHandler}
-          okButtonText="Save"
-          modalType="confirm"
+          onExportClick={sendEmailHandler}
+          onCancelClick={checkMailExportHandler}
+          exportButtonText="Export"
+          modalType="export"
         />
-      )} */}
+      )}
       <div className="landing-page">
         <TopInformationBar />
         <div className={classes.current_command_box}></div>
@@ -167,44 +167,11 @@ const SummaryPage = () => {
             />
           )}
         </div>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_COMMAND",
-            //   payload: {
-            //     command: "PDRE",
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "mesial",
-            //   },
-            // });
-          }}
-        >
-          Initialize
-        </button>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_PDRE_POSITION",
-            //   payload: {
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "middle",
-            //   },
-            // });
-          }}
-        >
-          Move
-        </button>
         <RecordControlSummaryBar
           createReport={createReport}
-          data={EX_DATA}
-          sendReportExcelAPIHandler={sendReportExcelAPIHandler}
-          email={"test7@mail.com"}
-          // checkFinishHandler={checkFinishHandler}
-          // summaryHandler={summaryHandler}
+          data={information}
+          email={userData.email}
+          checkMailExportHandler={checkMailExportHandler}
         />
       </div>
     </Fragment>

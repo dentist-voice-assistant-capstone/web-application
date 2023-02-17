@@ -51,15 +51,49 @@
   width: 110px;
 }
 
-.summaryButton {
+.exportButton {
+  background-color: white;
+  color: black;
+  border-color: white;
+  border-style: none;
+  border-radius: 5px;
+  margin: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+  width: 160px;
+  margin-left: 17%;
+  position: fixed;
+}
+
+.saveAsButton {
   background-color: green;
   color: white;
   border-color: white;
   border-style: none;
   border-radius: 5px;
   margin: auto;
-  margin-left: 25%;
+  margin-right: 8%;
   width: 110px;
+}
+
+.finishButton:hover {
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
+}
+
+.saveAsButton:hover {
+  background-color: var(--primary-color-hover);
+  transition: 0.7s;
+}
+
+.exportButton:hover {
+  background-color: var(--secondary-color-hover);
+  transition: 0.7s;
+}
+
+.recordButton:hover {
+  background-color: var(--secondary-color-hover);
+  transition: 0.7s;
 }
 
 .recordControlContainer {

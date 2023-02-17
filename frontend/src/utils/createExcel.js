@@ -218,25 +218,24 @@ exports.createReport = (EX_DATA) => {
       ws.getCell(
         `${colID[start_col]}${tooth_row}`
       ).value = `${data.quadrant}${idx.ID}`;
+
+      // if (idx.missing) {
       ws.getCell(`${colID[start_col]}${mo_row}`).value = idx.MO;
       ws.getCell(`${colID[start_col]}${mgj_row}`).value = idx.MGJ;
+      // }
 
       setExcelProperties(ws, colID[start_col], tooth_row);
       setExcelProperties(ws, colID[start_col], mo_row);
       setExcelProperties(ws, colID[start_col], mgj_row);
 
+      if (idx.missing) {
+        setGrayColor(ws, colID[start_col], tooth_row);
+        setGrayColor(ws, colID[start_col], mo_row);
+        setGrayColor(ws, colID[start_col], mgj_row);
+      }
+
       idx.depended_side_data.forEach((side_data) => {
         for (let id = 0; id < 3; id++) {
-          ws.getCell(
-            `${colID[start_col + id]}${pd_mode[side_data.side][mode]}`
-          ).value = side_data.PD[pattern_flag[flag][id]];
-          ws.getCell(
-            `${colID[start_col + id]}${re_mode[side_data.side][mode]}`
-          ).value = side_data.RE[pattern_flag[flag][id]];
-          ws.getCell(
-            `${colID[start_col + id]}${bop_mode[side_data.side][mode]}`
-          ).value = side_data.BOP[pattern_flag[flag][id]] | 0;
-
           setExcelProperties(
             ws,
             colID[start_col + id],
@@ -252,6 +251,45 @@ exports.createReport = (EX_DATA) => {
             colID[start_col + id],
             bop_mode[side_data.side][mode]
           );
+
+          if (idx.missing) {
+            setGrayColor(
+              ws,
+              colID[start_col + id],
+              pd_mode[side_data.side][mode]
+            );
+            setGrayColor(
+              ws,
+              colID[start_col + id],
+              re_mode[side_data.side][mode]
+            );
+            setGrayColor(
+              ws,
+              colID[start_col + id],
+              bop_mode[side_data.side][mode]
+            );
+            continue;
+          }
+
+          ws.getCell(
+            `${colID[start_col + id]}${pd_mode[side_data.side][mode]}`
+          ).value = side_data.PD[pattern_flag[flag][id]];
+          ws.getCell(
+            `${colID[start_col + id]}${re_mode[side_data.side][mode]}`
+          ).value = side_data.RE[pattern_flag[flag][id]];
+          // ws.getCell(
+          //   `${colID[start_col + id]}${bop_mode[side_data.side][mode]}`
+          // ).value = side_data.BOP[pattern_flag[flag][id]] | 0;
+
+          if (side_data.BOP[pattern_flag[flag][id]] | 0) {
+            ws.getCell(
+              `${colID[start_col + id]}${bop_mode[side_data.side][mode]}`
+            ).fill = {
+              type: "pattern",
+              pattern: "solid",
+              fgColor: { argb: "ef5350" },
+            };
+          }
         }
       });
       start_col = start_col + 3;

@@ -10,14 +10,14 @@ function RecordControlBar(props) {
       <div className={classes.recordControlContainer}>
         <Navbar.Brand className={classes.actions}>
           <button
-            className={classes.finishButton}
-            onClick={props.createReport(props.data)}
+            className={classes.exportButton}
+            onClick={props.checkMailExportHandler}
           >
             Send to email
           </button>
           <button
-            className={classes.finishButton}
-            onClick={props.sendReportExcelAPIHandler(props.data, props.email)}
+            className={classes.saveAsButton}
+            onClick={() => props.createReport(props.data)}
           >
             Save as
           </button>

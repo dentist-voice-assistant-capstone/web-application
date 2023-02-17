@@ -1,6 +1,6 @@
 /* import React Libraries */
 import { useState, useEffect, useReducer, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
@@ -136,6 +136,8 @@ const currentCommandReducer = (prevCommand, action) => {
 
 const RecordPage = () => {
   const navigate = useNavigate();
+  const state = useLocation();
+  const userData = state.state.userData;
 
   // [States] ===============================================================
   /* states for socket.io connection */
@@ -188,13 +190,6 @@ const RecordPage = () => {
     });
   };
 
-  const summaryHandler = () => {
-    // console.log(information);
-    navigate("/summary", {
-      state: { information: information },
-    });
-  };
-
   const confirmHandler = () => {
     setIsFinish(true);
     checkFinishHandler();
@@ -206,6 +201,13 @@ const RecordPage = () => {
       setPeerConnection,
       setLocalStream
     );
+
+    navigate("/summary", {
+      state: {
+        information: information,
+        userData: userData,
+      },
+    });
   };
 
   const handleAutoChangeQuadrant = (quadrantToChange) => {
@@ -327,7 +329,7 @@ const RecordPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar />
+        <TopInformationBar userData={userData} />
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}
@@ -412,7 +414,6 @@ const RecordPage = () => {
           isFinish={!isFinish}
           pauseResumeHandler={pauseResumeHandler}
           checkFinishHandler={checkFinishHandler}
-          summaryHandler={summaryHandler}
         />
       </div>
     </Fragment>
