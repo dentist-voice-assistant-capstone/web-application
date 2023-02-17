@@ -75,8 +75,10 @@ class ToothTable {
         }
       }
     }
-    // reverse the toothArray if side is "lingual"
-    if (!!side && side === "lingual") {
+    // reverse the toothArray 
+    // for quadrant 1-2 if side === "lingual"
+    // for quadrant 3-4 if side === "buccal"
+    if (!!side && (((q === 1 || q === 2) && side === "lingual") || ((q === 3 || q === 4) && side === "buccal"))) {
       toothArray.reverse();
     }
 

@@ -100,13 +100,13 @@ const currentCommandReducer = (prevCommand, action) => {
 
       let positionArray;
       if (
-        ((q === 1 || q === 4) && currentSide === "buccal") ||
-        ((q === 2 || q === 3) && currentSide === "lingual")
+        ((q === 1 || q === 3) && currentSide === "buccal") ||
+        ((q === 2 || q === 4) && currentSide === "lingual")
       ) {
         positionArray = ["distal", "middle", "mesial"];
       } else if (
-        ((q === 1 || q === 4) && currentSide === "lingual") ||
-        ((q === 2 || q === 3) && currentSide === "buccal")
+        ((q === 1 || q === 3) && currentSide === "lingual") ||
+        ((q === 2 || q === 4) && currentSide === "buccal")
       ) {
         positionArray = ["mesial", "middle", "distal"];
       }
@@ -165,13 +165,6 @@ const RecordPage = () => {
     defaultCurrentCommand
   );
 
-  // const [currentCommand, setCurrentCommand] = useState({
-  //   command: "MO",
-  //   tooth: "17",
-  //   side: null,
-  //   position: "middle", //should be "distal", "middle" or "mesial" !!
-  // });
-
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
   const handleSelect = (e) => {
@@ -211,7 +204,7 @@ const RecordPage = () => {
   const handleAutoChangeQuadrant = (quadrantToChange) => {
     setQuadrant((prevQuadrant) => {
       if (prevQuadrant !== quadrantToChange) {
-        console.log(`Current Q${quadrant}, Change To Q${quadrantToChange}`);
+        // console.log(`Current Q${quadrant}, Change To Q${quadrantToChange}`);
         return quadrantToChange;
       }
       return prevQuadrant;
@@ -266,13 +259,11 @@ const RecordPage = () => {
       }
       return obj;
     });
-    // console.log(newInformation);
 
     setInformation(newInformation);
     handleAutoChangeQuadrant(q);
   };
-  // console.log("===============");
-  // console.log(information);
+
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;

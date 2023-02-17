@@ -198,7 +198,8 @@ io.on("connection", (socket) => {
           // console.log(mode, q, i, side, position, '-->', target)
           let next_tooth = null;
           if (toothTable.updateValue(q, i, mode, target, side, position)) {
-            if (mode === "RE" && (((((q === 1 || q === 4) && side === "buccal") || ((q === 2 || q === 3) && side === "lingual")) && position === "mesial") || ((((q === 1 || q === 4) && side === "lingual") || ((q === 2 || q === 3) && side === "buccal")) && position === "distal"))) {
+            if (mode === "RE" && (((((q === 1 || q === 3) && side === "buccal") || ((q === 2 || q === 4) && side === "lingual")) && position === "mesial") ||
+              ((((q === 1 || q === 3) && side === "lingual") || ((q === 2 || q === 4) && side === "buccal")) && position === "distal"))) {
               next_tooth = toothTable.findNextAvailableTooth(q, i, side)
             }
             sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position, next_tooth);
@@ -213,7 +214,7 @@ io.on("connection", (socket) => {
           let next_tooth = null;
           if (toothTable.updateValue(q, i, mode, target)) {
             if (mode === "MGJ") {
-              next_tooth = toothTable.findNextAvailableTooth(q, i)
+              next_tooth = toothTable.findNextAvailableTooth(q, i, "buccal")
             }
             sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side = null, position = null, next_tooth = next_tooth);
           }
