@@ -54,7 +54,11 @@ const RecordSection = ({
             handleSetInformation={handleSetInformation}
             currentCommand={highlightCommandBuccalSide ? currentCommand : null}
           />
-          <div className={classes.title}>{`${quadrant}${information.ID}`}</div>
+          <div
+            className={`${classes.title} ${
+              !!currentCommand ? classes.hightlighted : null
+            }`}
+          >{`${quadrant}${information.ID}`}</div>
           <RecordLingualInformation
             quadrant={quadrant}
             id={id}
