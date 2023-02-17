@@ -31,6 +31,7 @@ const defaultCurrentCommand = {
   tooth: null,
   side: null,
   position: null,
+  quadrant: 1,
 };
 
 const currentCommandReducer = (prevCommand, action) => {
@@ -38,36 +39,35 @@ const currentCommandReducer = (prevCommand, action) => {
     case "CLEAR_COMMAND":
       return defaultCurrentCommand;
     case "UPDATE_COMMAND":
-      // -- if the same command, use the old command ??? --
-      // if (
-      //   action.payload.command === prevCommand.command &&
-      //   action.payload.tooth === prevCommand.tooth &&
-      //   action.payload.side === prevCommand.side
-      // ) {
-      //   return prevCommand;
-      // }
-      return action.payload;
+      // if the quadrant is changed, then set new quadrant
+      let quadrant = prevCommand.quadrant;
+      if (!!action.payload.tooth) {
+        let newQuadrant = parseInt(action.payload.tooth.slice(0, 1));
+        quadrant = newQuadrant;
+      }
+      return { ...action.payload, quadrant };
     case "NEXT_TOOTH":
-      if (!!action.payload.next_tooth) {
-        let position = null;
-        if (action.payload.mode === "RE") {
-          position = getToothStartPosition(
-            action.payload.next_tooth.q,
-            action.payload.next_tooth.i,
-            prevCommand.side
-          );
-        }
-        return {
-          command: prevCommand.command,
-          tooth:
-            action.payload.next_tooth.q.toString() +
-            action.payload.next_tooth.i.toString(),
-          side: prevCommand.side,
-          position: position,
-        };
-      } else {
+      if (!!!action.payload.next_tooth) {
         return prevCommand;
       }
+      let position = null;
+      if (action.payload.mode === "RE") {
+        position = getToothStartPosition(
+          action.payload.next_tooth.q,
+          action.payload.next_tooth.i,
+          prevCommand.side
+        );
+      }
+      return {
+        command: prevCommand.command,
+        tooth:
+          action.payload.next_tooth.q.toString() +
+          action.payload.next_tooth.i.toString(),
+        side: prevCommand.side,
+        position: position,
+        quadrant: action.payload.next_tooth.q,
+      };
+
     case "UPDATE_PDRE_POSITION":
       /* this action will work when the system receive the RE value of 
         the latest tooth position
@@ -125,10 +125,19 @@ const currentCommandReducer = (prevCommand, action) => {
           tooth: tooth,
           side: currentSide,
           position: newPosition,
+          quadrant: q,
         };
       } else {
         return prevCommand;
       }
+    case "CHANGE_QUADRANT":
+      let quadrantToChange = action.payload.quadrant;
+      if (quadrantToChange !== prevCommand.quadrant) {
+        return { ...prevCommand, quadrant: quadrantToChange };
+      } else {
+        return prevCommand;
+      }
+
     default:
       return prevCommand;
   }
@@ -165,10 +174,15 @@ const RecordPage = () => {
     defaultCurrentCommand
   );
 
-  /* states for quadrant */
-  const [quadrant, setQuadrant] = useState(1);
+  /* quadrant */
+  const quadrant = currentCommand.quadrant;
   const handleSelect = (e) => {
-    setQuadrant(parseInt(e));
+    dispatchCurrentCommand({
+      type: "CHANGE_QUADRANT",
+      payload: {
+        quadrant: parseInt(e),
+      },
+    });
   };
 
   const checkFinishHandler = () => {
@@ -199,16 +213,6 @@ const RecordPage = () => {
       setPeerConnection,
       setLocalStream
     );
-  };
-
-  const handleAutoChangeQuadrant = (quadrantToChange) => {
-    setQuadrant((prevQuadrant) => {
-      if (prevQuadrant !== quadrantToChange) {
-        // console.log(`Current Q${quadrant}, Change To Q${quadrantToChange}`);
-        return quadrantToChange;
-      }
-      return prevQuadrant;
-    });
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -261,7 +265,7 @@ const RecordPage = () => {
     });
 
     setInformation(newInformation);
-    handleAutoChangeQuadrant(q);
+    // handleAutoChangeQuadrant(q);
   };
 
   // ========================================================================
