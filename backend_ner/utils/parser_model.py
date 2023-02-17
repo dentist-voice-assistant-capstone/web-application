@@ -21,7 +21,7 @@ class ParserModel:
         self.mo_prob = MOProb()
         self.bop_prob = BOPProb()
 
-    def inference(self, sentence, token_classifier, save=False, threshold=5):
+    def inference(self, sentence, token_classifier, save=False, alternate_parse_zee=True, threshold=5):
         ''' 
         Input: 
             - sentence: a consider sentence which want to parse
@@ -30,10 +30,11 @@ class ParserModel:
             - threshold: CER threshold
         '''
         tokens = token_classifier.inference(sentence)
-        semantic = self.parse(tokens, threshold=threshold) # Don't save parser, check alternate first
-        result = self.alternate_parse_zee(sentence, tokens, token_classifier, semantic, save, threshold)
+        semantic = self.parse(tokens, threshold=threshold, save=save and not alternate_parse_zee) # Don't save parser, check alternate first
+        if alternate_parse_zee:
+            semantic = self.alternate_parse_zee(sentence, tokens, token_classifier, semantic, save, threshold)
 
-        return result # result
+        return semantic # result
 
     def alternate_parse_zee(self, sentence, tokens, token_classifier, semantic, save=False, threshold=5):
         result_tokens = copy.deepcopy(tokens)
