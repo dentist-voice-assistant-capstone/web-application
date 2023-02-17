@@ -170,7 +170,10 @@ io.on("connection", (socket) => {
           }
           tooth_side = semantic.data.tooth_side;
 
-          if (!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side)) {
+          if (mode === "MGJ" && (old_command === mode) && old_q === null && old_i === null) {
+            sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
+          }
+          else if (!(mode === "MGJ") && (!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side))) {
             sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
           }
 
