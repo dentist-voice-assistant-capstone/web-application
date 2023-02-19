@@ -71,7 +71,7 @@
   border-radius: 5px;
   margin: auto;
   width: 160px;
-  margin-left: 20%;
+  margin-left: 10%;
 }
 
 .saveAsButton {
@@ -82,7 +82,7 @@
   border-radius: 5px;
   margin: auto;
   margin-right: 10%;
-  width: 110px;
+  width: 160px;
 }
 
 .finishButton:hover {
