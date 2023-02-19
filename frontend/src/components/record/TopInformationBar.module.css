@@ -16,6 +16,7 @@
   border: 0;
   color: white;
   width: 100%;
+  height: 40px;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
@@ -30,9 +31,24 @@
   background-color: green;
 }
 
-/* .patienceID {
+.back-to-home-page:first-child {
+  flex: 1;
+}
+
+.back-to-home-page button:first-child {
+  /* border: 0.5px solid orange; */
+  font-size: 25px;
+  font-weight: bold;
   color: white;
+  background-color: black;
+  border: none;
+  /* color: rgb(216, 11, 11);
   flex-flow: row;
   display: flex;
-  justify-content: center;
-} */
+  justify-content: center; */
+}
+
+.back-to-home-page button:first-child:hover {
+  color: var(--primary-color-highlight);
+  transition: 0.7s;
+}

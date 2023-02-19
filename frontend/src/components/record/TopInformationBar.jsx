@@ -8,50 +8,38 @@ import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 import classes from "./TopInformationBar.module.css";
 
 function TopInformationBar(props) {
-  // states for handling initial fetching user's data
-  const authCtx = useContext(AuthContext);
-  const token = authCtx.token;
-  const [patienceData] = useState("55555555");
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  const current = new Date();
-  const date = `${current.getDate()}/${
-    current.getMonth() + 1
-  }/${current.getFullYear()}`;
-
-  // // fetching user data, when loaded page =========================
-  // useEffect(() => {
-  //   fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
-  // }, [token]);
-  // =============================================================
-
+  const isSummary = props.isSummary;
+  console.log(isSummary);
   return (
-    // <Navbar bg="light">
-    //   <Container>
-    //     <Navbar.Brand>Brand link</Navbar.Brand>
-    //     <Nav className="me-auto">
-    //       <LogoutButton></LogoutButton>
-    //     </Nav>
-    //   </Container>
-    // </Navbar>
     <Navbar bg="black" variant="dark" fixed="top">
       <Container>
-        {isLoaded && (
+        {!isSummary && (
           <Navbar.Brand className={classes.actions}>
             <div>
               {"Dentist ID: "}
-              {props.userData.dentistID}
+              {props.dentistID}
             </div>
 
             <div className="patienceID">
               {"Patience ID: "}
-              {patienceData}
+              {props.patienceID}
             </div>
 
             <div>
               {"Date: "}
-              {date}
+              {props.date}
             </div>
+          </Navbar.Brand>
+        )}
+        {isSummary && (
+          <Navbar.Brand className={classes.actions}>
+            <div></div>
+            <div className={classes["back-to-home-page"]}>
+              <button onClick={props.checkBackToHomeHandler}>
+                Back to Home Page
+              </button>
+            </div>
+            <div></div>
           </Navbar.Brand>
         )}
       </Container>

@@ -139,6 +139,14 @@ const RecordPage = () => {
   const state = useLocation();
   const userData = state.state.userData;
 
+  const patienceID = state.state.patienceID;
+  const dentistID = state.state.dentistID;
+
+  const current = new Date();
+  const date = `${current.getDate()}/${
+    current.getMonth() + 1
+  }/${current.getFullYear()}`;
+
   // [States] ===============================================================
   /* states for socket.io connection */
   const [socket, setSocket] = useState(null);
@@ -206,6 +214,9 @@ const RecordPage = () => {
       state: {
         information: information,
         userData: userData,
+        patienceID: patienceID,
+        dentistID: dentistID,
+        date: date,
       },
     });
   };
@@ -329,7 +340,12 @@ const RecordPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar userData={userData} />
+        <TopInformationBar
+          date={date}
+          patienceID={patienceID}
+          dentistID={dentistID}
+          isSummary={false}
+        />
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}

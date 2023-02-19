@@ -133,7 +133,7 @@ const merge = (ws, r) => {
   ws.mergeCells(`${colID[47]}${r}:${colID[49]}${r}`);
 };
 
-exports.createReport = (EX_DATA) => {
+exports.createReport = (DATA, file_name) => {
   //--------------create a workbook and worksheet--------------
   const wb = new Excel.Workbook();
   const ws = wb.addWorksheet(`My Sheet`);
@@ -205,7 +205,7 @@ exports.createReport = (EX_DATA) => {
   ];
 
   //-----------------------fill data to each cell---------------------------------
-  EX_DATA.forEach((data) => {
+  DATA.forEach((data) => {
     const flag = data.quadrant === 1 || data.quadrant === 4 ? 0 : 1;
     let start_col = data.quadrant === 1 || data.quadrant === 4 ? 1 : 26;
     const mode = data.quadrant === 1 || data.quadrant === 2 ? 0 : 1;
@@ -219,10 +219,8 @@ exports.createReport = (EX_DATA) => {
         `${colID[start_col]}${tooth_row}`
       ).value = `${data.quadrant}${idx.ID}`;
 
-      // if (idx.missing) {
       ws.getCell(`${colID[start_col]}${mo_row}`).value = idx.MO;
       ws.getCell(`${colID[start_col]}${mgj_row}`).value = idx.MGJ;
-      // }
 
       setExcelProperties(ws, colID[start_col], tooth_row);
       setExcelProperties(ws, colID[start_col], mo_row);
@@ -277,9 +275,6 @@ exports.createReport = (EX_DATA) => {
           ws.getCell(
             `${colID[start_col + id]}${re_mode[side_data.side][mode]}`
           ).value = side_data.RE[pattern_flag[flag][id]];
-          // ws.getCell(
-          //   `${colID[start_col + id]}${bop_mode[side_data.side][mode]}`
-          // ).value = side_data.BOP[pattern_flag[flag][id]] | 0;
 
           if (side_data.BOP[pattern_flag[flag][id]] | 0) {
             ws.getCell(
@@ -298,6 +293,6 @@ exports.createReport = (EX_DATA) => {
 
   wb.xlsx.writeBuffer().then(function (buffer) {
     const blob = new Blob([buffer], { type: "applicationi/xlsx" });
-    FileSaver.saveAs(blob, "report.xlsx");
+    FileSaver.saveAs(blob, `${file_name}.xlsx`);
   });
 };

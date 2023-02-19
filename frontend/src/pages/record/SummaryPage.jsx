@@ -8,24 +8,28 @@ import TopInformationBar from "../../components/record/TopInformationBar";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import RecordControlSummaryBar from "../../components/record/RecordControlSummaryBar";
-import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
-import Spinner from "react-bootstrap/Spinner";
-import { FiCloudOff } from "react-icons/fi";
+import InformationBox from "../../components/record/InformationBox";
+
 import Modal from "../../components/ui/Modal";
-import CurrentCommandBox from "../../components/record/CurrentCommandBox";
-import { EX_DATA } from "../../utils/constants";
 import { createReport } from "../../utils/createExcel";
 import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
 
 const SummaryPage = () => {
+  const navigate = useNavigate();
+
   const state = useLocation();
-  console.log(state);
   const userData = state.state.userData;
+
+  const patienceID = state.state.patienceID;
+  const dentistID = state.state.dentistID;
+  const date = state.state.date;
+
+  const file_name = `${patienceID}_${date}`;
 
   const [information, setInformation] = useState(state.state.information);
   const [checkMailExport, setCheckMailExport] = useState(false);
-  // const [isMailExport, setIsMailExport] = useState(true);
+  const [checkBackToHome, setCheckBackToHome] = useState(false);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -40,9 +44,20 @@ const SummaryPage = () => {
     });
   };
 
+  const checkBackToHomeHandler = () => {
+    setCheckBackToHome((prevcheckBackToHome) => {
+      return !prevcheckBackToHome;
+    });
+  };
+
   const sendEmailHandler = () => {
-    sendReportExcelAPIHandler(information, userData.email);
+    sendReportExcelAPIHandler(information, userData.email, file_name);
     checkMailExportHandler();
+  };
+
+  const backToHomePageHandler = () => {
+    checkBackToHomeHandler();
+    navigate("/");
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -98,7 +113,7 @@ const SummaryPage = () => {
     setInformation(newInformation);
   };
 
-  const modalConfirmContent = (
+  const modalExportContent = (
     <p>
       report will send to {userData.email}
       {/* <br />
@@ -109,22 +124,56 @@ const SummaryPage = () => {
     </p>
   );
 
+  const modalBackContent = (
+    <p>
+      Are you sure to go back to Hame Page?
+      <br />
+      Once confirmed,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
+  );
+
   /* components to be rendered */
   const PDRETableComponentToBeRendered = (
     <Fragment>
       {checkMailExport && (
         <Modal
           header="Exporting report"
-          content={modalConfirmContent}
+          content={modalExportContent}
           onExportClick={sendEmailHandler}
           onCancelClick={checkMailExportHandler}
           exportButtonText="Export"
           modalType="export"
         />
       )}
+      {checkBackToHome && (
+        <Modal
+          header="Back to Home Page"
+          content={modalBackContent}
+          onOKClick={backToHomePageHandler}
+          onCancelClick={checkBackToHomeHandler}
+          okButtonText="Confirm"
+          modalType="confirm"
+        />
+      )}
       <div className="landing-page">
-        <TopInformationBar />
-        <div className={classes.current_command_box}></div>
+        <TopInformationBar
+          date={date}
+          patienceID={patienceID}
+          dentistID={dentistID}
+          isSummary={true}
+          checkBackToHomeHandler={checkBackToHomeHandler}
+        />
+
+        <div className={classes.information_box}>
+          <InformationBox
+            dentistID={dentistID}
+            patienceID={patienceID}
+            date={date}
+          />
+        </div>
         <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}
@@ -172,6 +221,7 @@ const SummaryPage = () => {
           data={information}
           email={userData.email}
           checkMailExportHandler={checkMailExportHandler}
+          file_name={file_name}
         />
       </div>
     </Fragment>

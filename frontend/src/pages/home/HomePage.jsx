@@ -8,10 +8,16 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
+  const [patienceID, setPatienceID] = useState("123456");
+  const [dentistID, setDentistID] = useState("654321");
   function startHandler() {
     startAPIHandler(); // just console.log("starting")
     navigate("/record", {
-      state: { userData: userData },
+      state: {
+        userData: userData,
+        patienceID: patienceID,
+        dentistID: dentistID,
+      },
     });
   }
 

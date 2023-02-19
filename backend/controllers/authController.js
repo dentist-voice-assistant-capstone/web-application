@@ -108,67 +108,11 @@ exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
     );
   }
 });
-exports.saveLocalExcel = catchAsync(async (req, res, next) => {
-  const data = req.body.data;
-
-  try {
-    const wb = await createExcel.createReport(data);
-
-    //   res.sendFile(wb, options, function (err) {
-    //     if (err) {
-    //         next(err);
-    //     } else {
-    //         console.log('Sent:', fileName);
-    //     }
-    // });
-    const buffer = await wb.xlsx.writeBuffer();
-    // console.log(buffer);
-    // // wb.xlsx.writeBuffer().then(function(buffer) {
-    // const blob = new Blob([buffer], { type: "application/xlsx" });
-    // console.log(blob);
-    // var file = new File(blob, "myexcel.xlsx", { type: "application/xlsx" });
-    // console.log(file);
-
-    // FileSaver.saveAs(file);
-    // FileSaver.saveAs(blob, "myexcel.xlsx");
-    // });
-    // var options = {
-    //   root: path.join(__dirname, "public"),
-    //   dotfiles: "deny",
-    //   headers: {
-    //     "x-timestamp": Date.now(),
-    //     "x-sent": true,
-    //   },
-    // };
-    // const tempfile = require("tempfile");
-    // var tempFilePath = tempfile(".xlsx");
-    // wb.xlsx.writeFile(tempFilePath).then(function() {
-    //   console.log("file is written");
-    //   res.sendFile(tempFilePath, options, function(err) {
-    //     if (err) {
-    //       next(err);
-    //     } else {
-    //       console.log("Sent:", fileName);
-    //     }
-    //   });
-    // });
-
-    /* prepare response headers */
-    res.end(buffer);
-    // console.log(buffer);
-
-    res.status(200).json({
-      status: "success",
-      message: "Created Report",
-    });
-  } catch (err) {
-    return next(new AppError("Unable to create Report"), 500);
-  }
-});
 
 exports.sendReportExcel = catchAsync(async (req, res, next) => {
   const data = req.body.data;
   const email = req.body.email;
+  const file_name = req.body.file_name;
 
   try {
     const user = await User.findOne({ email }).select("+active");
@@ -182,7 +126,7 @@ exports.sendReportExcel = catchAsync(async (req, res, next) => {
       message: "Report summary",
       attachments: [
         {
-          filename: "report.xlsx",
+          filename: `${file_name}.xlsx`,
           content: buffer,
           contentType:
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

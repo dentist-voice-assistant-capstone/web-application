@@ -15,10 +15,6 @@ const Modal = (props) => {
   const isConfirmModal = modalType === "confirm";
   const isExportModal = modalType === "export";
 
-  console.log(isExportModal);
-
-  console.log(isConfirmModal);
-
   // buttons in modal actions
   const okButton = (
     <button onClick={props.onOKClick} className={classes["ok_button"]}>
