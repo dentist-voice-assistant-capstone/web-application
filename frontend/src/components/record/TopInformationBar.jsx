@@ -11,39 +11,47 @@ function TopInformationBar(props) {
   const isSummary = props.isSummary;
   console.log(isSummary);
   return (
-    <Navbar bg="black" variant="dark" fixed="top">
-      <Container>
-        {!isSummary && (
-          <Navbar.Brand className={classes.actions}>
-            <div>
-              {"Dentist ID: "}
-              {props.dentistID}
-            </div>
+    <>
+      {" "}
+      {!isSummary && (
+        <div className={classes["navbar"]}>
+          <Navbar bg="black" variant="dark" fixed="top">
+            <Container>
+              <Navbar.Brand className={classes.actions}>
+                <div className={classes["content"]}>
+                  {"Dentist ID: "}
+                  {props.dentistID}
+                </div>
+                <div className={classes["content"]}>
+                  {"Patience ID: "}
+                  {props.patienceID}
+                </div>
 
-            <div className="patienceID">
-              {"Patience ID: "}
-              {props.patienceID}
-            </div>
-
-            <div>
-              {"Date: "}
-              {props.date}
-            </div>
-          </Navbar.Brand>
-        )}
-        {isSummary && (
-          <Navbar.Brand className={classes.actions}>
-            <div></div>
-            <div className={classes["back-to-home-page"]}>
-              <button onClick={props.checkBackToHomeHandler}>
-                Back to Home Page
-              </button>
-            </div>
-            <div></div>
-          </Navbar.Brand>
-        )}
-      </Container>
-    </Navbar>
+                <div className={classes["content"]}>
+                  {"Date: "}
+                  {props.date}
+                </div>
+              </Navbar.Brand>
+            </Container>
+          </Navbar>
+        </div>
+      )}
+      {isSummary && (
+        <div
+          className={classes["navbar-summary"]}
+          onClick={props.checkBackToHomeHandler}
+        >
+          <Navbar
+            className="justify-content-center"
+            bg="transparent"
+            variant="transparent"
+            fixed="top"
+          >
+            <div className={classes["back-home-bar"]}> Back to Home Page</div>
+          </Navbar>
+        </div>
+      )}
+    </>
   );
 }
 

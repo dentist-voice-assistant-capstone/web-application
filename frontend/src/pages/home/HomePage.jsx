@@ -27,11 +27,13 @@ const HomePage = () => {
 
   return (
     <div className="landing-page">
+      {/* <div className={classes["navbar"]}> */}
       <NavBar
         email={"email"}
         userData={userData}
         setUserData={setUserData}
       ></NavBar>
+      {/* </div> */}
       <div className={classes.actions}>
         <button onClick={startHandler}>Start</button>
       </div>

@@ -8,8 +8,6 @@ import AuthContext from "../../store/auth-context";
 import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 
 function NavBar(props) {
-  console.log(props);
-
   // states for handling initial fetching user's data
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
