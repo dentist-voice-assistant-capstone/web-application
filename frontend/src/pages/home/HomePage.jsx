@@ -12,11 +12,13 @@ const HomePage = () => {
   const [dentistID, setDentistID] = useState("654321");
   const [isStart, setIsStart] = useState(false);
 
-  const checkIsStartHandler = () => {
-    setIsStart((prevcheckIsStart) => {
-      return !prevcheckIsStart;
-    });
-  };
+  //   -----------------------------------------TOGGLE MODAL--------------------------------------------------
+  //   const checkIsStartHandler = () => {
+  //     setIsStart((prevcheckIsStart) => {
+  //       return !prevcheckIsStart;
+  //     });
+  //   };
+  // -----------------------------------------------------------------------------------------------------
 
   function startHandler() {
     startAPIHandler();
@@ -44,11 +46,12 @@ const HomePage = () => {
       When start button is clicked, you should set isStart to true then the InputModal will be appeared.
 
       If patientID and dentistID fields in are filled in, you should update and navigate to RecordPage. You can use startHandler function to navigate na krub. */}
-
-      {/* {isStart && (
+      {/* ----------------------------------------------ADD HERE----------------------------------------------
+      {isStart && (
         <InputModal
         />
-      )} */}
+      )}
+----------------------------------------------------------------------------------------------------- */}
       <div className="landing-page">
         <NavBar
           email={"email"}
@@ -59,9 +62,10 @@ const HomePage = () => {
         <div className={classes.actions}>
           <button onClick={startHandler}>Start</button>
 
-          {/* Uncomment To toggle isStart then use startHandler function in InputModal
-
-          <button onClick={checkIsStartHandler}>Start</button> */}
+          {/* -----------------------------------------------------------------------------------------------------
+          Uncomment To toggle isStart then use startHandler function in InputModal
+          <button onClick={checkIsStartHandler}>Start</button>
+----------------------------------------------------------------------------------------------------- */}
         </div>
         <div className={classes.actions}>
           <button onClick={editAccountMenuOnClickHandler}>Account Edit</button>
