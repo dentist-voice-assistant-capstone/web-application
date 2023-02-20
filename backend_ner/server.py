@@ -73,23 +73,23 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 update_display = create_incomplete_semantic(command, tooth, tooth_side)
                 old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
                 semantics.append(update_display)
-            else:
-                new_semantics = []
-                prev_zee = None
-                idx_tooth_list = 0
-                for semantic in semantics:
-                    zee = semantic.get("data").get("zee")
-                    if zee != prev_zee:
-                        idx_tooth_list += 1
+            # else:
+            #     new_semantics = []
+            #     prev_zee = None
+            #     idx_tooth_list = 0
+            #     for semantic in semantics:
+            #         zee = semantic.get("data").get("zee")
+            #         if zee != prev_zee:
+            #             idx_tooth_list += 1
 
-                    if len(old_tooth_list) < idx_tooth_list:
-                        update_display = create_incomplete_semantic(command, tooth, tooth_side)
-                        old_tooth_list.append(zee)
-                        new_semantics.append(update_display)
+            #         if len(old_tooth_list) < idx_tooth_list:
+            #             update_display = create_incomplete_semantic(command, tooth, tooth_side)
+            #             old_tooth_list.append(zee)
+            #             new_semantics.append(update_display)
                     
-                    new_semantics.append(semantic)
-                    prev_zee = zee
-                semantics = new_semantics
+            #         new_semantics.append(semantic)
+            #         prev_zee = zee
+            #     semantics = new_semantics
 
 
             # print()
