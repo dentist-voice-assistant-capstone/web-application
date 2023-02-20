@@ -1,10 +1,8 @@
 import classes from "./SummaryPage.module.css";
 /* import React Libraries */
-import { useState, useEffect, useReducer, Fragment } from "react";
+import { useState, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import SuccessPopup from "react-success-popup";
 import Alert from "react-bootstrap/Alert";
-import Fade from "react-bootstrap/Fade";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";

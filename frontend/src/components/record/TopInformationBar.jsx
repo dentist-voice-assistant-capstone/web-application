@@ -1,17 +1,13 @@
-import { useState, useContext, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 // import LogoutButton from "./LogoutButton";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import AuthContext from "../../store/auth-context";
-import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 import classes from "./TopInformationBar.module.css";
 
 function TopInformationBar(props) {
   const isSummary = props.isSummary;
   return (
     <>
-      {" "}
       {!isSummary && (
         <div className={classes["navbar"]}>
           <Navbar bg="black" variant="dark" fixed="top">

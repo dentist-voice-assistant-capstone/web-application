@@ -1,6 +1,6 @@
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, Fragment } from "react";
 import { startAPIHandler } from "../../utils/apiHandler";
 
