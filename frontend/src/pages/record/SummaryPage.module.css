@@ -47,3 +47,51 @@ td {
     left: 20%;
   }
 }
+
+.success_message {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  border: 0;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  height: 56px;
+  flex-flow: row;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeOut 4s;
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.top_bar {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  border: 0;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  height: 56px;
+  flex-flow: row;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 2s;
+}
+@keyframes fadeIn {
+  100% {
+    opacity: 1;
+  }
+  0% {
+    opacity: 0;
+  }
+}

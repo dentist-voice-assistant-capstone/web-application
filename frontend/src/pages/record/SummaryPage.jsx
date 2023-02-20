@@ -2,6 +2,9 @@ import classes from "./SummaryPage.module.css";
 /* import React Libraries */
 import { useState, useEffect, useReducer, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import SuccessPopup from "react-success-popup";
+import Alert from "react-bootstrap/Alert";
+import Fade from "react-bootstrap/Fade";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
@@ -30,6 +33,7 @@ const SummaryPage = () => {
   const [information, setInformation] = useState(state.state.information);
   const [checkMailExport, setCheckMailExport] = useState(false);
   const [checkBackToHome, setCheckBackToHome] = useState(false);
+  const [showSentSuccess, setShowSentSuccess] = useState(false);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -50,6 +54,14 @@ const SummaryPage = () => {
     });
   };
 
+  const showSentSuccessHandler = () => {
+    setShowSentSuccess(true);
+
+    setTimeout(() => {
+      setShowSentSuccess(false);
+    }, 3000);
+  };
+
   const sendEmailHandler = () => {
     sendReportExcelAPIHandler(information, userData.email, file_name);
     checkMailExportHandler();
@@ -58,6 +70,11 @@ const SummaryPage = () => {
   const backToHomePageHandler = () => {
     checkBackToHomeHandler();
     navigate("/");
+  };
+
+  const exportConfirmHandler = () => {
+    sendEmailHandler();
+    showSentSuccessHandler();
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -142,7 +159,7 @@ const SummaryPage = () => {
         <Modal
           header="Exporting report"
           content={modalExportContent}
-          onExportClick={sendEmailHandler}
+          onExportClick={exportConfirmHandler}
           onCancelClick={checkMailExportHandler}
           exportButtonText="Export"
           modalType="export"
@@ -159,14 +176,28 @@ const SummaryPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar
-          date={date}
-          patienceID={patienceID}
-          dentistID={dentistID}
-          isSummary={true}
-          checkBackToHomeHandler={checkBackToHomeHandler}
-        />
-
+        {showSentSuccess && (
+          <div className={classes["success_message"]}>
+            <Alert
+              variant="success"
+              style={{ height: "56px", border: 0, margin: 0 }}
+              // className={classes["success_message"]}
+            >
+              Report has been sent successfully
+            </Alert>
+          </div>
+        )}
+        {!showSentSuccess && (
+          <div className={classes["top_bar"]}>
+            <TopInformationBar
+              date={date}
+              patienceID={patienceID}
+              dentistID={dentistID}
+              isSummary={true}
+              checkBackToHomeHandler={checkBackToHomeHandler}
+            />
+          </div>
+        )}
         <div className={classes.information_box}>
           <InformationBox
             dentistID={dentistID}

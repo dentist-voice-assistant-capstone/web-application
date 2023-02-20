@@ -9,7 +9,6 @@ import classes from "./TopInformationBar.module.css";
 
 function TopInformationBar(props) {
   const isSummary = props.isSummary;
-  console.log(isSummary);
   return (
     <>
       {" "}
