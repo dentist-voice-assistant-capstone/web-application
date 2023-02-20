@@ -100,7 +100,11 @@ const AccountEditPage = () => {
   return (
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
-      <NavBar email="email"></NavBar>
+      <NavBar
+        email="email"
+        userData={userData}
+        setUserData={setUserData}
+      ></NavBar>
       {/* Error Modal */}
       {updateError && (
         <Modal

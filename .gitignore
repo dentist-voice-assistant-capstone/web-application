@@ -37,3 +37,4 @@ backend_ner/ner_onnx.ipynb
 backend_ner/__pycache__
 backend_ner/utils/__pycache__
 
+backend/config.env

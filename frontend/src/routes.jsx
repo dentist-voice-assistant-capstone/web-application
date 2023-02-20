@@ -12,6 +12,7 @@ export const ROUTES = [
   { path: "*", element: <HomePage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
+  { path: "/summary", element: <SummaryPage /> }, //maybe delete later
   { path: "/record", element: <RecordPage /> },
 ];
 

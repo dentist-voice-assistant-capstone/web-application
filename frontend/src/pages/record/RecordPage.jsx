@@ -1,6 +1,6 @@
 /* import React Libraries */
 import { useState, useEffect, useReducer, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 /* import React Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
@@ -145,6 +145,16 @@ const currentCommandReducer = (prevCommand, action) => {
 
 const RecordPage = () => {
   const navigate = useNavigate();
+  const state = useLocation();
+  const userData = state.state.userData;
+
+  const patienceID = state.state.patienceID;
+  const dentistID = state.state.dentistID;
+
+  const current = new Date();
+  const date = `${current.getDate()}/${
+    current.getMonth() + 1
+  }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   /* states for socket.io connection */
@@ -195,13 +205,6 @@ const RecordPage = () => {
     });
   };
 
-  const summaryHandler = () => {
-    // console.log(information);
-    navigate("/summary", {
-      state: { information: information },
-    });
-  };
-
   const confirmHandler = () => {
     setIsFinish(true);
     checkFinishHandler();
@@ -213,6 +216,16 @@ const RecordPage = () => {
       setPeerConnection,
       setLocalStream
     );
+
+    navigate("/summary", {
+      state: {
+        information: information,
+        userData: userData,
+        patienceID: patienceID,
+        dentistID: dentistID,
+        date: date,
+      },
+    });
   };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
@@ -322,7 +335,12 @@ const RecordPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar />
+        <TopInformationBar
+          date={date}
+          patienceID={patienceID}
+          dentistID={dentistID}
+          isSummary={false}
+        />
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}
@@ -407,7 +425,6 @@ const RecordPage = () => {
           isFinish={!isFinish}
           pauseResumeHandler={pauseResumeHandler}
           checkFinishHandler={checkFinishHandler}
-          summaryHandler={summaryHandler}
         />
       </div>
     </Fragment>

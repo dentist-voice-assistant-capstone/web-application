@@ -9,10 +9,11 @@ const Modal = (props) => {
    * 3. "confirm"
    */
 
-  const modalType = props.modalType || "error";
+  const modalType = props.modalType;
 
   const isErrorOrInfoModal = modalType === "error" || modalType === "info";
   const isConfirmModal = modalType === "confirm";
+  const isExportModal = modalType === "export";
 
   // buttons in modal actions
   const okButton = (
@@ -25,6 +26,16 @@ const Modal = (props) => {
       {props.cancelButtonText || "Cancel"}
     </button>
   );
+  const exportButton = (
+    <button
+      onClick={() =>
+        props.onExportClick(props.data, props.email, props.onCancelClick)
+      }
+      className={classes["export_button"]}
+    >
+      {props.exportButtonText || "Export"}
+    </button>
+  );
 
   return (
     <Fragment>
@@ -33,6 +44,7 @@ const Modal = (props) => {
         <div className={classes["backdrop"]} onClick={props.onOKClick}></div>
       )}
       {isConfirmModal && <div className={classes["backdrop"]}></div>}
+      {isExportModal && <div className={classes["backdrop"]}></div>}
 
       <div className={`${classes["modal"]} ${classes[modalType]}`}>
         {/* modal's header */}
@@ -45,8 +57,9 @@ const Modal = (props) => {
 
         {/* modal's action bar */}
         <footer className={classes["modal__actions"]}>
-          {isConfirmModal && cancelButton}
-          {okButton}
+          {(isConfirmModal && cancelButton) || (isExportModal && cancelButton)}
+          {(isConfirmModal && okButton) || (isErrorOrInfoModal && okButton)}
+          {isExportModal && exportButton}
         </footer>
       </div>
     </Fragment>

@@ -8,17 +8,14 @@ import AuthContext from "../../store/auth-context";
 import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 
 function NavBar(props) {
-  console.log(props);
-
   // states for handling initial fetching user's data
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
-  const [userData, setUserData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+    fetchUserInfoAPIHandler(token, props.setUserData, setIsLoaded);
   }, [token]);
   // =============================================================
 
@@ -35,7 +32,7 @@ function NavBar(props) {
       <Container>
         {isLoaded && (
           <Navbar.Brand className={classes.actions}>
-            {userData.email}
+            {props.userData.email}
           </Navbar.Brand>
         )}
         {isLoaded && <LogoutButton></LogoutButton>}

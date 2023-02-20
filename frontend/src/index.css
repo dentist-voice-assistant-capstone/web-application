@@ -6,6 +6,8 @@
   --primary-color-info: #494848;
   --primary-color-highlight: #fff154;
   --secondary-color-highlight: #fff9ba;
+  --primary-color-hover: #00ab41;
+  --secondary-color-hover: #ececec;
 }
 
 * {

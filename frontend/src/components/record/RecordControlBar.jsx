@@ -31,19 +31,6 @@ function RecordControlBar(props) {
           </Navbar.Brand>
         </div>
       )}
-
-      {!props.isFinish && (
-        <div className={classes.recordControlContainer}>
-          <Navbar.Brand className={classes.actions}>
-            <button
-              className={classes.summaryButton}
-              onClick={props.summaryHandler}
-            >
-              {"Summary"}
-            </button>
-          </Navbar.Brand>
-        </div>
-      )}
     </Navbar>
   );
 }
