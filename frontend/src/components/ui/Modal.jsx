@@ -58,7 +58,7 @@ const Modal = (props) => {
         {/* modal's action bar */}
         <footer className={classes["modal__actions"]}>
           {(isConfirmModal && cancelButton) || (isExportModal && cancelButton)}
-          {isConfirmModal && okButton}
+          {(isConfirmModal && okButton) || (isErrorOrInfoModal && okButton)}
           {isExportModal && exportButton}
         </footer>
       </div>
