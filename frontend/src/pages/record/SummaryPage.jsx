@@ -11,6 +11,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import RecordControlSummaryBar from "../../components/record/RecordControlSummaryBar";
 import RecordInformation from "../../components/record/RecordInformation";
 import InformationBox from "../../components/record/InformationBox";
+import NavBar from "../../components/ui/NavBar";
 
 import Modal from "../../components/ui/Modal";
 import { createReport } from "../../utils/createExcel";
@@ -60,18 +61,14 @@ const SummaryPage = () => {
     }, 3000);
   };
 
-  const sendEmailHandler = () => {
-    sendReportExcelAPIHandler(information, userData.email, file_name);
-    checkMailExportHandler();
-  };
-
   const backToHomePageHandler = () => {
     checkBackToHomeHandler();
     navigate("/");
   };
 
   const exportConfirmHandler = () => {
-    sendEmailHandler();
+    sendReportExcelAPIHandler(information, userData.email, file_name);
+    checkMailExportHandler();
     showSentSuccessHandler();
   };
 
@@ -185,17 +182,21 @@ const SummaryPage = () => {
             </Alert>
           </div>
         )}
-        {!showSentSuccess && (
-          <div className={classes["top_bar"]}>
-            <TopInformationBar
-              date={date}
-              patienceID={patienceID}
-              dentistID={dentistID}
-              isSummary={true}
-              checkBackToHomeHandler={checkBackToHomeHandler}
-            />
-          </div>
-        )}
+        {/* <TopInformationBar
+            date={date}
+            patienceID={patienceID}
+            dentistID={dentistID}
+            isSummary={true}
+            checkBackToHomeHandler={checkBackToHomeHandler}
+          /> */}
+        <div className={classes["top-bar"]}>
+          <NavBar
+            userData={userData}
+            isLoaded={true}
+            isSummary={true}
+            checkBackToHomeHandler={checkBackToHomeHandler}
+          ></NavBar>
+        </div>
         <div className={classes.information_box}>
           <InformationBox
             dentistID={dentistID}

@@ -1,8 +1,12 @@
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
-import { useState, Fragment } from "react";
-import { startAPIHandler } from "../../utils/apiHandler";
+import { useState, useContext, useEffect, Fragment } from "react";
+import {
+  startAPIHandler,
+  fetchUserInfoAPIHandler,
+} from "../../utils/apiHandler";
+import AuthContext from "../../store/auth-context";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -11,6 +15,16 @@ const HomePage = () => {
   const [patienceID, setPatienceID] = useState("123456");
   const [dentistID, setDentistID] = useState("654321");
   const [isStart, setIsStart] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // fetching user data, when loaded page =========================
+  useEffect(() => {
+    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+  }, [token]);
+  // =============================================================
 
   //   -----------------------------------------TOGGLE MODAL--------------------------------------------------
   //   const checkIsStartHandler = () => {
@@ -53,11 +67,7 @@ const HomePage = () => {
       )}
 ----------------------------------------------------------------------------------------------------- */}
       <div className="landing-page">
-        <NavBar
-          email={"email"}
-          userData={userData}
-          setUserData={setUserData}
-        ></NavBar>
+        <NavBar userData={userData} isLoaded={isLoaded}></NavBar>
         {/* </div> */}
         <div className={classes.actions}>
           <button onClick={startHandler}>Start</button>

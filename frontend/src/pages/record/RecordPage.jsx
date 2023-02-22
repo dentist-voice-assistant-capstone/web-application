@@ -340,12 +340,14 @@ const RecordPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar
-          date={date}
-          patienceID={patienceID}
-          dentistID={dentistID}
-          isSummary={false}
-        />
+        <div className={classes["top_bar"]}>
+          <TopInformationBar
+            date={date}
+            patienceID={patienceID}
+            dentistID={dentistID}
+            isSummary={false}
+          />
+        </div>
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}
@@ -394,37 +396,6 @@ const RecordPage = () => {
             />
           )}
         </div>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_COMMAND",
-            //   payload: {
-            //     command: "PDRE",
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "mesial",
-            //   },
-            // });
-          }}
-        >
-          Initialize
-        </button>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_PDRE_POSITION",
-            //   payload: {
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "middle",
-            //   },
-            // });
-          }}
-        >
-          Move
-        </button>
         <RecordControlBar
           isPaused={isPaused}
           isFinish={!isFinish}
