@@ -11,13 +11,21 @@ function RecordControlBar(props) {
             className={classes.exportButton}
             onClick={props.checkMailExportHandler}
           >
-            Send to email
+            <img
+              src={require("../../../src/icons8-send-email-24.png")}
+              className={classes["icon"]}
+            />
+            {"Send to email"}
           </button>
           <button
             className={classes.saveAsButton}
             onClick={() => props.createReport(props.data, props.file_name)}
           >
-            Save as
+            <img
+              src={require("../../../src/icons8-microsoft-excel-24.png")}
+              className={classes["icon"]}
+            />
+            {"Save as"}
           </button>
         </Navbar.Brand>
       </Navbar>

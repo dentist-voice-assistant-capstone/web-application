@@ -39,6 +39,11 @@
   border-style: none;
   border-radius: 5px;
   margin: auto;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding-left: 6px;
   padding-right: 6px;
   width: 110px;
@@ -52,6 +57,11 @@
   border-style: none;
   border-radius: 5px;
   margin: auto;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 8%;
   width: 110px;
 }
@@ -63,8 +73,17 @@
   border-style: none;
   border-radius: 5px;
   margin: auto;
-  width: 160px;
+  width: 175px;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: 10%;
+}
+
+.icon {
+  padding-right: 10px;
 }
 
 .saveAsButton {
@@ -73,9 +92,14 @@
   border-color: white;
   border-style: none;
   border-radius: 5px;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
   margin-right: 10%;
-  width: 160px;
+  width: 130px;
 }
 
 .finishButton:hover {
