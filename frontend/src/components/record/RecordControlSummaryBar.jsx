@@ -25,7 +25,7 @@ function RecordControlBar(props) {
               src={require("../../../src/icons8-microsoft-excel-24.png")}
               className={classes["icon"]}
             />
-            {"Save as"}
+            {"Save as excel"}
           </button>
         </Navbar.Brand>
       </Navbar>
