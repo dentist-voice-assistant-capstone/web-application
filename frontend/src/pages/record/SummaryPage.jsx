@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 
 /* import React Components */
-import TopInformationBar from "../../components/record/TopInformationBar";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import RecordControlSummaryBar from "../../components/record/RecordControlSummaryBar";
@@ -16,6 +15,7 @@ import NavBar from "../../components/ui/NavBar";
 import Modal from "../../components/ui/Modal";
 import { createReport } from "../../utils/createExcel";
 import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
+import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 
 const SummaryPage = () => {
   const navigate = useNavigate();
@@ -74,53 +74,56 @@ const SummaryPage = () => {
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
-      if (obj.quadrant === q) {
-        obj.idxArray.map((data) => {
-          if (data.ID === i) {
-            if (mode === "PD") {
-              const newPD = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.PD[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newPD;
-            } else if (mode === "RE") {
-              const newRE = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.RE[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newRE;
-            } else if (mode === "BOP") {
-              const newBOP = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.BOP[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newBOP;
-            } else if (mode === "MO") {
-              data.MO = target;
-              return data;
-            } else if (mode === "MGJ") {
-              data.MGJ = target;
-              return data;
-            } else if (mode === "Missing") {
-              data.missing = target;
-              return data;
-            }
-          }
-          return data;
-        });
-      }
-      return obj;
+      return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
     });
-    // console.log(newInformation);
+
+    // const newInformation = information.map((obj) => {
+    //   if (obj.quadrant === q) {
+    //     obj.idxArray.map((data) => {
+    //       if (data.ID === i) {
+    //         if (mode === "PD") {
+    //           const newPD = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.PD[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newPD;
+    //         } else if (mode === "RE") {
+    //           const newRE = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.RE[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newRE;
+    //         } else if (mode === "BOP") {
+    //           const newBOP = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.BOP[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newBOP;
+    //         } else if (mode === "MO") {
+    //           data.MO = target;
+    //           return data;
+    //         } else if (mode === "MGJ") {
+    //           data.MGJ = target;
+    //           return data;
+    //         } else if (mode === "Missing") {
+    //           data.missing = target;
+    //           return data;
+    //         }
+    //       }
+    //       return data;
+    //     });
+    //   }
+    //   return obj;
+    // });
 
     setInformation(newInformation);
   };

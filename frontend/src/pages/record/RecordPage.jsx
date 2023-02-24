@@ -18,6 +18,8 @@ import classes from "./RecordPage.module.css";
 
 /* import related data and functions */
 import { EX_DATA } from "../../utils/constants";
+import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+
 import {
   initiateConnection,
   startAudioStreaming,
@@ -31,6 +33,7 @@ const defaultCurrentCommand = {
   tooth: null,
   side: null,
   position: null,
+  quadrant: 1,
 };
 
 const currentCommandReducer = (prevCommand, action) => {
@@ -38,36 +41,35 @@ const currentCommandReducer = (prevCommand, action) => {
     case "CLEAR_COMMAND":
       return defaultCurrentCommand;
     case "UPDATE_COMMAND":
-      // -- if the same command, use the old command ??? --
-      // if (
-      //   action.payload.command === prevCommand.command &&
-      //   action.payload.tooth === prevCommand.tooth &&
-      //   action.payload.side === prevCommand.side
-      // ) {
-      //   return prevCommand;
-      // }
-      return action.payload;
+      // if the quadrant is changed, then set new quadrant
+      let quadrant = prevCommand.quadrant;
+      if (!!action.payload.tooth) {
+        let newQuadrant = parseInt(action.payload.tooth.slice(0, 1));
+        quadrant = newQuadrant;
+      }
+      return { ...action.payload, quadrant };
     case "NEXT_TOOTH":
-      if (!!action.payload.next_tooth) {
-        let position = null;
-        if (action.payload.mode === "RE") {
-          position = getToothStartPosition(
-            action.payload.next_tooth.q,
-            action.payload.next_tooth.i,
-            prevCommand.side
-          );
-        }
-        return {
-          command: prevCommand.command,
-          tooth:
-            action.payload.next_tooth.q.toString() +
-            action.payload.next_tooth.i.toString(),
-          side: prevCommand.side,
-          position: position,
-        };
-      } else {
+      if (!!!action.payload.next_tooth) {
         return prevCommand;
       }
+      let position = null;
+      if (action.payload.mode === "RE") {
+        position = getToothStartPosition(
+          action.payload.next_tooth.q,
+          action.payload.next_tooth.i,
+          prevCommand.side
+        );
+      }
+      return {
+        command: prevCommand.command,
+        tooth:
+          action.payload.next_tooth.q.toString() +
+          action.payload.next_tooth.i.toString(),
+        side: prevCommand.side,
+        position: position,
+        quadrant: action.payload.next_tooth.q,
+      };
+
     case "UPDATE_PDRE_POSITION":
       /* this action will work when the system receive the RE value of 
         the latest tooth position
@@ -100,13 +102,13 @@ const currentCommandReducer = (prevCommand, action) => {
 
       let positionArray;
       if (
-        ((q === 1 || q === 4) && currentSide === "buccal") ||
-        ((q === 2 || q === 3) && currentSide === "lingual")
+        ((q === 1 || q === 3) && currentSide === "buccal") ||
+        ((q === 2 || q === 4) && currentSide === "lingual")
       ) {
         positionArray = ["distal", "middle", "mesial"];
       } else if (
-        ((q === 1 || q === 4) && currentSide === "lingual") ||
-        ((q === 2 || q === 3) && currentSide === "buccal")
+        ((q === 1 || q === 3) && currentSide === "lingual") ||
+        ((q === 2 || q === 4) && currentSide === "buccal")
       ) {
         positionArray = ["mesial", "middle", "distal"];
       }
@@ -125,10 +127,19 @@ const currentCommandReducer = (prevCommand, action) => {
           tooth: tooth,
           side: currentSide,
           position: newPosition,
+          quadrant: q,
         };
       } else {
         return prevCommand;
       }
+    case "CHANGE_QUADRANT":
+      let quadrantToChange = action.payload.quadrant;
+      if (quadrantToChange !== prevCommand.quadrant) {
+        return { ...prevCommand, quadrant: quadrantToChange };
+      } else {
+        return prevCommand;
+      }
+
     default:
       return prevCommand;
   }
@@ -175,17 +186,15 @@ const RecordPage = () => {
     defaultCurrentCommand
   );
 
-  // const [currentCommand, setCurrentCommand] = useState({
-  //   command: "MO",
-  //   tooth: "17",
-  //   side: null,
-  //   position: "middle", //should be "distal", "middle" or "mesial" !!
-  // });
-
-  /* states for quadrant */
-  const [quadrant, setQuadrant] = useState(1);
+  /* quadrant */
+  const quadrant = currentCommand.quadrant;
   const handleSelect = (e) => {
-    setQuadrant(parseInt(e));
+    dispatchCurrentCommand({
+      type: "CHANGE_QUADRANT",
+      payload: {
+        quadrant: parseInt(e),
+      },
+    });
   };
 
   const checkFinishHandler = () => {
@@ -221,71 +230,63 @@ const RecordPage = () => {
     });
   };
 
-  const handleAutoChangeQuadrant = (quadrantToChange) => {
-    setQuadrant((prevQuadrant) => {
-      if (prevQuadrant !== quadrantToChange) {
-        console.log(`Current Q${quadrant}, Change To Q${quadrantToChange}`);
-        return quadrantToChange;
-      }
-      return prevQuadrant;
-    });
-  };
-
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
-      if (obj.quadrant === q) {
-        obj.idxArray.map((data) => {
-          if (data.ID === i) {
-            if (mode === "PD") {
-              const newPD = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.PD[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newPD;
-            } else if (mode === "RE") {
-              const newRE = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.RE[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newRE;
-            } else if (mode === "BOP") {
-              const newBOP = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.BOP[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newBOP;
-            } else if (mode === "MO") {
-              data.MO = target;
-              return data;
-            } else if (mode === "MGJ") {
-              data.MGJ = target;
-              return data;
-            } else if (mode === "Missing") {
-              data.missing = target;
-              return data;
-            }
-          }
-          return data;
-        });
-      }
-      return obj;
+      return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
     });
-    // console.log(newInformation);
+
+    // const newInformation = information.map((obj) => {
+    //   if (obj.quadrant === q) {
+    //     obj.idxArray.map((data) => {
+    //       if (data.ID === i) {
+    //         if (mode === "PD") {
+    //           const newPD = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.PD[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newPD;
+    //         } else if (mode === "RE") {
+    //           const newRE = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.RE[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newRE;
+    //         } else if (mode === "BOP") {
+    //           const newBOP = data.depended_side_data.map((checkSide) => {
+    //             if (checkSide.side === side) {
+    //               checkSide.BOP[spec_id] = target;
+    //             }
+    //             return checkSide;
+    //           });
+
+    //           return newBOP;
+    //         } else if (mode === "MO") {
+    //           data.MO = target;
+    //           return data;
+    //         } else if (mode === "MGJ") {
+    //           data.MGJ = target;
+    //           return data;
+    //         } else if (mode === "Missing") {
+    //           data.missing = target;
+    //           return data;
+    //         }
+    //       }
+    //       return data;
+    //     });
+    //   }
+    //   return obj;
+    // });
 
     setInformation(newInformation);
-    handleAutoChangeQuadrant(q);
+    // handleAutoChangeQuadrant(q);
   };
-  // console.log("===============");
-  // console.log(information);
+
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
