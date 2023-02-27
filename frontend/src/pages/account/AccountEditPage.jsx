@@ -124,7 +124,7 @@ const AccountEditPage = () => {
         />
       )}
 
-      <div className={`${classes["account-edit__main"]} centered`}>
+      <div className={`${classes["account-edit__main"]}`}>
         <div className={classes["account-edit__sidebar"]}>
           <h2>User Profile</h2>
           {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
