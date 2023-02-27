@@ -1,4 +1,4 @@
-from utils.parser_related_function import create_result_list, create_semantic_object
+from utils.parser_related_function import append_zee_to_available_teeth_dict, create_result_list, create_semantic_object
 from prob.mo_prob import MOProb
 from prob.bop_prob import BOPProb
 import re
@@ -176,6 +176,10 @@ class ParserModel:
 
         return result
 
+    def append_zee_to_available_teeth_dict(self, zee):
+        assert len(zee) == 2, "Zee must contain the quadrant and index of the tooth."
+        append_zee_to_available_teeth_dict(zee, self.available_teeth_dict)
+
     def reset(self):
         self.semantic_object_list = []
         self.last_pdre_state = {'command': None}
@@ -186,4 +190,5 @@ class ParserModel:
             4: [[4, x] for x in range(1, 9)]
         }
         self.last_symbol = False
-
+        self.prev_token = "None"
+        self.prev_distant = -1

@@ -19,7 +19,7 @@ import config
 
 
 class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
-    def __init__(self, token_classifier, parser, dict_map):
+    def __init__(self, token_classifier: TokenClassifier, parser: ParserModel, dict_map: DictionaryMapping):
         self.token_classifier = token_classifier
         self.parser = parser
         self.dict_map = dict_map
@@ -84,6 +84,15 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             if len(semantics) > 0:
                 response = create_ner_response(semantics)
                 yield response
+    
+    def UndoMissing(
+        self,
+        request: ner_model_pb2.Zee,
+        context: ServicerContext,
+    ) -> ner_model_pb2.Empty:
+        q, i = request.first_zee, request.second_zee
+        self.parser.append_zee_to_available_teeth_dict([q, i])
+        return ner_model_pb2.Empty()
 
 
 address = f"[::]:{config.PORT}"

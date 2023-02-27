@@ -4,6 +4,7 @@ package ner_backend;
 
 service NERBackend {
     rpc StreamingNER(stream StreamingTranscribeResponse) returns (stream NERResponse);
+    rpc UndoMissing(Zee) returns (Empty);
 }
 
 message SemanticCommand {
@@ -66,5 +67,9 @@ message StreamingTranscribeResponse {
   
   string version = 4;
   float duration = 7;
+}
+
+message Empty {
+
 }
 
