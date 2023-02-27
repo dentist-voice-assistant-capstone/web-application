@@ -8,6 +8,7 @@ const RecordSection = ({
   quadrant,
   information,
   handleSetInformation,
+  handleUndoToothMissing,
   tooth,
   currentCommand,
 }) => {
@@ -41,6 +42,10 @@ const RecordSection = ({
     highlightCommandLingualSide = true;
   }
 
+  const handleClickMissingBox = () => {
+    handleUndoToothMissing(quadrant, information.ID);
+  };
+
   return (
     <div>
       {/* not missing */}
@@ -72,7 +77,7 @@ const RecordSection = ({
       {/* missing */}
       {information.missing && (
         <div className={classes.direction}>
-          <div className={classes.missingBox}>
+          <div className={classes.missingBox} onClick={handleClickMissingBox}>
             <div
               className={classes.title}
             >{`${quadrant}${information.ID}`}</div>

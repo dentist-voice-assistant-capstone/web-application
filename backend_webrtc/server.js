@@ -104,6 +104,11 @@ io.on("connection", (socket) => {
     is_record = false;
   });
 
+  // When client undo missing
+  socket.on("undo_missing", async (toothData) => {
+    console.log("undo_missing:", toothData);
+  })
+
   // When disconnect end the streaming
   socket.on("disconnect", () => {
     console.log("disconnect");

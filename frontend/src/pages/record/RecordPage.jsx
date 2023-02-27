@@ -20,6 +20,7 @@ import classes from "./RecordPage.module.css";
 import { EX_DATA } from "../../utils/constants";
 import {
   initiateConnection,
+  undoToothMissing,
   startAudioStreaming,
   stopAudioStreaming,
   terminateConnection,
@@ -285,7 +286,11 @@ const RecordPage = () => {
     });
 
     setInformation(newInformation);
-    // handleAutoChangeQuadrant(q);
+  };
+
+  const handleUndoToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", false);
+    undoToothMissing(socket, q, i);
   };
 
   // ========================================================================
@@ -372,6 +377,7 @@ const RecordPage = () => {
               information={information[0]}
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
             />
           )}
           {quadrant === 2 && (
@@ -379,6 +385,7 @@ const RecordPage = () => {
               information={information[1]}
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
             />
           )}
           {quadrant === 3 && (
@@ -386,6 +393,7 @@ const RecordPage = () => {
               information={information[2]}
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
             />
           )}
           {quadrant === 4 && (
@@ -393,6 +401,7 @@ const RecordPage = () => {
               information={information[3]}
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
             />
           )}
         </div>
