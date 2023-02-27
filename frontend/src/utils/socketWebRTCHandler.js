@@ -111,7 +111,7 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
 
       // shift the cursor when receive "RE" command
       if (data.mode === "RE") {
-        console.log("cursor shifted !")
+        // console.log("cursor shifted !")
         dispatchCurrentCommand({
           type: "UPDATE_PDRE_POSITION",
           payload: {
@@ -142,13 +142,20 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
     // shift the cursor to the next tooth available (PDRE, MGJ command) when receiving
     // 'next_tooth' field
     if (!!data.next_tooth) {
-      dispatchCurrentCommand({
-        type: "NEXT_TOOTH",
-        payload: {
-          mode: data.mode,
-          next_tooth: data.next_tooth
-        }
-      })
+      let delay = 0; // ms
+      // if the quadrant is changed, delay 1 sec
+      if (data.q !== data.next_tooth.q) {
+        delay = 1000;
+      }
+      setTimeout(() => {
+        dispatchCurrentCommand({
+          type: "NEXT_TOOTH",
+          payload: {
+            mode: data.mode,
+            next_tooth: data.next_tooth
+          }
+        })
+      }, delay)
     }
   })
 

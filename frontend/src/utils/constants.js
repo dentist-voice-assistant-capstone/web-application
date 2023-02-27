@@ -27,11 +27,11 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 8,
-        missing: true,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
-            PD: { mesial: 1, middle: null, distal: null },
+            PD: { mesial: null, middle: null, distal: null },
             RE: { mesial: null, middle: null, distal: null },
             BOP: { mesial: null, middle: null, distal: null },
           },
@@ -51,7 +51,7 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: { mesial: 1, middle: 2, distal: null },
+            PD: { mesial: null, middle: null, distal: null },
             RE: { mesial: null, middle: null, distal: null },
             BOP: { mesial: null, middle: null, distal: null },
           },

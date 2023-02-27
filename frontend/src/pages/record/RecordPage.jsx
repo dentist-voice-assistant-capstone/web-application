@@ -46,6 +46,7 @@ const currentCommandReducer = (prevCommand, action) => {
         quadrant = newQuadrant;
       }
       return { ...action.payload, quadrant };
+
     case "NEXT_TOOTH":
       if (!!!action.payload.next_tooth) {
         return prevCommand;
@@ -58,7 +59,8 @@ const currentCommandReducer = (prevCommand, action) => {
           prevCommand.side
         );
       }
-      return {
+
+      let nextToothCommand = {
         command: prevCommand.command,
         tooth:
           action.payload.next_tooth.q.toString() +
@@ -67,7 +69,7 @@ const currentCommandReducer = (prevCommand, action) => {
         position: position,
         quadrant: action.payload.next_tooth.q,
       };
-
+      return nextToothCommand;
     case "UPDATE_PDRE_POSITION":
       /* this action will work when the system receive the RE value of 
         the latest tooth position
@@ -146,10 +148,15 @@ const currentCommandReducer = (prevCommand, action) => {
 const RecordPage = () => {
   const navigate = useNavigate();
   const state = useLocation();
-  const userData = state.state.userData;
+  // const userData = state.state.userData;
+  // const patienceID = state.state.patienceID;
+  // const dentistID = state.state.dentistID;
 
-  const patienceID = state.state.patienceID;
-  const dentistID = state.state.dentistID;
+  // =========== FOR TESTING ======================
+  const userData = { email: "test@hotmail.com" };
+  const patienceID = "123456";
+  const dentistID = "654321";
+  // ===============================================
 
   const current = new Date();
   const date = `${current.getDate()}/${
