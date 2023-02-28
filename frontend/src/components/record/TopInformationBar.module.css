@@ -40,7 +40,7 @@
 }
 
 .navbar-summary:hover * {
-  transition: 0.7s;
+  transition: var(--transition-hover);
 
   cursor: pointer;
   color: var(--primary-color-highlight);

@@ -107,7 +107,7 @@
 
 .modal.confirm .modal__actions button.ok_button:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .modal.confirm .modal__actions button.export_button {
@@ -117,7 +117,7 @@
 
 .modal.confirm .modal__actions button.export_button:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .modal.error .modal__actions button {
@@ -137,7 +137,7 @@
 
 .modal.confirm .modal__actions button.cancel_button:hover {
   background-color: var(--secondary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
   color: black;
 }
 
@@ -161,7 +161,7 @@
 
 .modal.export .modal__actions button.ok_button:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .modal.export .modal__actions button.export_button {
@@ -171,7 +171,7 @@
 
 .modal.export .modal__actions button.export_button:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .modal.export .modal__actions button.cancel_button {
@@ -182,7 +182,7 @@
 
 .modal.export .modal__actions button.cancel_button:hover {
   background-color: var(--secondary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
   color: black;
 }
 

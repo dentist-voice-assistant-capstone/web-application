@@ -7,6 +7,8 @@ import LogoutButton from "./LogoutButton";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 
+import { FaHome } from "react-icons/fa";
+
 function NavBar(props) {
   const navigate = useNavigate();
 
@@ -41,44 +43,20 @@ function NavBar(props) {
         <Navbar.Brand className={classes.actions}>
           {props.isSummary && (
             <div className={classes["content-left"]}>
-              {/* <button onClick={props.checkBackToHomeHandler}>Home</button> */}
-              <button>
-                {!isMouseOver && (
-                  <img
-                    src={require("../../../src/house-48.png")}
-                    onClick={props.checkBackToHomeHandler}
-                    onMouseEnter={mouseEnterHandler}
-                  />
-                )}
-                {isMouseOver && (
-                  <img
-                    src={require("../../../src/house-48-yellow.png")}
-                    onClick={props.checkBackToHomeHandler}
-                    onMouseLeave={mouseEnterHandler}
-                  />
-                )}
-              </button>
+              <FaHome
+                className={classes["home-icon"]}
+                size={40}
+                onClick={props.checkBackToHomeHandler}
+              />
             </div>
           )}
           {!props.isSummary && (
             <div className={classes["content-left"]}>
-              {/* <button onClick={homeMenuOnClickHandler}>Home</button> */}
-              <button className={classes["home-icon"]}>
-                {!isMouseOver && (
-                  <img
-                    src={require("../../../src/house-48.png")}
-                    onClick={homeMenuOnClickHandler}
-                    onMouseEnter={mouseEnterHandler}
-                  />
-                )}
-                {isMouseOver && (
-                  <img
-                    src={require("../../../src/house-48-yellow.png")}
-                    onClick={homeMenuOnClickHandler}
-                    onMouseLeave={mouseEnterHandler}
-                  />
-                )}
-              </button>
+              <FaHome
+                className={classes["home-icon"]}
+                size={40}
+                onClick={homeMenuOnClickHandler}
+              />
             </div>
           )}
 

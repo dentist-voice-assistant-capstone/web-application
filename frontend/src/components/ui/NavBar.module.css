@@ -62,20 +62,18 @@
 .content-left button:hover {
   background-color: rgb(0, 0, 0);
   color: var(--primary-color-highlight);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
-/* .home-icon:hover {
-  animation: fadeOut 0.35s;
+.home-icon {
+  /* size: 40px; */
+  color: white;
 }
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-} */
+
+.home-icon:hover {
+  transition: var(--transition-hover);
+  color: var(--primary-color-highlight);
+}
 
 /* .home-icon-fadeIn {
   animation: fadeIn 0.35s;

@@ -104,22 +104,22 @@
 
 .finishButton:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .saveAsButton:hover {
   background-color: var(--primary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .exportButton:hover {
   background-color: var(--secondary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .recordButton:hover {
   background-color: var(--secondary-color-hover);
-  transition: 0.7s;
+  transition: var(--transition-hover);
 }
 
 .recordControlContainer {
