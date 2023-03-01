@@ -8,6 +8,7 @@ import {
 } from "../../utils/apiHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
+import Modal from "../../components/ui/Modal";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const HomePage = () => {
   const [patienceID, setPatienceID] = useState(null);
   const [dentistID, setDentistID] = useState(null);
   const [isStart, setIsStart] = useState(false);
+  const [isContinue, setIsContinue] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
@@ -42,11 +44,36 @@ const HomePage = () => {
     setIsStart((prevcheckIsStart) => {
       return !prevcheckIsStart;
     });
+
+    if (!isStart && !isContinue) {
+      setDentistID(null);
+      setPatienceID(null);
+    }
+  };
+
+  const checkIsContinueHandler = () => {
+    checkIsStartHandler();
+    setIsContinue((prevcheckIsContinue) => {
+      return !prevcheckIsContinue;
+    });
   };
 
   function editAccountMenuOnClickHandler() {
     navigate("/account/edit");
   }
+
+  const modalRecheckContent = (
+    <p>
+      Dentist ID: {dentistID}
+      <br />
+      Patience ID: {patienceID}
+      <br />
+      Once confirmed,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
+  );
 
   return (
     <Fragment>
@@ -54,10 +81,22 @@ const HomePage = () => {
         <InputModal
           header="Please enter required information"
           modalType="input"
+          dentistID={dentistID}
+          patienceID={patienceID}
           setDentistID={setDentistID}
           setPatienceID={setPatienceID}
           onCancelClick={checkIsStartHandler}
+          onOKClick={checkIsContinueHandler}
+        />
+      )}
+      {isContinue && (
+        <Modal
+          header="Confirm to continue"
+          content={modalRecheckContent}
           onOKClick={startHandler}
+          onCancelClick={checkIsContinueHandler}
+          okButtonText="Confirm"
+          modalType="input_confirm"
         />
       )}
       -----------------------------------------------------------------------------------------------------

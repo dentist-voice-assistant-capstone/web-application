@@ -32,6 +32,7 @@ const InputModal = (props) => {
             type="Dentist-ID"
             id="Dentist-ID"
             onChange={(e) => props.setDentistID(e.target.value)}
+            value={props.dentistID}
           />
         </div>
         <div className={classes["input_modal__control"]}>
@@ -40,6 +41,7 @@ const InputModal = (props) => {
             type="Patience-ID"
             id="Patience-ID"
             onChange={(e) => props.setPatienceID(e.target.value)}
+            value={props.patienceID}
           />
         </div>
 
