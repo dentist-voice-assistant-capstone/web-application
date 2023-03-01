@@ -44,14 +44,12 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             sentence = ""
             for transcript in request.results:
                 sentence += str(transcript.transcript)
-                for word in transcript.word_timestamps:
-                    print(word.word, word.confidence)
 
             # print(request.results)
             sentence = self.dict_map.normalize(sentence)
             # hack, token classifier model cannot predict single number text, 
             # however if we add space at the end of the sentence it will resolve the problem
-            sentence = sentence + " " 
+            # sentence = sentence + " " 
 
             if old_is_final:
                 sentences.append(sentence)
@@ -67,13 +65,24 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             semantics = self.parser.inference(sentence, self.token_classifier, request.is_final)
             print(semantics)
             command, tooth, tooth_side, semantics, _ = semantics.values()    
-            # print(semantics)
-            if ((len(semantics) == 0) or \
-            (len(semantics) > 0 and (semantics[-1]["command"] != command or tooth is None or tooth_side is None))) \
+            
+            # Create an incomplete semantic for update display to frontend
+            # first we consider that if there is not semantic from the result but the command is not None
+            # then create incomplete semantic
+            # second we consider that if the command in the last semantic is not the same as the command, this mean
+            # that there is a new command from the user but does not complete yet. 
+            # last but note least the PDRE and the MGJ command has a sequential format, therefore these two command 
+            # must send incomplete only at the start of the command and frontend will do the rest, if not, the cursor
+            # will be pull back to the tooth of the incomplete command. Therefore, we need to separate the MGJ command
+            # from the other (PDRE) because the tooth_side in MGJ is None.
+            if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command or tooth is None or tooth_side is None))) \
             and command and (command != old_command or old_tooth is None or old_tooth_side is None or \
-            (command == old_command and (tooth is None or tooth_side is None))): # or tooth != old_tooth or tooth_side != old_tooth_side):
+            ((command == old_command and command != "MGJ" and (tooth is None or tooth_side is None)) or \
+             (command == old_command and command == "MGJ" and (tooth is None)))): # or tooth != old_tooth or tooth_side != old_tooth_side):
                 update_display = create_incomplete_semantic(command, tooth, tooth_side)
                 old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
+                if command == "MGJ":
+                    old_tooth_side = "Not Care"
                 semantics.append(update_display)
 
 

@@ -6,17 +6,17 @@ class Tooth {
 
     this.PD = {
       "buccal": {"distal": null, "buccal": null, "mesial": null},
-      "lingual": {"distal": null, "buccal": null, "mesial": null}
+      "lingual": {"distal": null, "lingual": null, "mesial": null}
     }
     
     this.RE = {
       "buccal": {"distal": null, "buccal": null, "mesial": null},
-      "lingual": {"distal": null, "buccal": null, "mesial": null}
+      "lingual": {"distal": null, "lingual": null, "mesial": null}
     }
 
     this.BOP = {
       "buccal": {"distal": null, "buccal": null, "mesial": null},
-      "lingual": {"distal": null, "buccal": null, "mesial": null}
+      "lingual": {"distal": null, "lingual": null, "mesial": null}
     }
 
     this.MO = null

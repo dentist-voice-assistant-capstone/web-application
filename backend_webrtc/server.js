@@ -106,6 +106,11 @@ io.on("connection", (socket) => {
 
   // When client undo missing
   socket.on("undo_missing", async (toothData) => {
+    tooth = {first_zee: toothData.q, second_zee: toothData.i};
+    ner_stub.UndoMissing(tooth, (err, response) => {
+      if (err) console.log(err);
+    });
+    toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
     console.log("undo_missing:", toothData);
   })
 
@@ -175,11 +180,14 @@ io.on("connection", (socket) => {
           }
           tooth_side = semantic.data.tooth_side;
 
-          if (mode === "MGJ" && (old_command === mode) && old_q === null && old_i === null) {
+          if ((!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side))) {
             sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
-          }
-          else if (!(mode === "MGJ") && (!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side))) {
-            sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
+            // Clear the ToothValue when start a command to handle the repeat tooth value problem.
+            if (mode === "PDRE" && !!q && !!i && !!tooth_side) {
+              toothTable.clearToothValue(q, i, mode, tooth_side);
+            } else if (mode === "MGJ" && !!q && !!i) {
+              toothTable.clearToothValue(q, i, mode);
+            }
           }
 
           old_command = mode;
@@ -205,12 +213,16 @@ io.on("connection", (socket) => {
 
           // console.log(mode, q, i, side, position, '-->', target)
           let next_tooth = null;
+          // toothTable.updateValue(q, i, mode, target, side, position);
           if (toothTable.updateValue(q, i, mode, target, side, position)) {
             if (mode === "RE" && (((((q === 1 || q === 3) && side === "buccal") || ((q === 2 || q === 4) && side === "lingual")) && position === "mesial") ||
               ((((q === 1 || q === 3) && side === "lingual") || ((q === 2 || q === 4) && side === "buccal")) && position === "distal"))) {
               next_tooth = toothTable.findNextAvailableTooth(q, i, side)
             }
             sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position, next_tooth);
+            if (next_tooth) {
+              toothTable.clearToothValue(next_tooth.q, next_tooth.i, "PDRE", side);
+            }
           }
         }
         else if (mo_mgj.includes(mode)) {
@@ -225,6 +237,9 @@ io.on("connection", (socket) => {
               next_tooth = toothTable.findNextAvailableTooth(q, i, "buccal")
             }
             sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side = null, position = null, next_tooth = next_tooth);
+            if (next_tooth) {
+              toothTable.clearToothValue(next_tooth.q, next_tooth.i, mode);
+            }
           }
         }
         else if (mode === "Missing") {
@@ -249,13 +264,13 @@ io.on("connection", (socket) => {
 
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
   data = { q, i, mode, target, side, position, next_tooth }
-  // console.log("data", data);
+  console.log("data", data);
   socket.emit("data", data);
 }
 
 const sendUpdateDisplayToFrontEnd = (socket, command, q, i, tooth_side) => {
   data = { command, q, i, tooth_side }
-  console.log("update_command", data);
+  // console.log("update_command", data);
   socket.emit("update_command", data);
 }
 

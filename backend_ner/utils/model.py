@@ -15,6 +15,7 @@ class TokenClassifier:
             sentence, self.tokenizer
         )
         predictions = self.prediction_with_onnx(self.args, test_sentence)
+        print(mode)
         predictions = self.postprocess_predictions_BI(predictions, mode=mode)
         return predictions
 
@@ -33,12 +34,10 @@ class TokenClassifier:
                 # Beginning case
                 if "B-" in list(predictions[i][j].values())[0]:
                     if words != "" and category != "":
-                        new_words = words
                         if words[0] == "▁":
-                            new_words = new_words[1:]
-                        if words[-1] == "▁":
-                            new_words = new_words[:-1]
-                        result_list.append([new_words, category])
+                            result_list.append([words[1:], category])
+                        else:
+                            result_list.append([words, category])
                     words = list(predictions[i][j].keys())[0]
                     category = list(predictions[i][j].values())[0][2:]
                 elif (
@@ -47,25 +46,22 @@ class TokenClassifier:
                 ):
                     words += list(predictions[i][j].keys())[0]
                 elif list(predictions[i][j].values())[0] == "O" and words != "":
-                    new_words = words
                     if words[0] == "▁":
-                        new_words = new_words[1:]
-                    if words[-1] == "▁":
-                        new_words = new_words[:-1]
-                    result_list.append([new_words, category])
+                        result_list.append([words[1:], category])
+                    else:
+                        result_list.append([words, category])
                     # Reset
                     words = ""
                     category = ""
             if words != "" and category != "":
-                new_words = words
                 if words[0] == "▁":
-                    new_words = new_words[1:]
-                if words[-1] == "▁":
-                    new_words = new_words[:-1]
-                result_list.append([new_words, category])
+                    result_list.append([words[1:], category])
+                else:
+                    result_list.append([words, category])
+        # Special case: "เอ็ม"
         if mode == "new":
             for item in result_list:
-                if item[0] == "":
+                if item[0] in ["", "เอ็ม"]:
                     result_list.remove(item)
         return result_list
 

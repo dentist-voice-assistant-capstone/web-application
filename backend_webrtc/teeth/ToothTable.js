@@ -99,6 +99,31 @@ class ToothTable {
     return next_tooth;
   }
 
+  clearToothValue(q, i, mode, side=null) {
+    /*
+      This function is called when the user want to record PDRE/MGJ value at the same tooth that has been recorded earlier.
+      It set all the corresponding values in the particular tooth to be null, so the new incoming target should not repeated with the old kept values.
+    */
+   console.log("hihi", q, i, mode, side);
+    switch(mode) {
+      case ("PDRE"):
+        side = side.toLowerCase();
+        const positionArray = ["mesial", side, "distal"];
+        for (const position of positionArray) {
+          this.quadrants[q - 1].teeth[i - 1].PD[side][position] = null;
+          this.quadrants[q - 1].teeth[i - 1].RE[side][position] = null;
+        }
+        break;
+        
+      case ("MGJ"): 
+        this.quadrants[q - 1].teeth[i - 1].MGJ = null;
+        break;
+        
+      default:
+        return false;
+    }
+  }
+
   showPDREValue() {
     let pd = 'PD: ';
     let re = 'RE: ';
@@ -117,22 +142,22 @@ class ToothTable {
 
       tooth += `==1${i}== `
     }
-    pd += '||| '
-    re += '||| '
-    for (let i = 1; i <= 8; i++) {
-      pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["mesial"] || 'x' + ' '
-      pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["buccal"] || 'x' + ' '
-      pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["distal"] || 'x' + ' '
+    // pd += '||| '
+    // re += '||| '
+    // for (let i = 1; i <= 8; i++) {
+    //   pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["mesial"] || 'x' + ' '
+    //   pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["buccal"] || 'x' + ' '
+    //   pd += this.quadrants[1].teeth[i - 1].PD["buccal"]["distal"] || 'x' + ' '
 
-      re += this.quadrants[1].teeth[i - 1].RE["buccal"]["mesial"] || 'x' + ' '
-      re += this.quadrants[1].teeth[i - 1].RE["buccal"]["buccal"] || 'x' + ' '
-      re += this.quadrants[1].teeth[i - 1].RE["buccal"]["distal"] || 'x' + ' '
+    //   re += this.quadrants[1].teeth[i - 1].RE["buccal"]["mesial"] || 'x' + ' '
+    //   re += this.quadrants[1].teeth[i - 1].RE["buccal"]["buccal"] || 'x' + ' '
+    //   re += this.quadrants[1].teeth[i - 1].RE["buccal"]["distal"] || 'x' + ' '
 
-      pd += '| '
-      re += '| '
+    //   pd += '| '
+    //   re += '| '
 
-      tooth += `==2${i}== `
-    }
+    //   tooth += `==2${i}== `
+    // }
 
     console.log(pd)
     console.log(re)
