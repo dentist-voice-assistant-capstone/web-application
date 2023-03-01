@@ -39,3 +39,8 @@
   width: 100%;
   height: 56px;
 }
+
+.top-bar {
+  z-index: 1;
+  position: absolute;
+}
