@@ -1,14 +1,15 @@
-import classes from './LogoutButton.module.css'
-import { useContext } from 'react'
-import AuthContext from '../../store/auth-context';
+import classes from "./LogoutButton.module.css";
+import { useContext } from "react";
+import AuthContext from "../../store/auth-context";
+import { useNavigate } from "react-router-dom";
 
 function LogoutButton() {
-
-    const authCtx = useContext(AuthContext);
-    const logoutHandler = () => {
-      authCtx.logout()
-    }
-
+  const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
+  const logoutHandler = () => {
+    authCtx.logout();
+    navigate("/");
+  };
 
   return (
     <div className={classes.actions}>

@@ -1,25 +1,35 @@
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
-import { useState, Fragment } from "react";
-import { startAPIHandler } from "../../utils/apiHandler";
+import { useState, useContext, useEffect, Fragment } from "react";
+import {
+  startAPIHandler,
+  fetchUserInfoAPIHandler,
+} from "../../utils/apiHandler";
+import AuthContext from "../../store/auth-context";
+import InputModal from "../../components/ui/InputModal";
+import Modal from "../../components/ui/Modal";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
-  const [patienceID, setPatienceID] = useState("123456");
-  const [dentistID, setDentistID] = useState("654321");
+  const [patienceID, setPatienceID] = useState(null);
+  const [dentistID, setDentistID] = useState(null);
   const [isStart, setIsStart] = useState(false);
+  const [isContinue, setIsContinue] = useState(false);
 
-  //   -----------------------------------------TOGGLE MODAL--------------------------------------------------
-  //   const checkIsStartHandler = () => {
-  //     setIsStart((prevcheckIsStart) => {
-  //       return !prevcheckIsStart;
-  //     });
-  //   };
-  // -----------------------------------------------------------------------------------------------------
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // fetching user data, when loaded page =========================
+  useEffect(() => {
+    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+  }, [token]);
+  // =============================================================
+
+  console.log(dentistID);
   function startHandler() {
     startAPIHandler();
     navigate("/record", {
@@ -31,41 +41,74 @@ const HomePage = () => {
     });
   }
 
+  const checkIsStartHandler = () => {
+    setDentistID(userData.dentistID);
+    setIsStart((prevcheckIsStart) => {
+      return !prevcheckIsStart;
+    });
+
+    if (!isStart && !isContinue) {
+      setDentistID(userData.dentistID);
+      setPatienceID(null);
+    }
+  };
+
+  const checkIsContinueHandler = () => {
+    checkIsStartHandler();
+    setIsContinue((prevcheckIsContinue) => {
+      return !prevcheckIsContinue;
+    });
+  };
+
   function editAccountMenuOnClickHandler() {
     navigate("/account/edit");
   }
 
+  const modalRecheckContent = (
+    <p>
+      Dentist ID: {dentistID}
+      <br />
+      Patience ID: {patienceID}
+      <br />
+      Once confirmed,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
+  );
+
   return (
     <Fragment>
-      {/* Assign to Joey, Create InputModal to fill patienceID and dentistID fields before starting record.
-
-      Might use setPatienceID and setDentistID functions to update
-
-      In component/ui, you should create a InputModal.jsx like a Modal.jsx file
-
-      When start button is clicked, you should set isStart to true then the InputModal will be appeared.
-
-      If patientID and dentistID fields in are filled in, you should update and navigate to RecordPage. You can use startHandler function to navigate na krub. */}
-      {/* ----------------------------------------------ADD HERE----------------------------------------------
       {isStart && (
         <InputModal
+          header="Please enter required information"
+          modalType="input"
+          dentistID={dentistID}
+          patienceID={patienceID}
+          setDentistID={setDentistID}
+          setPatienceID={setPatienceID}
+          onCancelClick={checkIsStartHandler}
+          onOKClick={checkIsContinueHandler}
         />
       )}
------------------------------------------------------------------------------------------------------ */}
+      {isContinue && (
+        <Modal
+          header="Confirm to continue"
+          content={modalRecheckContent}
+          onOKClick={startHandler}
+          onCancelClick={checkIsContinueHandler}
+          okButtonText="Confirm"
+          modalType="input_confirm"
+        />
+      )}
+      -----------------------------------------------------------------------------------------------------
       <div className="landing-page">
-        <NavBar
-          email={"email"}
-          userData={userData}
-          setUserData={setUserData}
-        ></NavBar>
+        <div className={classes["top-bar"]}>
+          <NavBar userData={userData} isLoaded={isLoaded}></NavBar>
+        </div>
         {/* </div> */}
         <div className={classes.actions}>
-          <button onClick={startHandler}>Start</button>
-
-          {/* -----------------------------------------------------------------------------------------------------
-          Uncomment To toggle isStart then use startHandler function in InputModal
           <button onClick={checkIsStartHandler}>Start</button>
------------------------------------------------------------------------------------------------------ */}
         </div>
         <div className={classes.actions}>
           <button onClick={editAccountMenuOnClickHandler}>Account Edit</button>

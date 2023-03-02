@@ -8,6 +8,7 @@
   --secondary-color-highlight: #fff9ba;
   --primary-color-hover: #00ab41;
   --secondary-color-hover: #ececec;
+  --transition-hover: 0.7s;
 }
 
 * {

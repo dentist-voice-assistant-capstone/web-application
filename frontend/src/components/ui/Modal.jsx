@@ -12,7 +12,8 @@ const Modal = (props) => {
   const modalType = props.modalType;
 
   const isErrorOrInfoModal = modalType === "error" || modalType === "info";
-  const isConfirmModal = modalType === "confirm";
+  const isConfirmModal =
+    modalType === "confirm" || modalType === "input_confirm";
   const isExportModal = modalType === "export";
 
   // buttons in modal actions
