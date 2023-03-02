@@ -14,8 +14,8 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
-  const [patienceID, setPatienceID] = useState(null);
-  const [dentistID, setDentistID] = useState(null);
+  const [patienceID, setPatienceID] = useState("");
+  const [dentistID, setDentistID] = useState("");
   const [isStart, setIsStart] = useState(false);
   const [isContinue, setIsContinue] = useState(false);
 
@@ -29,7 +29,7 @@ const HomePage = () => {
   }, [token]);
   // =============================================================
 
-  console.log(dentistID);
+  console.log(userData);
   function startHandler() {
     startAPIHandler();
     navigate("/record", {
@@ -49,7 +49,7 @@ const HomePage = () => {
 
     if (!isStart && !isContinue) {
       setDentistID(userData.dentistID);
-      setPatienceID(null);
+      setPatienceID("");
     }
   };
 
