@@ -106,7 +106,7 @@ io.on("connection", (socket) => {
 
   // When client undo missing
   socket.on("undo_missing", async (toothData) => {
-    tooth = {first_zee: toothData.q, second_zee: toothData.i};
+    tooth = { first_zee: toothData.q, second_zee: toothData.i };
     ner_stub.UndoMissing(tooth, (err, response) => {
       if (err) console.log(err);
     });
@@ -264,7 +264,7 @@ io.on("connection", (socket) => {
 
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
   data = { q, i, mode, target, side, position, next_tooth }
-  console.log("data", data);
+  // console.log("data", data);
   socket.emit("data", data);
 }
 

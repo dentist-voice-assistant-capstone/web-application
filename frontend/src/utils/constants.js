@@ -21,6 +21,9 @@ const URL_BACKEND_STREAMING = "http://localhost:3001";
 const SOCKET_RECONNECTION_ATTEMPTS = 2;
 const SOCKET_RECONNECTION_DELAY = 1500; //milliseconds
 
+// Auto change Quadrant Delay
+const AUTO_CHANGE_QUADRANT_DELAY = 1000; //milliseconds
+
 const EX_DATA = [
   {
     quadrant: 1,
@@ -695,5 +698,6 @@ export {
   URL_BACKEND_STREAMING,
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY,
+  AUTO_CHANGE_QUADRANT_DELAY,
   EX_DATA,
 };
