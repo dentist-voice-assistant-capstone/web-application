@@ -6,6 +6,8 @@ const User = require("./../models/userModel");
 const AppError = require("./../utils/appError");
 const sendEmail = require("./../utils/email");
 const createExcel = require("./../utils/createExcelFile");
+const verificationContent = require("./../utils/verifyEmail");
+
 const FileSaver = require("file-saver");
 const Blob = require("node-blob");
 
@@ -85,12 +87,15 @@ exports.sendEmailConfirm = catchAsync(async (req, res, next) => {
     "host"
   )}/user/activateAccount/${confirmToken}`;
 
+  const emailContent = verificationContent.verificationContent(confirmToken);
+
   const message = `Please send a PATCH request to ${emailConfirmURL} to activate your account.`;
   try {
     await sendEmail({
       email: user.email,
       subject: "Your email confirmation token (valid for 10 min)",
       message,
+      html: emailContent,
     });
 
     res.status(200).json({

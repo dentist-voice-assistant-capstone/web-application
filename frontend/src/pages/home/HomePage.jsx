@@ -29,6 +29,7 @@ const HomePage = () => {
   }, [token]);
   // =============================================================
 
+  console.log(dentistID);
   function startHandler() {
     startAPIHandler();
     navigate("/record", {
@@ -41,12 +42,13 @@ const HomePage = () => {
   }
 
   const checkIsStartHandler = () => {
+    setDentistID(userData.dentistID);
     setIsStart((prevcheckIsStart) => {
       return !prevcheckIsStart;
     });
 
     if (!isStart && !isContinue) {
-      setDentistID(null);
+      setDentistID(userData.dentistID);
       setPatienceID(null);
     }
   };
