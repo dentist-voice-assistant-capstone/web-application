@@ -40,7 +40,7 @@
 }
 
 .navbar-summary:hover * {
-  transition: 0.7s;
+  transition: var(--transition-hover);
 
   cursor: pointer;
   color: var(--primary-color-highlight);
@@ -48,16 +48,26 @@
 }
 
 .back-home-bar,
-.content {
-  font-size: 18px;
-  font-weight: bold;
-  border: 0;
-  color: white;
+.content-left {
   width: 100%;
-  height: 56px;
-  flex-flow: row;
+  text-align: center;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.content-center {
+  width: 100%;
   text-align: center;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.content-right {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: right;
   align-items: center;
 }

@@ -18,6 +18,8 @@ import classes from "./RecordPage.module.css";
 
 /* import related data and functions */
 import { EX_DATA } from "../../utils/constants";
+import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+
 import {
   initiateConnection,
   undoToothMissing,
@@ -149,14 +151,14 @@ const currentCommandReducer = (prevCommand, action) => {
 const RecordPage = () => {
   const navigate = useNavigate();
   const state = useLocation();
-  // const userData = state.state.userData;
-  // const patienceID = state.state.patienceID;
-  // const dentistID = state.state.dentistID;
+  const userData = state.state.userData;
+  const patienceID = state.state.patienceID;
+  const dentistID = state.state.dentistID;
 
   // =========== FOR TESTING ======================
-  const userData = { email: "test@hotmail.com" };
-  const patienceID = "123456";
-  const dentistID = "654321";
+  // const userData = { email: "test@hotmail.com" };
+  // const patienceID = "123456";
+  // const dentistID = "654321";
   // ===============================================
 
   const current = new Date();
@@ -238,53 +240,8 @@ const RecordPage = () => {
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
-      if (obj.quadrant === q) {
-        obj.idxArray.map((data) => {
-          if (data.ID === i) {
-            if (mode === "PD") {
-              const newPD = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.PD[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newPD;
-            } else if (mode === "RE") {
-              const newRE = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.RE[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newRE;
-            } else if (mode === "BOP") {
-              const newBOP = data.depended_side_data.map((checkSide) => {
-                if (checkSide.side === side) {
-                  checkSide.BOP[spec_id] = target;
-                }
-                return checkSide;
-              });
-
-              return newBOP;
-            } else if (mode === "MO") {
-              data.MO = target;
-              return data;
-            } else if (mode === "MGJ") {
-              data.MGJ = target;
-              return data;
-            } else if (mode === "Missing") {
-              data.missing = target;
-              return data;
-            }
-          }
-          return data;
-        });
-      }
-      return obj;
+      return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
     });
-
     setInformation(newInformation);
   };
 
@@ -347,12 +304,14 @@ const RecordPage = () => {
         />
       )}
       <div className="landing-page">
-        <TopInformationBar
-          date={date}
-          patienceID={patienceID}
-          dentistID={dentistID}
-          isSummary={false}
-        />
+        <div className={classes["top_bar"]}>
+          <TopInformationBar
+            date={date}
+            patienceID={patienceID}
+            dentistID={dentistID}
+            isSummary={false}
+          />
+        </div>
         <div className={classes.current_command_box}>
           <CurrentCommandBox
             command={currentCommand.command}
@@ -405,37 +364,6 @@ const RecordPage = () => {
             />
           )}
         </div>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_COMMAND",
-            //   payload: {
-            //     command: "PDRE",
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "mesial",
-            //   },
-            // });
-          }}
-        >
-          Initialize
-        </button>
-        <button
-          style={{ margin: "50px 20px 0px 50px" }}
-          onClick={() => {
-            // dispatchCurrentCommand({
-            //   type: "UPDATE_PDRE_POSITION",
-            //   payload: {
-            //     tooth: "15",
-            //     side: "lingual",
-            //     position: "middle",
-            //   },
-            // });
-          }}
-        >
-          Move
-        </button>
         <RecordControlBar
           isPaused={isPaused}
           isFinish={!isFinish}

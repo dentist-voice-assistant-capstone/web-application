@@ -1,5 +1,5 @@
 .information-box__mainbox {
-  /* width: 100%; */
+  width: 100%;
   /* border: 0.5px solid red; */
   display: flex;
   justify-content: space-between;
@@ -17,6 +17,10 @@
   padding-left: 20px;
   padding-right: 20px;
 }
+
+/* .information-box__subbox-information {
+  width: 105px;
+} */
 
 .information-box__subbox:first-child {
   flex: 1;

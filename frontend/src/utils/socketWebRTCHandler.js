@@ -1,7 +1,8 @@
 import {
   RTC_CONFIG, URL_BACKEND_STREAMING,
   SOCKET_RECONNECTION_ATTEMPTS,
-  SOCKET_RECONNECTION_DELAY
+  SOCKET_RECONNECTION_DELAY,
+  AUTO_CHANGE_QUADRANT_DELAY
 } from "../utils/constants";
 import { getToothStartPosition } from "./toothLogic";
 
@@ -34,6 +35,12 @@ const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, s
 */
 const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation, dispatchCurrentCommand) => {
   let socketFailedToConnectCount = 0
+  const autoChangeToothTimer = {
+    timerID: null,
+    timerStatus: null,
+    callbackFunction: null,
+    parameters: null
+  }
 
   /* 1) initiate RTCPeerConnectionObject and socket object */
   const pc = new RTCPeerConnection(RTC_CONFIG);
@@ -97,6 +104,16 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   s.on("data", async (data) => {
     console.log(data);
 
+    /* if we receive the next data while the autoChaneToothTimer is ticking, then immediately executued the timer by
+      clearout the timer and then calling the callbackFunction immediately
+    */
+    if (autoChangeToothTimer.timerStatus === "ticking") {
+      clearTimeout(autoChangeToothTimer.timerID)
+      autoChangeToothTimer.callbackFunction(autoChangeToothTimer.parameters)
+      autoChangeToothTimer.timerStatus = "executed"
+      console.log("autoChangeToothTimer is forced executed!")
+    }
+
     if (data.mode !== "BOP") {
       // [for "PD", "RE", "Missing", "MGJ", "MO" data]
       let spec_id = null;
@@ -142,20 +159,32 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
     // shift the cursor to the next tooth available (PDRE, MGJ command) when receiving
     // 'next_tooth' field
     if (!!data.next_tooth) {
-      let delay = 0; // ms
-      // if the quadrant is changed, delay 1 sec
-      if (data.q !== data.next_tooth.q) {
-        delay = 1000;
+      // changeTooth callback function and parameters
+      const cbFn = dispatchCurrentCommand
+      const paramForCbFn = {
+        type: "NEXT_TOOTH",
+        payload: {
+          mode: data.mode,
+          next_tooth: data.next_tooth
+        }
       }
-      setTimeout(() => {
-        dispatchCurrentCommand({
-          type: "NEXT_TOOTH",
-          payload: {
-            mode: data.mode,
-            next_tooth: data.next_tooth
-          }
-        })
-      }, delay)
+      if (data.q !== data.next_tooth.q) {
+        // if the quadrant is changed -> set the timer
+        const timer = setTimeout(() => {
+          cbFn(paramForCbFn)
+          autoChangeToothTimer.timerStatus = "executed"
+          console.log("autoChangeToothTimer is executued!")
+        }, AUTO_CHANGE_QUADRANT_DELAY)
+
+        autoChangeToothTimer.timerID = timer
+        autoChangeToothTimer.timerStatus = "ticking"
+        autoChangeToothTimer.callbackFunction = cbFn
+        autoChangeToothTimer.parameters = paramForCbFn
+        console.log("autoChangeToothTimer is Set", autoChangeToothTimer)
+      } else {
+        // if the quadrant is not changed -> call the function immediately
+        cbFn(paramForCbFn)
+      }
     }
   })
 

@@ -2,6 +2,7 @@ import HomePage from "./pages/home/HomePage";
 import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import EmailConfirmPage from "./pages/register/EmailConfirmPage";
+import VerificationPage from "./pages/register/VerificationPage";
 import AccountEditPage from "./pages/account/AccountEditPage";
 import AudioStreamingPage from "./pages/audioStreaming/AudioStreamingPage";
 import RecordPage from "./pages/record/RecordPage";
@@ -19,6 +20,7 @@ export const ROUTES = [
 export const ROUTES_NOT_LOGIN = [
   { path: "/register", element: <RegisterPage /> },
   { path: "/register/email_confirmation", element: <EmailConfirmPage /> },
+  { path: "/register/verification/:id", element: <VerificationPage /> },
   { path: "/login", element: <LoginPage /> },
   { path: "*", element: <LoginPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },

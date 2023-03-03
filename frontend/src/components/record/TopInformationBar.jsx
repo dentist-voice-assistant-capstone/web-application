@@ -13,16 +13,16 @@ function TopInformationBar(props) {
           <Navbar bg="black" variant="dark" fixed="top">
             <Container>
               <Navbar.Brand className={classes.actions}>
-                <div className={classes["content"]}>
+                <div className={classes["content-left"]}>
                   {"Dentist ID: "}
                   {props.dentistID}
                 </div>
-                <div className={classes["content"]}>
+                <div className={classes["content-center"]}>
                   {"Patience ID: "}
                   {props.patienceID}
                 </div>
 
-                <div className={classes["content"]}>
+                <div className={classes["content-right"]}>
                   {"Date: "}
                   {props.date}
                 </div>

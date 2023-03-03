@@ -7,7 +7,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 
 const corsOptions = {
-  origin: "http://localhost:5000",
+  origin: "http://127.0.0.1:5000",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
