@@ -264,7 +264,7 @@ io.on("connection", (socket) => {
 
 const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
   data = { q, i, mode, target, side, position, next_tooth }
-  console.log("data", data);
+  // console.log("data", data);
   socket.emit("data", data);
 }
 

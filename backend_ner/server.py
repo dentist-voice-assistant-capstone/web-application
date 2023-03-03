@@ -79,11 +79,13 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             and command and (command != old_command or old_tooth is None or old_tooth_side is None or \
             ((command == old_command and command != "MGJ" and (tooth is None or tooth_side is None)) or \
              (command == old_command and command == "MGJ" and (tooth is None)))): # or tooth != old_tooth or tooth_side != old_tooth_side):
+                print("create incomplete semantic", command, tooth, tooth_side)
+                print("old command", old_command, old_tooth, old_tooth_side)
                 update_display = create_incomplete_semantic(command, tooth, tooth_side)
                 old_command, old_tooth, old_tooth_side = command, tooth, tooth_side
                 if command == "MGJ":
                     old_tooth_side = "Not Care"
-                semantics.append(update_display)
+                semantics.insert(0, update_display)
 
 
             # print()
