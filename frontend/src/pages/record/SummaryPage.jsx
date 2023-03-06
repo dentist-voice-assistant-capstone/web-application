@@ -3,6 +3,7 @@ import classes from "./SummaryPage.module.css";
 import { useState, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
+import "bootstrap/dist/css/bootstrap.css";
 
 /* import React Components */
 import Dropdown from "react-bootstrap/Dropdown";
@@ -58,7 +59,7 @@ const SummaryPage = () => {
 
     setTimeout(() => {
       setShowSentSuccess(false);
-    }, 3000);
+    }, 2000);
   };
 
   const backToHomePageHandler = () => {
@@ -125,24 +126,16 @@ const SummaryPage = () => {
         />
       )}
       <div className="landing-page">
-        {showSentSuccess && (
-          <div className={classes["success_message"]}>
-            <Alert
-              variant="success"
-              style={{ height: "56px", border: 0, margin: 0 }}
-              // className={classes["success_message"]}
-            >
-              Report has been sent successfully
-            </Alert>
-          </div>
-        )}
-        {/* <TopInformationBar
-            date={date}
-            patienceID={patienceID}
-            dentistID={dentistID}
-            isSummary={true}
-            checkBackToHomeHandler={checkBackToHomeHandler}
-          /> */}
+        <div className={classes["success_message"]}>
+          <Alert
+            show={showSentSuccess}
+            variant="success"
+            style={{ height: "56px", border: 0, margin: 0 }}
+            // className={classes["success_message"]}
+          >
+            Report has been sent successfully
+          </Alert>
+        </div>
         <div className={classes["top-bar"]}>
           <NavBar
             userData={userData}

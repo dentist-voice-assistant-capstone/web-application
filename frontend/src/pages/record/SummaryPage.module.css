@@ -63,7 +63,7 @@ td {
   align-items: center;
   z-index: 2;
   position: absolute;
-  animation: fadeOut 4.5s;
+  /* animation: fadeOut 4.5s; */
 }
 @keyframes fadeOut {
   0% {
