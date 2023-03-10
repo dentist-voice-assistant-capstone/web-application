@@ -96,11 +96,11 @@ const AccountEditPage = () => {
       <PasswordEditForm onSaveClick={updatePasswordHandler} />
     );
   }
-
   return (
     <Fragment>
       <div className={classes["account-edit__background"]}></div>
       <NavBar
+        isLoaded={isLoaded}
         email="email"
         userData={userData}
         setUserData={setUserData}

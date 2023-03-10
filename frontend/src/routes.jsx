@@ -18,6 +18,7 @@ export const ROUTES = [
 ];
 
 export const ROUTES_NOT_LOGIN = [
+  { path: "/", element: <HomePage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/register/email_confirmation", element: <EmailConfirmPage /> },
   { path: "/register/verification/:id", element: <VerificationPage /> },

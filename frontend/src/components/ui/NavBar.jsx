@@ -16,6 +16,10 @@ function NavBar(props) {
     navigate("/");
   };
 
+  function editAccountMenuOnClickHandler() {
+    navigate("/account/edit");
+  }
+
   const [hoverClass, setHoverClass] = useState("home-icon");
 
   const mouseEnterHandler = () => {
@@ -61,14 +65,35 @@ function NavBar(props) {
           )}
 
           {props.isLoaded && (
-            <div className={classes["content-center"]}>
-              {props.userData.email}
+            // <div className={classes["content-center"]}>
+            //   {props.userData.email}
+            // </div>
+            <div className={classes["content-right"]}>
+              <div className={classes["right-component"]}>
+                {props.userData.email}
+              </div>
+              {props.isEditEnable && (
+                <button
+                  className={classes["right-component"]}
+                  onClick={editAccountMenuOnClickHandler}
+                >
+                  Account Edit
+                </button>
+              )}
+              <LogoutButton className={classes["right-component"]} />
             </div>
           )}
 
-          <div className={classes["content-right"]}>
-            <LogoutButton />
-          </div>
+          {!props.isLoaded && (
+            <div className={classes["content-right"]}>
+              <button
+                className={classes["right-component"]}
+                onClick={editAccountMenuOnClickHandler}
+              >
+                Sign In
+              </button>
+            </div>
+          )}
         </Navbar.Brand>
       </Container>
     </Navbar>

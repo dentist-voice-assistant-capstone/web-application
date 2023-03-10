@@ -82,12 +82,11 @@ const SummaryPage = () => {
 
   const modalExportContent = (
     <p>
-      report will send to {userData.email}
-      {/* <br />
-      Once export,{" "} */}
-      {/* <span style={{ color: "red" }}>
-        <b> this procedure cannot be reversed.</b>
-      </span> */}
+      The report will be sent to {userData.email}
+      <br />
+      <span style={{ color: "red" }}>
+        <b> Please recheck whether email is correct before export.</b>
+      </span>
     </p>
   );
 
@@ -126,16 +125,17 @@ const SummaryPage = () => {
         />
       )}
       <div className="landing-page">
-        <div className={classes["success_message"]}>
-          <Alert
-            show={showSentSuccess}
-            variant="success"
-            style={{ height: "56px", border: 0, margin: 0 }}
-            // className={classes["success_message"]}
-          >
-            Report has been sent successfully
-          </Alert>
-        </div>
+        {showSentSuccess && (
+          <div className={classes["success_message"]}>
+            <Alert
+              show={showSentSuccess}
+              variant="success"
+              style={{ height: "56px", border: 0, margin: 0 }}
+            >
+              Report has been sent successfully
+            </Alert>
+          </div>
+        )}
         <div className={classes["top-bar"]}>
           <NavBar
             userData={userData}

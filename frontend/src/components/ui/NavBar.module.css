@@ -49,6 +49,23 @@
   align-items: center;
 }
 
+.right-component {
+  justify-content: right;
+  align-items: center;
+  margin-right: 40px;
+}
+
+.content-right button {
+  /* width: 120px; */
+  /* margin-left: 20px; */
+  background-color: rgb(0, 0, 0);
+  color: white;
+  font-weight: bold;
+  border-color: white;
+  border-style: none;
+  border-radius: 5px;
+}
+
 .content-left button {
   background-color: rgb(0, 0, 0);
   color: white;
@@ -60,6 +77,12 @@
 }
 
 .content-left button:hover {
+  background-color: rgb(0, 0, 0);
+  color: var(--primary-color-highlight);
+  transition: var(--transition-hover);
+}
+
+.content-right button:hover {
   background-color: rgb(0, 0, 0);
   color: var(--primary-color-highlight);
   transition: var(--transition-hover);

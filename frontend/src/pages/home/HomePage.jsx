@@ -9,6 +9,7 @@ import {
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
 import Modal from "../../components/ui/Modal";
+import { VscDebugStart } from "react-icons/vsc";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -42,14 +43,18 @@ const HomePage = () => {
   }
 
   const checkIsStartHandler = () => {
-    setDentistID(userData.dentistID);
-    setIsStart((prevcheckIsStart) => {
-      return !prevcheckIsStart;
-    });
-
-    if (!isStart && !isContinue) {
+    if (isLoaded) {
       setDentistID(userData.dentistID);
-      setPatienceID("");
+      setIsStart((prevcheckIsStart) => {
+        return !prevcheckIsStart;
+      });
+
+      if (!isStart && !isContinue) {
+        setDentistID(userData.dentistID);
+        setPatienceID("");
+      }
+    } else {
+      navigate("/login");
     }
   };
 
@@ -59,10 +64,6 @@ const HomePage = () => {
       return !prevcheckIsContinue;
     });
   };
-
-  function editAccountMenuOnClickHandler() {
-    navigate("/account/edit");
-  }
 
   const modalRecheckContent = (
     <p>
@@ -101,17 +102,38 @@ const HomePage = () => {
           modalType="input_confirm"
         />
       )}
-      -----------------------------------------------------------------------------------------------------
+
       <div className="landing-page">
-        <div className={classes["top-bar"]}>
-          <NavBar userData={userData} isLoaded={isLoaded}></NavBar>
-        </div>
-        {/* </div> */}
-        <div className={classes.actions}>
-          <button onClick={checkIsStartHandler}>Start</button>
-        </div>
-        <div className={classes.actions}>
-          <button onClick={editAccountMenuOnClickHandler}>Account Edit</button>
+        <div className={classes["image-section"]}>
+          <div className={classes["top-bar"]}>
+            <NavBar
+              userData={userData}
+              isLoaded={isLoaded}
+              isEditEnable={true}
+            ></NavBar>
+          </div>
+          <div>
+            <h1 className={classes.header}>
+              Dentist Voice-Controlled Assistant
+            </h1>
+            <p className={classes.information}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ante
+              eros, aliquam et nisl vitae, accumsan volutpat tellus. Suspendisse
+              eget pharetra magna. Donec id nibh ac elit mollis finibus. Fusce
+              gravida turpis dui, vel vulputate ante scelerisque et. Ut finibus
+              diam quis ultrices vulputate. Nulla sapien turpis, ullamcorper sed
+              nibh a, viverra dignissim lectus. Pellentesque tincidunt imperdiet
+              odio, id aliquam nunc sodales et.
+            </p>
+          </div>
+          <div className={classes.actions}>
+            <button onClick={checkIsStartHandler}>Getting Started</button>
+          </div>
+          {/* <div className={classes.actions}>
+            <button onClick={editAccountMenuOnClickHandler}>
+              Account Edit
+            </button>
+          </div> */}
         </div>
       </div>
     </Fragment>
