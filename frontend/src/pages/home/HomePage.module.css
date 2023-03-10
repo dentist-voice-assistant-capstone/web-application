@@ -17,7 +17,7 @@
 /* iPad */
 @media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
   .header {
-    padding-top: 8rem;
+    padding-top: 7rem;
     padding-left: 5rem;
     text-align: left;
     font-weight: 700;
