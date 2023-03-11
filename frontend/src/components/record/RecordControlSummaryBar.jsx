@@ -12,7 +12,7 @@ function RecordControlBar(props) {
             onClick={props.checkMailExportHandler}
           >
             <img
-              src={require("../../../src/icons8-send-email-24.png")}
+              src={require("../../../src/images/icons8-send-email-24.png")}
               className={classes["icon"]}
             />
             {"Send to email"}
@@ -22,7 +22,7 @@ function RecordControlBar(props) {
             onClick={() => props.createReport(props.data, props.file_name)}
           >
             <img
-              src={require("../../../src/icons8-microsoft-excel-24.png")}
+              src={require("../../../src/images/icons8-microsoft-excel-24.png")}
               className={classes["icon"]}
             />
             {"Save as excel"}
