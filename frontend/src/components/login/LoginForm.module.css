@@ -47,8 +47,10 @@
 .actions button:disabled,
 .actions button:disabled:hover {
   background-color: gray;
+  transition: var(--transition-hover);
 }
 
 .actions button:hover {
   background-color: green;
+  transition: var(--transition-hover);
 }

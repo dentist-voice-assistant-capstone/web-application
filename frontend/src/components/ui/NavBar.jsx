@@ -20,6 +20,14 @@ function NavBar(props) {
     navigate("/account/edit");
   }
 
+  function loginMenuOnClickHandler() {
+    navigate("/login");
+  }
+
+  function registerMenuOnClickHandler() {
+    navigate("/register");
+  }
+
   const [hoverClass, setHoverClass] = useState("home-icon");
 
   const mouseEnterHandler = () => {
@@ -43,59 +51,65 @@ function NavBar(props) {
     //   </Container>
     // </Navbar>
     <Navbar bg="black" variant="dark" fixed="top">
-      <Container>
-        <Navbar.Brand className={classes.actions}>
-          {props.isSummary && (
-            <div className={classes["content-left"]}>
-              <FaHome
-                className={classes["home-icon"]}
-                size={40}
-                onClick={props.checkBackToHomeHandler}
-              />
-            </div>
-          )}
-          {!props.isSummary && (
-            <div className={classes["content-left"]}>
-              <FaHome
-                className={classes["home-icon"]}
-                size={40}
-                onClick={homeMenuOnClickHandler}
-              />
-            </div>
-          )}
+      {/* <Container> */}
+      <Navbar.Brand className={classes.actions}>
+        {props.isSummary && (
+          <div className={classes["content-left"]}>
+            <FaHome
+              className={classes["home-icon"]}
+              size={40}
+              onClick={props.checkBackToHomeHandler}
+            />
+          </div>
+        )}
+        {!props.isSummary && (
+          <div className={classes["content-left"]}>
+            <FaHome
+              className={classes["home-icon"]}
+              size={40}
+              onClick={homeMenuOnClickHandler}
+            />
+          </div>
+        )}
 
-          {props.isLoaded && (
-            // <div className={classes["content-center"]}>
-            //   {props.userData.email}
-            // </div>
-            <div className={classes["content-right"]}>
-              <div className={classes["right-component"]}>
-                {props.userData.email}
-              </div>
-              {props.isEditEnable && (
-                <button
-                  className={classes["right-component"]}
-                  onClick={editAccountMenuOnClickHandler}
-                >
-                  Account Edit
-                </button>
-              )}
-              <LogoutButton className={classes["right-component"]} />
+        {props.isLoaded && (
+          // <div className={classes["content-center"]}>
+          //   {props.userData.email}
+          // </div>
+          <div className={classes["content-right"]}>
+            <div className={classes["right-component"]}>
+              {props.userData.email}
             </div>
-          )}
-
-          {!props.isLoaded && (
-            <div className={classes["content-right"]}>
+            {props.isEditEnable && (
               <button
                 className={classes["right-component"]}
                 onClick={editAccountMenuOnClickHandler}
               >
-                Sign In
+                Account Edit
               </button>
-            </div>
-          )}
-        </Navbar.Brand>
-      </Container>
+            )}
+            <LogoutButton className={classes["right-component"]} />
+          </div>
+        )}
+
+        {!props.isLoaded && (
+          <div className={classes["content-right"]}>
+            <button
+              className={classes["right-component"]}
+              onClick={loginMenuOnClickHandler}
+            >
+              Sign In
+            </button>
+            <button
+              className={classes["right-component"]}
+              onClick={registerMenuOnClickHandler}
+            >
+              Sign Up
+            </button>
+          </div>
+        )}
+      </Navbar.Brand>
+      {/* </Container> */}
     </Navbar>
   );
 }

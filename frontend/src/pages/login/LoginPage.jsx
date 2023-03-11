@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Fragment, useState, useContext } from "react";
 import Modal from "../../components/ui/Modal";
 import AuthContext from "../../store/auth-context";
+import NavBar from "../../components/ui/NavBar";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -41,11 +42,14 @@ const LoginPage = () => {
         />
       )}
       <div className="landing-page">
-        <div className="centered">
-          <div className={classes.login}>
-            <div className={classes.login_label}>Login</div>
-            <LoginForm onLogin={loginHandler} />
-            <LoginBottom />
+        <NavBar isLoaded={false}></NavBar>
+        <div className={classes["image-section"]}>
+          <div className="centered">
+            <div className={classes.login}>
+              <div className={classes.login_label}>Login</div>
+              <LoginForm onLogin={loginHandler} />
+              <LoginBottom />
+            </div>
           </div>
         </div>
       </div>
