@@ -10,22 +10,31 @@ import { getToothStartPosition } from "./toothLogic";
 import io from "socket.io-client";
 
 const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, setLocalStream) => {
-  const mediaStream = await navigator.mediaDevices.getUserMedia({
-    video: false,
-    audio: true,
-  })
+  try {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: false,
+      audio: true,
+    })
 
-  mediaStream.getTracks().forEach((track) => {
+    mediaStream.getTracks().forEach((track) => {
+      if (localStream === null) {
+        peerConnection.addTrack(track, mediaStream);
+      } else {
+        localStream.addTrack(track)
+        peerConnection.addTrack(track, localStream);
+      }
+    })
+
     if (localStream === null) {
-      peerConnection.addTrack(track, mediaStream);
-    } else {
-      localStream.addTrack(track)
-      peerConnection.addTrack(track, localStream);
+      setLocalStream(mediaStream);
     }
-  })
-
-  if (localStream === null) {
-    setLocalStream(mediaStream);
+  } catch (err) {
+    console.log(err);
+    if (err.name === "NotAllowedError") {
+      // handle permission denied error here
+      console.log('Permission denied by user');
+      alert('Permission to use microphone was denied. This application needs to have access to your microphone to work. If you want to allow access, please check your browser permission settings.');
+    }
   }
 }
 
