@@ -225,13 +225,22 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   console.log(`socket connected, id = ${s.id}`)
 }
 
-/* This function is called when the user click on the missing box on the specific tooth
-(The user want to cancel tooth missing). This function will emit an message through the 
-socket channel "undo_missing" to tell the backend streaming server.
-*/
+/* This function is called when the user want to set the missing of the specific tooth to FALSE.
+ * This function will emit an message through the socket channel "undo_missing"
+ * to tell the backend streaming server.
+ */
 const undoToothMissing = (socket, q, i) => {
   const toothData = { q: q, i: i }
   socket.emit("undo_missing", toothData);
+}
+
+/* This function is called when the user want to set the missing of the specific tooth to TRUE.
+ * This function will emit an message through the socket channel "add_missing"
+ * to tell the backend streaming server.
+ */
+const addToothMissing = (socket, q, i) => {
+  const toothData = { q: q, i: i }
+  socket.emit("add_missing", toothData);
 }
 
 /* This function is called when the connection is ready (socket and webRTC) or
@@ -286,6 +295,7 @@ const terminateConnection = (socket, peerConnection, localStream, setSocket, set
 export {
   initiateConnection,
   undoToothMissing,
+  addToothMissing,
   startAudioStreaming,
   stopAudioStreaming,
   terminateConnection

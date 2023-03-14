@@ -114,6 +114,11 @@ io.on("connection", (socket) => {
     console.log("undo_missing:", toothData);
   })
 
+  // When client add missing
+  socket.on("add_missing", async (toothData) => {
+    console.log("add_missing:", toothData);
+  })
+
   // When disconnect end the streaming
   socket.on("disconnect", () => {
     console.log("disconnect");
