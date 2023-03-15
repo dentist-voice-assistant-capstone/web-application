@@ -24,6 +24,11 @@ class NERBackendStub(object):
                 request_serializer=ner__model__pb2.Zee.SerializeToString,
                 response_deserializer=ner__model__pb2.Empty.FromString,
                 )
+        self.AddMissing = channel.unary_unary(
+                '/ner_backend.NERBackend/AddMissing',
+                request_serializer=ner__model__pb2.Zee.SerializeToString,
+                response_deserializer=ner__model__pb2.Empty.FromString,
+                )
 
 
 class NERBackendServicer(object):
@@ -41,6 +46,12 @@ class NERBackendServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AddMissing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_NERBackendServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -51,6 +62,11 @@ def add_NERBackendServicer_to_server(servicer, server):
             ),
             'UndoMissing': grpc.unary_unary_rpc_method_handler(
                     servicer.UndoMissing,
+                    request_deserializer=ner__model__pb2.Zee.FromString,
+                    response_serializer=ner__model__pb2.Empty.SerializeToString,
+            ),
+            'AddMissing': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddMissing,
                     request_deserializer=ner__model__pb2.Zee.FromString,
                     response_serializer=ner__model__pb2.Empty.SerializeToString,
             ),
@@ -93,6 +109,23 @@ class NERBackend(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ner_backend.NERBackend/UndoMissing',
+            ner__model__pb2.Zee.SerializeToString,
+            ner__model__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def AddMissing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ner_backend.NERBackend/AddMissing',
             ner__model__pb2.Zee.SerializeToString,
             ner__model__pb2.Empty.FromString,
             options, channel_credentials,

@@ -5,6 +5,7 @@ package ner_backend;
 service NERBackend {
     rpc StreamingNER(stream StreamingTranscribeResponse) returns (stream NERResponse);
     rpc UndoMissing(Zee) returns (Empty);
+    rpc AddMissing(Zee) returns (Empty);
 }
 
 message SemanticCommand {

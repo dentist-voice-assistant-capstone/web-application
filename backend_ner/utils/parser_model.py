@@ -21,7 +21,7 @@ class ParserModel:
         self.mo_prob = MOProb()
         self.bop_prob = BOPProb()
 
-    def inference(self, sentence, token_classifier, save=False, threshold=5):
+    def inference(self, sentence, token_classifier, save=False, threshold=3):
         ''' 
         Input: 
             - sentence: a consider sentence which want to parse
