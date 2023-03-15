@@ -1,15 +1,13 @@
 import axios from "axios";
-import { saveAs } from "file-saver";
+import { URL_BACKEND } from "./constants";
 
-const backendBaseURL = "http://localhost:3000";
-
-const USER_REGISTER_ENDPOINT = `${backendBaseURL}/user/signup`;
-const USER_LOGIN_ENDPOINT = `${backendBaseURL}/user/login`;
-const USER_EMAIL_CONFIRMATION_ENDPOINT = `${backendBaseURL}/user/sendEmailConfirm`;
-const USER_INFO_ENDPOINT = `${backendBaseURL}/user/userInfo`;
-const USER_UPDATE_PROFILE_ENDPOINT = `${backendBaseURL}/user/updateProfile`;
-const USER_UPDATE_PASSWORD_ENDPOINT = `${backendBaseURL}/user/updatePassword`;
-const USER_SEND_REPORT_EXCEL_ENDPOINT = `${backendBaseURL}/user/sendReportExcel`;
+const USER_REGISTER_ENDPOINT = `${URL_BACKEND}/user/signup`;
+const USER_LOGIN_ENDPOINT = `${URL_BACKEND}/user/login`;
+const USER_EMAIL_CONFIRMATION_ENDPOINT = `${URL_BACKEND}/user/sendEmailConfirm`;
+const USER_INFO_ENDPOINT = `${URL_BACKEND}/user/userInfo`;
+const USER_UPDATE_PROFILE_ENDPOINT = `${URL_BACKEND}/user/updateProfile`;
+const USER_UPDATE_PASSWORD_ENDPOINT = `${URL_BACKEND}/user/updatePassword`;
+const USER_SEND_REPORT_EXCEL_ENDPOINT = `${URL_BACKEND}/user/sendReportExcel`;
 
 const userRegisterAPIHandler = (
   userRegisterData,

@@ -1,3 +1,7 @@
+// Backend Streaming URL
+const URL_BACKEND = `http://${process.env.REACT_APP_BACKEND_IP}:${process.env.REACT_APP_BACKEND_PORT}`;
+const URL_BACKEND_STREAMING = `http://${process.env.REACT_APP_BACKEND_STREAMING_IP}:${process.env.REACT_APP_BACKEND_STREAMING_PORT}`;
+
 // user fields
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 12;
@@ -13,9 +17,6 @@ const RTC_CONFIG = {
     },
   ],
 };
-
-// Backend Streaming URL
-const URL_BACKEND_STREAMING = "http://localhost:3001";
 
 // socket reconnection
 const SOCKET_RECONNECTION_ATTEMPTS = 2;
@@ -695,6 +696,7 @@ export {
   SURNAME_MAX_LENGTH,
   DENTISTID_MAX_LENGTH,
   RTC_CONFIG,
+  URL_BACKEND,
   URL_BACKEND_STREAMING,
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY,

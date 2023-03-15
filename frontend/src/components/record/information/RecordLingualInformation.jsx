@@ -27,8 +27,8 @@ const RecordLingualInformation = ({
       ? currentCommand.position
       : null;
 
-  const isMOHighlighted = !!currentCommand && command == "MO" ? true : false;
-  const isBOPHighlighted = !!currentCommand && command == "BOP" ? true : false;
+  const isMOHighlighted = !!currentCommand && command === "MO" ? true : false;
+  const isBOPHighlighted = !!currentCommand && command === "BOP" ? true : false;
 
   return (
     <div className={classes.direction}>
@@ -58,7 +58,7 @@ const RecordLingualInformation = ({
         data={pd}
         handleSetInformation={handleSetInformation}
         positionToBeHighlighted={
-          command == "PDRE" ? positionToBeHighlighted : null
+          command === "PDRE" ? positionToBeHighlighted : null
         }
       />
       <DropdownSmBox
@@ -69,7 +69,7 @@ const RecordLingualInformation = ({
         data={re}
         handleSetInformation={handleSetInformation}
         positionToBeHighlighted={
-          command == "PDRE" ? positionToBeHighlighted : null
+          command === "PDRE" ? positionToBeHighlighted : null
         }
       />
     </div>
