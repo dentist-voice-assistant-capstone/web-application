@@ -114,7 +114,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         context: ServicerContext,
     ) -> ner_model_pb2.Empty:
         q, i = request.first_zee, request.second_zee
-        # self.parser.remove_zee_from_available_teeth_dict([q, i])
+        self.parser.remove_zee_from_available_teeth_dict([q, i])
         return ner_model_pb2.Empty()
 
 

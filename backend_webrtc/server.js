@@ -64,13 +64,15 @@ io.on("connection", (socket) => {
 
   // Connect to gRPC Gowajee Streaming Backend
   let gowajee_stub = new speech2text_protoc.GowajeeSpeechToText(
-    `localhost:${process.env.GOWAJEE_PORT}`,
+    // `localhost:${process.env.GOWAJEE_PORT}`,
+    `${process.env.GOWAJEE_IP}:${process.env.GOWAJEE_PORT}`,
     grpc.credentials.createInsecure()
   );
 
   // Connect to NER Backend 
   let ner_stub = new ner_protoc.NERBackend(
-    `localhost:${process.env.NER_BACKEND_PORT}`,
+    // `localhost:${process.env.NER_BACKEND_PORT}`,
+    `${process.env.NER_BACKEND_IP}:${process.env.NER_BACKEND_PORT}`,
     grpc.credentials.createInsecure()
   );
 
@@ -116,6 +118,11 @@ io.on("connection", (socket) => {
 
   // When client add missing
   socket.on("add_missing", async (toothData) => {
+    tooth = { first_zee: toothData.q, second_zee: toothData.i };
+    ner_stub.AddMissing(tooth, (err, response) => {
+      if (err) console.log(err);
+    });
+    toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
     console.log("add_missing:", toothData);
   })
 

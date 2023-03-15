@@ -271,7 +271,7 @@ def append_zee_to_available_teeth_dict(zee, available_teeth_dict):
   # OUTPUT: available_teeth_dict
   quadrant = zee[0]
   # Append zee to the quadrant if not already exists
-  if 1<=quadrant<=4:
+  if 1 <= quadrant <= 4 and 1 <= zee[1] <= 8:
     if zee not in available_teeth_dict[quadrant]:
       available_teeth_dict[quadrant].append(zee)
       # Sort value in that quardrant
@@ -281,6 +281,25 @@ def append_zee_to_available_teeth_dict(zee, available_teeth_dict):
       else:
         available_teeth_dict[quadrant].sort()    
   return available_teeth_dict
+
+def remove_zee_from_available_teeth_dict(zee, available_teeth_dict):
+  # INPUT:  zee: tooth that you want remove from available_teeth_dict ex. [1, 4]
+  #         available_teeth_dict: dict of available teeth
+  # OUTPUT: available_teeth_dict
+  #         flag: flag for create_semantic_object function (check whether tooth successfully remove or not.)
+  flag = True
+  quadrant = zee[0]
+  if 1 <= quadrant <= 4 and 1 <= zee[1] <= 8:
+    if zee in available_teeth_dict[quadrant]:
+      # Remove this tooth from available_teeth_dict
+      available_teeth_dict[quadrant].remove(zee)
+    else:
+      print('Input teeth '+str(zee)+' is not available. Please try again.')
+      flag = False
+  else:
+    print('Input teeth '+str(zee)+' is incorrect. Please try again.')
+    flag = False 
+  return available_teeth_dict, flag
 
 def create_semantic_object(semantic_object_list, word_list, available_teeth_dict, last_pdre_state):
   # INPUT:  semantic_object_list: semantic object result list
@@ -365,16 +384,12 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
         elif len(semantic_object['data']['missing']) != 0 and semantic_object['data']['missing'][len(semantic_object['data']['missing'])-1][1] == None:
           semantic_object['data']['missing'][len(semantic_object['data']['missing'])-1][1] = word_list[i]
           latest_zee = semantic_object['data']['missing'][len(semantic_object['data']['missing'])-1]
-          quadrant = latest_zee[0]
-          if 1<=quadrant<=4 and latest_zee in available_teeth_dict[quadrant]:
-            # Remove this tooth from available_teeth_dict
-            available_teeth_dict[quadrant].remove(latest_zee)
+          available_teeth_dict, removed_flag = remove_zee_from_available_teeth_dict(latest_zee, available_teeth_dict)
+          if removed_flag:
             # Find new first and last tooth list
             first_tooth_list = find_first_tooth_in_quadrant(available_teeth_dict)
             last_tooth_list = find_last_tooth_in_quadrant(available_teeth_dict)
           else:
-            # Remove unavailable teeth (last element) from missing list
-            print('Teeth '+str(latest_zee)+' is not available. Please try again.')
             semantic_object['data']['missing'].pop()
         # 5.1.3 missing = [[1, 2], ...]
         elif len(semantic_object['data']['missing']) != 0 and semantic_object['data']['missing'][len(semantic_object['data']['missing'])-1][1] != None:
