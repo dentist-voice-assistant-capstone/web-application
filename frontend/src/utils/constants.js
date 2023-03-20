@@ -1,6 +1,6 @@
 // Backend Streaming URL
-const URL_BACKEND = `http://${process.env.REACT_APP_BACKEND_IP}:${process.env.REACT_APP_BACKEND_PORT}`;
-const URL_BACKEND_STREAMING = `http://${process.env.REACT_APP_BACKEND_STREAMING_IP}:${process.env.REACT_APP_BACKEND_STREAMING_PORT}`;
+const URL_BACKEND = `https://${process.env.REACT_APP_BACKEND_IP}:${process.env.REACT_APP_BACKEND_PORT}`;
+const URL_BACKEND_STREAMING = `https://${process.env.REACT_APP_BACKEND_STREAMING_IP}:${process.env.REACT_APP_BACKEND_STREAMING_PORT}`;
 
 // user fields
 const PASSWORD_MIN_LENGTH = 8;

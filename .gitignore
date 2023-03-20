@@ -38,3 +38,8 @@ backend_ner/__pycache__
 backend_ner/utils/__pycache__
 
 backend/config.env
+
+# public and private key of backend server (for https)
+cert.pem
+csr.pem
+key.pem

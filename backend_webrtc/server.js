@@ -1,9 +1,10 @@
 const ToothTable = require("./teeth/ToothTable.js")
 
+const fs = require("fs");
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
-const http = require("http");
+const https = require("https");
 const { Server } = require("socket.io");
 const gowajee_service = require('./utils/gowajee_service.js');
 const dotenv = require("dotenv");
@@ -39,11 +40,17 @@ let ner_protoc = grpc.loadPackageDefinition(ner_packageDefinition).ner_backend;
 
 // Initialize Socket
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer(
+  {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  }, 
+  app
+);
 const io = new Server(server, {
   // Create CORS, in order to give an access to front-end server
   cors: {
-    origin: `http://${process.env.IP_ADDRESS}:${process.env.CLIENT_PORT}`,
+    origin: true, //`http://${process.env.IP_ADDRESS}:${process.env.CLIENT_PORT}`,
     methods: ["GET", "POST"],
   },
 });

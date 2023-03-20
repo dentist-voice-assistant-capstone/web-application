@@ -1,3 +1,5 @@
+const fs = require("fs");
+const https = require("https");
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
@@ -25,7 +27,18 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {});
+// const server = app.listen(port, () => {});
+https
+.createServer(
+  {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  },
+  app
+)
+.listen(port, () => {
+  console.log(`server is runing at port ${port}`)
+});
 
 process.on('unhandledRejection', err => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
