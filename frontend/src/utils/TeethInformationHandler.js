@@ -80,12 +80,6 @@ function getRandomValue(list, weight) {
   return weighed_list[random_num];
 }
 
-// var list = ['javascript', 'php', 'ruby', 'python'];
-// var weight = [0.5, 0.2, 0.2, 0.1];
-// var weighed_list = generateWeighedList(list, weight);
-
-// var random_num = rand(0, weighed_list.length-1);
-
 function randomValue(mode) {
   switch (mode) {
     case "PD":
@@ -130,7 +124,6 @@ function randomValue(mode) {
 
 exports.valueGenarator = (obj) => {
   const mapped_sides = ["distal", "middle", "mesial"];
-  // console.log(information);
   obj.idxArray.map((data) => {
     data.missing = randomValue("missing");
 
