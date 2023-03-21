@@ -30,7 +30,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 8,
-        missing: null,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -50,7 +50,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
-        missing: null,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",

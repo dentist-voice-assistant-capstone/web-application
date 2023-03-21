@@ -17,7 +17,7 @@ function DropdownSm({
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
   };
 
-  const PDDropdown = (
+  const REDropdown = (
     <DropdownButton
       className={`${classes["smallbox"]} ${
         isHighlighted ? classes["highlighted"] : ""
@@ -49,7 +49,7 @@ function DropdownSm({
     </DropdownButton>
   );
 
-  const REDropdown = (
+  const PDDropdown = (
     <DropdownButton
       className={`${classes["smallbox"]} ${
         isHighlighted ? classes["highlighted"] : ""

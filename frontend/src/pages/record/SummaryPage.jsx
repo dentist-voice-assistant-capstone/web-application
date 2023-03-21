@@ -16,7 +16,11 @@ import NavBar from "../../components/ui/NavBar";
 import Modal from "../../components/ui/Modal";
 import { createReport } from "../../utils/createExcel";
 import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
-import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+import {
+  teethInformationHandler,
+  // randomValue,
+  valueGenarator,
+} from "../../utils/TeethInformationHandler";
 
 const SummaryPage = () => {
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ const SummaryPage = () => {
   const [checkMailExport, setCheckMailExport] = useState(false);
   const [checkBackToHome, setCheckBackToHome] = useState(false);
   const [showSentSuccess, setShowSentSuccess] = useState(false);
+  const [value, setValue] = useState(null);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -47,7 +52,11 @@ const SummaryPage = () => {
       return !prevcheckMailExport;
     });
   };
-
+  // const valueHandler = () => {
+  //   const v = randomValue("MO");
+  //   setValue(v);
+  //   console.log(v);
+  // };
   const checkBackToHomeHandler = () => {
     setCheckBackToHome((prevcheckBackToHome) => {
       return !prevcheckBackToHome;
@@ -76,6 +85,13 @@ const SummaryPage = () => {
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
       return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
+    });
+    setInformation(newInformation);
+  };
+
+  const handleRandomInformation = () => {
+    const newInformation = information.map((obj) => {
+      return valueGenarator(obj);
     });
     setInformation(newInformation);
   };
@@ -144,6 +160,9 @@ const SummaryPage = () => {
             checkBackToHomeHandler={checkBackToHomeHandler}
           ></NavBar>
         </div>
+        <button className={classes.rand_box} onClick={handleRandomInformation}>
+          random
+        </button>
         <div className={classes.information_box}>
           <InformationBox
             dentistID={dentistID}

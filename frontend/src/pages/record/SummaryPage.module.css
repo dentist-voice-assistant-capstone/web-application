@@ -48,6 +48,11 @@ td {
   }
 }
 
+.rand_box {
+  position: absolute;
+  top: 10vh;
+}
+
 .success_message {
   font-size: 18px;
   font-weight: bold;
