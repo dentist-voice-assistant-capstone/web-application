@@ -43,7 +43,17 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             # Concatenate trancripts in the responses
             sentence = ""
             for transcript in request.results:
+                # fix the problem, when the user does not speak, but
+                # gowajee output something. We do not consider the word
+                # which has low confidence. 
+                # for word in transcript.word_timestamps:
+                #     print("Word", word.word)
+                #     print("Confidence", word.confidence)
+                if len(transcript.word_timestamps) == 1 and \
+                    transcript.word_timestamps[0].confidence < 0.2:
+                    continue
                 sentence += str(transcript.transcript)
+
 
             # print(request.results)
             sentence = self.dict_map.normalize(sentence)
