@@ -124,25 +124,27 @@ const AccountEditPage = () => {
             modalType="info"
           />
         )}
-        <div className={`${classes["account-edit__main"]}`}>
-          <div className={classes["account-edit__sidebar"]}>
-            <h2>User Profile</h2>
-            {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
-              <div
-                className={`${classes["account-edit__sidebar-menu"]} ${
-                  idx === idxMenuSelected ? classes["selected"] : ""
-                }`}
-                key={sidebarMenuLabel}
-                idx={idx}
-                onClick={changeMenuHandler}
-              >
-                {sidebarMenuLabel}
-              </div>
-            ))}
-          </div>
-          <div className={classes["account-edit__form-area"]}>
-            {/* only render form, when the user's data is loaded */}
-            {isLoaded && formToBeDisplayed}
+        <div className={classes["main"]}>
+          <div className={`${classes["account-edit__main"]}`}>
+            <div className={classes["account-edit__sidebar"]}>
+              <h2>User Profile</h2>
+              {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
+                <div
+                  className={`${classes["account-edit__sidebar-menu"]} ${
+                    idx === idxMenuSelected ? classes["selected"] : ""
+                  }`}
+                  key={sidebarMenuLabel}
+                  idx={idx}
+                  onClick={changeMenuHandler}
+                >
+                  {sidebarMenuLabel}
+                </div>
+              ))}
+            </div>
+            <div className={classes["account-edit__form-area"]}>
+              {/* only render form, when the user's data is loaded */}
+              {isLoaded && formToBeDisplayed}
+            </div>
           </div>
         </div>
       </div>

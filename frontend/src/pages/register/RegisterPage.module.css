@@ -10,8 +10,9 @@
   justify-content: center;
   align-items: center;
   background-color: rgb(252, 252, 252);
-  border-radius: 5rem;
   border: solid black;
+  border-width: var(--primary-border-width);
+  border-radius: var(--main-border-radius);
 }
 
 .register__label {

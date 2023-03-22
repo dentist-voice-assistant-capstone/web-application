@@ -1,6 +1,5 @@
 /* variable declare */
 :root {
-  --main-border-radius: 10px;
   --main-background-color: #f0f0f0;
 }
 
@@ -15,21 +14,24 @@
 }
 
 .account-edit__main {
-  margin-top: 10vh;
-  margin-left: 15vw;
-  height: 100%;
   width: 70%;
+  margin-top: 10vh;
+  position: fixed;
   display: flex;
   background-color: white;
-  border-radius: var(--main-border-radius);
-  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  margin-left: 15vw;
+  border: solid black;
+  border-width: var(--primary-border-width);
+  border-radius: var(--primary-border-radius);
+  /* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); */
 }
 
 .account-edit__sidebar {
   width: 225px;
   box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.3);
   background-color: #d4d4d4;
-  border-radius: var(--main-border-radius) 0px 0px var(--main-border-radius);
+  border-radius: var(--primary-border-radius) 0px 0px
+    var(--primary-border-radius);
 }
 
 .account-edit__sidebar h2 {
@@ -69,9 +71,9 @@
     background-image: url(../../images/background_template.png);
     background-repeat: no-repeat;
     background-size: 100%;
-    height: 100%;
     background-color: #acad90;
-    width: auto;
+    height: 100vh;
+    width: 100vw;
   }
 }
 
@@ -81,8 +83,8 @@
     background-image: url(../../images/background_template.png);
     background-repeat: no-repeat;
     background-size: 100%;
-    height: 100%;
     background-color: #acad90;
-    width: auto;
+    height: 100vh;
+    width: 100vw;
   }
 }
