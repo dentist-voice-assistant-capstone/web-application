@@ -98,51 +98,52 @@ const AccountEditPage = () => {
   }
   return (
     <Fragment>
-      <div className={classes["account-edit__background"]}></div>
-      <NavBar
-        isLoaded={isLoaded}
-        email="email"
-        userData={userData}
-        setUserData={setUserData}
-      ></NavBar>
-      {/* Error Modal */}
-      {updateError && (
-        <Modal
-          header={updateError.header}
-          content={updateError.content}
-          onOKClick={errorModalOkHandler}
-          modalType="error"
-        />
-      )}
-      {/* Info Modal */}
-      {updateInfo && (
-        <Modal
-          header={updateInfo.header}
-          content={updateInfo.content}
-          onOKClick={infoModalOkHandler}
-          modalType="info"
-        />
-      )}
-
-      <div className={`${classes["account-edit__main"]}`}>
-        <div className={classes["account-edit__sidebar"]}>
-          <h2>User Profile</h2>
-          {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
-            <div
-              className={`${classes["account-edit__sidebar-menu"]} ${
-                idx === idxMenuSelected ? classes["selected"] : ""
-              }`}
-              key={sidebarMenuLabel}
-              idx={idx}
-              onClick={changeMenuHandler}
-            >
-              {sidebarMenuLabel}
-            </div>
-          ))}
-        </div>
-        <div className={classes["account-edit__form-area"]}>
-          {/* only render form, when the user's data is loaded */}
-          {isLoaded && formToBeDisplayed}
+      <div className={classes["image-section"]}>
+        <div className={classes["account-edit__background"]}></div>
+        <NavBar
+          isLoaded={isLoaded}
+          email="email"
+          userData={userData}
+          setUserData={setUserData}
+        ></NavBar>
+        {/* Error Modal */}
+        {updateError && (
+          <Modal
+            header={updateError.header}
+            content={updateError.content}
+            onOKClick={errorModalOkHandler}
+            modalType="error"
+          />
+        )}
+        {/* Info Modal */}
+        {updateInfo && (
+          <Modal
+            header={updateInfo.header}
+            content={updateInfo.content}
+            onOKClick={infoModalOkHandler}
+            modalType="info"
+          />
+        )}
+        <div className={`${classes["account-edit__main"]}`}>
+          <div className={classes["account-edit__sidebar"]}>
+            <h2>User Profile</h2>
+            {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
+              <div
+                className={`${classes["account-edit__sidebar-menu"]} ${
+                  idx === idxMenuSelected ? classes["selected"] : ""
+                }`}
+                key={sidebarMenuLabel}
+                idx={idx}
+                onClick={changeMenuHandler}
+              >
+                {sidebarMenuLabel}
+              </div>
+            ))}
+          </div>
+          <div className={classes["account-edit__form-area"]}>
+            {/* only render form, when the user's data is loaded */}
+            {isLoaded && formToBeDisplayed}
+          </div>
         </div>
       </div>
     </Fragment>
