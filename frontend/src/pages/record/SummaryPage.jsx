@@ -89,6 +89,14 @@ const SummaryPage = () => {
     setInformation(newInformation);
   };
 
+  const handleUndoToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", false);
+  };
+
+  const handleAddToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", true);
+  };
+
   const handleRandomInformation = () => {
     const newInformation = information.map((obj) => {
       return valueGenarator(obj);
@@ -188,6 +196,8 @@ const SummaryPage = () => {
               information={information[0]}
               currentCommand={false}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 2 && (
@@ -195,6 +205,8 @@ const SummaryPage = () => {
               information={information[1]}
               currentCommand={false}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 3 && (
@@ -202,6 +214,8 @@ const SummaryPage = () => {
               information={information[2]}
               currentCommand={false}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 4 && (
@@ -209,6 +223,8 @@ const SummaryPage = () => {
               information={information[3]}
               currentCommand={false}
               handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
         </div>
