@@ -23,6 +23,7 @@ import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 import {
   initiateConnection,
   undoToothMissing,
+  addToothMissing,
   startAudioStreaming,
   stopAudioStreaming,
   terminateConnection,
@@ -162,9 +163,8 @@ const RecordPage = () => {
   // ===============================================
 
   const current = new Date();
-  const date = `${current.getDate()}/${
-    current.getMonth() + 1
-  }/${current.getFullYear()}`;
+  const date = `${current.getDate()}/${current.getMonth() + 1
+    }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   /* states for socket.io connection */
@@ -249,6 +249,11 @@ const RecordPage = () => {
     handleSetInformation(q, i, null, "Missing", false);
     undoToothMissing(socket, q, i);
   };
+
+  const handleAddToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", true);
+    addToothMissing(socket, q, i);
+  }
 
   // ========================================================================
   /* determine the socket's connection status */
@@ -337,6 +342,7 @@ const RecordPage = () => {
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
               handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 2 && (
@@ -345,6 +351,7 @@ const RecordPage = () => {
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
               handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 3 && (
@@ -353,6 +360,7 @@ const RecordPage = () => {
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
               handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
           {quadrant === 4 && (
@@ -361,6 +369,7 @@ const RecordPage = () => {
               currentCommand={currentCommand}
               handleSetInformation={handleSetInformation}
               handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
             />
           )}
         </div>

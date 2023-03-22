@@ -15,7 +15,6 @@ class TokenClassifier:
             sentence, self.tokenizer
         )
         predictions = self.prediction_with_onnx(self.args, test_sentence)
-        print(mode)
         predictions = self.postprocess_predictions_BI(predictions, mode=mode)
         return predictions
 

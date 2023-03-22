@@ -10,22 +10,31 @@ import { getToothStartPosition } from "./toothLogic";
 import io from "socket.io-client";
 
 const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, setLocalStream) => {
-  const mediaStream = await navigator.mediaDevices.getUserMedia({
-    video: false,
-    audio: true,
-  })
+  try {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: false,
+      audio: true,
+    })
 
-  mediaStream.getTracks().forEach((track) => {
+    mediaStream.getTracks().forEach((track) => {
+      if (localStream === null) {
+        peerConnection.addTrack(track, mediaStream);
+      } else {
+        localStream.addTrack(track)
+        peerConnection.addTrack(track, localStream);
+      }
+    })
+
     if (localStream === null) {
-      peerConnection.addTrack(track, mediaStream);
-    } else {
-      localStream.addTrack(track)
-      peerConnection.addTrack(track, localStream);
+      setLocalStream(mediaStream);
     }
-  })
-
-  if (localStream === null) {
-    setLocalStream(mediaStream);
+  } catch (err) {
+    console.log(err);
+    if (err.name === "NotAllowedError") {
+      // handle permission denied error here
+      console.log('Permission denied by user');
+      alert('Permission to use microphone was denied. This application needs to have access to your microphone to work. If you want to allow access, please check your browser permission settings.');
+    }
   }
 }
 
@@ -225,13 +234,22 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   console.log(`socket connected, id = ${s.id}`)
 }
 
-/* This function is called when the user click on the missing box on the specific tooth
-(The user want to cancel tooth missing). This function will emit an message through the 
-socket channel "undo_missing" to tell the backend streaming server.
-*/
+/* This function is called when the user want to set the missing of the specific tooth to FALSE.
+ * This function will emit an message through the socket channel "undo_missing"
+ * to tell the backend streaming server.
+ */
 const undoToothMissing = (socket, q, i) => {
   const toothData = { q: q, i: i }
   socket.emit("undo_missing", toothData);
+}
+
+/* This function is called when the user want to set the missing of the specific tooth to TRUE.
+ * This function will emit an message through the socket channel "add_missing"
+ * to tell the backend streaming server.
+ */
+const addToothMissing = (socket, q, i) => {
+  const toothData = { q: q, i: i }
+  socket.emit("add_missing", toothData);
 }
 
 /* This function is called when the connection is ready (socket and webRTC) or
@@ -286,6 +304,7 @@ const terminateConnection = (socket, peerConnection, localStream, setSocket, set
 export {
   initiateConnection,
   undoToothMissing,
+  addToothMissing,
   startAudioStreaming,
   stopAudioStreaming,
   terminateConnection

@@ -8,6 +8,7 @@ const RecordInformation = ({
   handleSetInformation,
   currentCommand,
   handleUndoToothMissing,
+  handleAddToothMissing
 }) => {
   return (
     <div className={classes.direction}>
@@ -20,9 +21,10 @@ const RecordInformation = ({
           information={idx}
           handleSetInformation={handleSetInformation}
           handleUndoToothMissing={handleUndoToothMissing}
+          handleAddToothMissing={handleAddToothMissing}
           currentCommand={
             information.quadrant.toString() + idx.ID.toString() ===
-            currentCommand.tooth
+              currentCommand.tooth
               ? currentCommand
               : null
           }
