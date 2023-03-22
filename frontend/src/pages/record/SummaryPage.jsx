@@ -173,13 +173,13 @@ const SummaryPage = () => {
         <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}
-            title={quadrant}
+            title={`Q${quadrant}`}
             onSelect={handleSelect}
           >
-            <Dropdown.Item eventKey="1">1</Dropdown.Item>
-            <Dropdown.Item eventKey="2">2</Dropdown.Item>
-            <Dropdown.Item eventKey="3">3</Dropdown.Item>
-            <Dropdown.Item eventKey="4">4</Dropdown.Item>
+            <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
+            <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
+            <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
+            <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
           </DropdownButton>
         </div>
         <div className="centered">
