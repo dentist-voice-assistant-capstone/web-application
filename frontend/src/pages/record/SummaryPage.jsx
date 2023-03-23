@@ -102,7 +102,6 @@ const SummaryPage = () => {
   };
 
   const handleRandomInformation = () => {
-    console.log(information);
     const newInformation = information.map((obj) => {
       return valueGenarator(obj);
     });
