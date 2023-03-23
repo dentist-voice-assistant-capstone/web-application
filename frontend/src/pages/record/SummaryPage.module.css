@@ -51,8 +51,8 @@ td {
 .rand_box {
   position: absolute;
   top: 10vh;
-  left: 10vh;
-  width: 100px;
+  left: 5vh;
+  width: 80px;
   border-color: white;
   border-style: none;
   border-radius: 5px;
@@ -60,9 +60,23 @@ td {
 }
 
 .rand_box:hover {
-  /* background-color: rgb(0, 0, 0);
-  color: var(--primary-color-highlight);
-  transition: var(--transition-hover); */
+  background-color: var(--primary-color-hover);
+  color: white;
+  transition: var(--transition-hover);
+}
+
+.reset_box {
+  position: absolute;
+  top: 10vh;
+  left: 18vh;
+  width: 80px;
+  border-color: white;
+  border-style: none;
+  border-radius: 5px;
+  background-color: var(--secondary-color-hover);
+}
+
+.reset_box:hover {
   background-color: var(--primary-color-hover);
   color: white;
   transition: var(--transition-hover);

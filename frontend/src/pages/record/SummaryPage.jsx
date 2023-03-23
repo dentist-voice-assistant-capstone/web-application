@@ -21,11 +21,13 @@ import {
   // randomValue,
   valueGenarator,
 } from "../../utils/TeethInformationHandler";
+import { EX_DATA } from "../../utils/constants";
 
 const SummaryPage = () => {
   const navigate = useNavigate();
 
   const state = useLocation();
+  const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
   const userData = state.state.userData;
 
   const patienceID = state.state.patienceID;
@@ -34,7 +36,9 @@ const SummaryPage = () => {
 
   const file_name = `${patienceID}_${date}`;
 
-  const [information, setInformation] = useState(state.state.information);
+  const [information, setInformation] = useState(
+    Object.assign([], state.state.information)
+  );
   const [checkMailExport, setCheckMailExport] = useState(false);
   const [checkBackToHome, setCheckBackToHome] = useState(false);
   const [showSentSuccess, setShowSentSuccess] = useState(false);
@@ -98,10 +102,15 @@ const SummaryPage = () => {
   };
 
   const handleRandomInformation = () => {
+    console.log(information);
     const newInformation = information.map((obj) => {
       return valueGenarator(obj);
     });
     setInformation(newInformation);
+  };
+
+  const handleResetInformation = () => {
+    setInformation(JSON.parse(JSON.stringify(defaultInformation)));
   };
 
   const modalExportContent = (
@@ -170,6 +179,9 @@ const SummaryPage = () => {
         </div>
         <button className={classes.rand_box} onClick={handleRandomInformation}>
           random
+        </button>
+        <button className={classes.reset_box} onClick={handleResetInformation}>
+          reset
         </button>
         <div className={classes.information_box}>
           <InformationBox

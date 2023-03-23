@@ -63,7 +63,7 @@ var generateWeighedList = function (list, weight) {
 
   // Loop over weights
   for (var i = 0; i < weight.length; i++) {
-    var multiples = weight[i] * 100;
+    var multiples = weight[i] * 1000;
 
     // Loop over the list of items
     for (var j = 0; j < multiples; j++) {
@@ -85,8 +85,8 @@ function randomValue(mode) {
     case "PD":
       var list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
       var weight = [
-        0.13, 0.13, 0.13, 0.11, 0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.01, 0.01,
-        0.01, 0.01, 0.01,
+        0.25, 0.2, 0.15, 0.1, 0.1, 0.05, 0.05, 0.025, 0.025, 0.0125, 0.0125,
+        0.00625, 0.00625, 0.00625, 0.00625,
       ];
       return getRandomValue(list, weight);
     case "RE":
@@ -95,8 +95,8 @@ function randomValue(mode) {
         15,
       ];
       var weight = [
-        0.02, 0.02, 0.03, 0.05, 0.1, 0.15, 0.15, 0.1, 0.1, 0.05, 0.05, 0.03,
-        0.03, 0.03, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01,
+        0.01, 0.01, 0.02, 0.05, 0.15, 0.2, 0.2, 0.1, 0.1, 0.05, 0.04, 0.03,
+        0.005, 0.005, 0.005, 0.005, 0.005, 0.00375, 0.00375, 0.00375, 0.00375,
       ];
       return getRandomValue(list, weight);
     case "BOP":
