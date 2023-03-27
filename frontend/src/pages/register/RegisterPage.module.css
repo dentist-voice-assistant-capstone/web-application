@@ -1,8 +1,10 @@
 .register {
-  width: 800px;
-  /* height: 750px; */
-  padding: 0 2.5% 2.5% 2.5%;
-  margin-top: 5%;
+  width: 80vw;
+  /* height: 700px; */
+  padding: 2rem 5rem 1rem 5rem;
+  margin-top: 4rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
   /* padding-top: 5%; */
   /* border: 1px solid black; */
   display: flex;
@@ -12,7 +14,7 @@
   background-color: rgb(252, 252, 252);
   border: solid black;
   border-width: var(--primary-border-width);
-  border-radius: var(--main-border-radius);
+  border-radius: var(--primary-border-radius);
 }
 
 .register__label {
@@ -21,7 +23,7 @@
   justify-content: center;
   align-items: center;
   font-size: 64px;
-  width: 800px;
+  width: 100%;
   margin-bottom: 1rem;
 }
 

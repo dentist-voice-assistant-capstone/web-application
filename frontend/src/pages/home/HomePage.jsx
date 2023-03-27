@@ -9,7 +9,6 @@ import {
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
 import Modal from "../../components/ui/Modal";
-import { VscDebugStart } from "react-icons/vsc";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -26,11 +25,13 @@ const HomePage = () => {
 
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+    if (authCtx.isLoggedIn) {
+      fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+    }
   }, [token]);
   // =============================================================
 
-  console.log(userData);
+  console.log("userData", userData);
   function startHandler() {
     startAPIHandler();
     navigate("/record", {
