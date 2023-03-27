@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27018:27017'
+    networks:
+      - mynetwork
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "5000:5000"
+    networks:
+      - mynetwork
+  
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+      - frontend
+    depends_on:
+      - mongo
+    networks:
+      - mynetwork
+
+  backend_streaming:
+    container_name: backend_streaming
+    build: ./backend_webrtc
+    ports:
+      - "3001:3001"
+    networks:
+      - mynetwork
+
+  backend_ner:
+    container_name: backend_ner
+    build: ./backend_ner
+    ports:
+      - "50052:50052"
+    networks:
+      - mynetwork
+
+
+networks:
+  mynetwork:
