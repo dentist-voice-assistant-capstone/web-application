@@ -50,7 +50,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 #     print("Word", word.word)
                 #     print("Confidence", word.confidence)
                 if len(transcript.word_timestamps) == 1 and \
-                    transcript.word_timestamps[0].confidence < 0.2:
+                    transcript.word_timestamps[0].confidence < 0.3:
                     continue
                 sentence += str(transcript.transcript)
 
@@ -73,7 +73,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             # print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
             semantics = self.parser.inference(sentence, self.token_classifier, request.is_final)
-            print(semantics)
+            # print(semantics)
             command, tooth, tooth_side, semantics, _ = semantics.values()    
             
             # Create an incomplete semantic for update display to frontend
