@@ -7,7 +7,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 
 const corsOptions = {
-  origin: "http://127.0.0.1:5000",
+  origin: `http://${process.env.FRONTEND_IP}:${process.env.FRONTEND_PORT}`,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
