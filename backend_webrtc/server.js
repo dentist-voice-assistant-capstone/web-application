@@ -62,6 +62,8 @@ io.on("connection", (socket) => {
   let old_side = "";
   let toothTable = new ToothTable();
 
+  console.log("socket id:", socket.id, ", userId:", socket.handshake.query.userId)
+
   // Connect to gRPC Gowajee Streaming Backend
   let gowajee_stub = new speech2text_protoc.GowajeeSpeechToText(
     // `localhost:${process.env.GOWAJEE_PORT}`,

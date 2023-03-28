@@ -25,7 +25,7 @@ export const ROUTES_NOT_LOGIN = [
   { path: "/login", element: <LoginPage /> },
   { path: "*", element: <LoginPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
-  // { path: "/record", element: <RecordPage /> }, //maybe delete later
+  { path: "/record", element: <RecordPage /> }, //maybe delete later
   { path: "/summary", element: <SummaryPage /> }, //maybe delete later
 ];
 

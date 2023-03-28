@@ -159,10 +159,15 @@ const RecordPage = () => {
 
   const authCtx = useContext(AuthContext);
 
-  const userData = state.state.userData;
-  const patienceID = state.state.patienceID;
-  const dentistID = state.state.dentistID;
-
+  let userData = null;
+  let patienceID = null;
+  let dentistID = null;
+  try {
+    userData = state.state.userData;
+    patienceID = state.state.patienceID;
+    dentistID = state.state.dentistID;
+  } catch (err) {
+  }
   // =========== FOR TESTING ======================
   // const userData = { email: "test@hotmail.com" };
   // const patienceID = "123456";
@@ -174,6 +179,8 @@ const RecordPage = () => {
     }/${current.getFullYear()}`;
 
   // [States] ===============================================================
+  const [userId, setUserId] = useState(null);
+
   /* states for socket.io connection */
   const [socket, setSocket] = useState(null);
   const [socketFailedToConnect, setSocketFailedToConnect] = useState(false);
@@ -218,6 +225,7 @@ const RecordPage = () => {
   const reLoginModalOKHandler = () => {
     setReLoginModal();
     authCtx.logout();
+    navigate("/");
   }
 
   const checkFinishHandler = () => {
@@ -275,6 +283,15 @@ const RecordPage = () => {
   const isSocketConnected = !!socket ? socket.connected : false;
 
   /* determine that the connection is ready or not ? */
+  if (!!socket && !!peerConnection) {
+    console.log({
+      "peerConnection": !!peerConnection,
+      "peerConnection.connectionState": peerConnection.connectionState,
+      "socket": !!socket,
+      "isSocketConnected": isSocketConnected
+    })
+  }
+
   const isConnectionReady =
     !!peerConnection &&
     peerConnection.connectionState === "connected" &&
@@ -294,19 +311,19 @@ const RecordPage = () => {
     /* when the page loads, validate the token kept in authCtx first by sending GET request to the backend, 
       if the token is valid, it should return the associated user_id back. 
     */
-    let user_id;
+    let uId;
     const validateToken = async () => {
-      user_id = await checkUserTokenAPIHandler(authCtx.token);
+      uId = await checkUserTokenAPIHandler(authCtx.token);
     }
     validateToken().then(() => {
-
-      /* if there exists an user_id associated with the token, then the user is authenticated.
+      /* if there exists an uId associated with the token, then the user is authenticated.
        it should initiate the connection to the Backend Streaming Server via socket and webRTC.
        Otherwise, it should prompt the user to re-login again and redirect user to the login page.
       */
-      if (user_id) {
-        console.log("user_id associated with token:", user_id)
+      if (uId) {
+        console.log("uId associated with token:", uId)
         initiateConnection(
+          uId,
           setSocket,
           setPeerConnection,
           setLocalStream,
@@ -314,6 +331,7 @@ const RecordPage = () => {
           handleSetInformation,
           dispatchCurrentCommand
         );
+        setUserId(uId);
       } else {
         console.log("Failed to validate token, redirecting user back to login page")
         setReLoginModal({
@@ -328,6 +346,26 @@ const RecordPage = () => {
       }
     });
   }, []);
+
+  /* terminate connection, if the user press the back button on the browser */
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      terminateConnection(
+        socket,
+        peerConnection,
+        localStream,
+        setSocket,
+        setPeerConnection,
+        setLocalStream
+      );
+    }
+    window.addEventListener("popstate", handleBeforeUnload);
+    return () => {
+      setTimeout(() => {
+        window.removeEventListener("popstate", handleBeforeUnload);
+      }, 0);
+    };
+  }, [socket, peerConnection, localStream]);
 
   const modalConfirmContent = (
     <p>
@@ -439,6 +477,7 @@ const RecordPage = () => {
           onClick={() => {
             setSocketFailedToConnect(false);
             initiateConnection(
+              userId,
               setSocket,
               setPeerConnection,
               setLocalStream,
@@ -455,7 +494,7 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (isConnectionReady || isFinish) {
+  if (true || isConnectionReady || isFinish) { // add true for testing
     CenterComponentToBeRendered = PDRETableComponentToBeRendered
   } else if (!isConnectionReady && !socketFailedToConnect && !isFinish) {
     CenterComponentToBeRendered = ReconnectingScreenToBeRendered

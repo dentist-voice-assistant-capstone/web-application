@@ -42,8 +42,7 @@ const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, s
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
 */
-const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation, dispatchCurrentCommand) => {
-  let socketFailedToConnectCount = 0
+const initiateConnection = async (userId, setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation, dispatchCurrentCommand) => {
   const autoChangeToothTimer = {
     timerID: null,
     timerStatus: null,
@@ -55,18 +54,23 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
   const pc = new RTCPeerConnection(RTC_CONFIG);
   const s = io.connect(URL_BACKEND_STREAMING, {
     reconnectionAttempts: SOCKET_RECONNECTION_ATTEMPTS,
-    reconnectionDelay: SOCKET_RECONNECTION_DELAY
+    reconnectionDelay: SOCKET_RECONNECTION_DELAY,
+    query: { userId: userId }
   });
 
-  /* catching socket connection error */
-  s.on("connect_error", (err) => {
-    socketFailedToConnectCount += 1
-    console.log(`socket connection error, trying to reconnect #${socketFailedToConnectCount}`)
-    if (socketFailedToConnectCount === SOCKET_RECONNECTION_ATTEMPTS + 1) {
-      console.log(`maximum reconnect attempts reached, cannot connect socket`)
-      socketFailedToConnectCount = 0
-      setSocketFailedToConnect(true)
-    }
+  s.io.on("reconnect_attempt", (attempt) => {
+    console.log(`socket connection error, trying to reconnect #${attempt}`)
+  })
+
+  s.io.on("reconnect_failed", () => {
+    console.log(`maximum reconnect attempts reached, cannot connect socket`)
+    setSocketFailedToConnect(true)
+  })
+
+  s.on("connect", () => {
+    console.log("socket connection successful!")
+    setSocketFailedToConnect(false)
+    // TODO: need to reconnect via webRTC after succesfully connect via sockets !!!
   })
 
   /* 2) set event for socket */
@@ -285,14 +289,19 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
  * connection (webRTC and socket) between frontend and backend-streaming.
  */
 const terminateConnection = (socket, peerConnection, localStream, setSocket, setPeerConnection, setLocalStream) => {
-  socket.disconnect(); // socket disconnect
+  if (socket) {
+    socket.disconnect(); // socket disconnect
+  }
 
   if (localStream) {
     localStream.getTracks().forEach((track) => {
       track.stop();
     });
   }
-  peerConnection.close(); // close webRTCConnection
+
+  if (peerConnection) {
+    peerConnection.close(); // close webRTCConnection
+  }
 
   console.log("connnection terminated.")
   // clear states
