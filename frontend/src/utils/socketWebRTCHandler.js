@@ -64,8 +64,8 @@ const initiateConnection = async (setSocket, setPeerConnection, setLocalStream, 
     console.log(`socket connection error, trying to reconnect #${socketFailedToConnectCount}`)
     if (socketFailedToConnectCount === SOCKET_RECONNECTION_ATTEMPTS + 1) {
       console.log(`maximum reconnect attempts reached, cannot connect socket`)
+      socketFailedToConnectCount = 0
       setSocketFailedToConnect(true)
-      return
     }
   })
 

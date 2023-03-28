@@ -9,6 +9,7 @@ const USER_UPDATE_PROFILE_ENDPOINT = `${URL_BACKEND}/user/updateProfile`;
 const USER_UPDATE_PASSWORD_ENDPOINT = `${URL_BACKEND}/user/updatePassword`;
 const USER_SEND_REPORT_EXCEL_ENDPOINT = `${URL_BACKEND}/user/sendReportExcel`;
 const USER_ACTIVATE_EMAIL_ENDPOINT = `${URL_BACKEND}/user/activateAccount/`;
+const USER_CHECK_TOKEN_ENDPOINT = `${URL_BACKEND}/user/checkToken`
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -272,6 +273,23 @@ const updateUserPasswordAPIHandler = (
     });
 };
 
+const checkUserTokenAPIHandler = async (token) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  try {
+    const result = await axios.get(USER_CHECK_TOKEN_ENDPOINT, config)
+    if (result.status === 200) {
+      return result.data.user_id;
+    }
+  } catch (err) {
+    const response = err.response
+    console.log(response.status, response.statusText)
+    return null;
+  }
+
+}
+
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
@@ -282,4 +300,5 @@ export {
   updateUserPasswordAPIHandler,
   sendReportExcelAPIHandler,
   emailActivatedHandler,
+  checkUserTokenAPIHandler
 };

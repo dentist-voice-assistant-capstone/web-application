@@ -1,17 +1,20 @@
 /* import React Libraries */
-import { useState, useEffect, useReducer, Fragment } from "react";
+import { useState, useEffect, useReducer, useContext, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-/* import React Components */
+/* import Custom Components */
 import TopInformationBar from "../../components/record/TopInformationBar";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import RecordControlBar from "../../components/record/RecordControlBar";
 import RecordInformation from "../../components/record/RecordInformation";
-import Spinner from "react-bootstrap/Spinner";
-import { FiCloudOff } from "react-icons/fi";
 import Modal from "../../components/ui/Modal";
 import CurrentCommandBox from "../../components/record/CurrentCommandBox";
+import AuthContext from "../../store/auth-context";
+
+/* import other components */
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Spinner from "react-bootstrap/Spinner";
+import { FiCloudOff } from "react-icons/fi";
 
 /* import css styles */
 import classes from "./RecordPage.module.css";
@@ -19,6 +22,7 @@ import classes from "./RecordPage.module.css";
 /* import related data and functions */
 import { EX_DATA } from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
 
 import {
   initiateConnection,
@@ -152,6 +156,9 @@ const currentCommandReducer = (prevCommand, action) => {
 const RecordPage = () => {
   const navigate = useNavigate();
   const state = useLocation();
+
+  const authCtx = useContext(AuthContext);
+
   const userData = state.state.userData;
   const patienceID = state.state.patienceID;
   const dentistID = state.state.dentistID;
@@ -163,9 +170,8 @@ const RecordPage = () => {
   // ===============================================
 
   const current = new Date();
-  const date = `${current.getDate()}/${
-    current.getMonth() + 1
-  }/${current.getFullYear()}`;
+  const date = `${current.getDate()}/${current.getMonth() + 1
+    }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   /* states for socket.io connection */
@@ -205,6 +211,14 @@ const RecordPage = () => {
       },
     });
   };
+
+  /* states for modals */
+  const [reLoginModal, setReLoginModal] = useState(null);
+
+  const reLoginModalOKHandler = () => {
+    setReLoginModal();
+    authCtx.logout();
+  }
 
   const checkFinishHandler = () => {
     /* if click "Finish" button, if the recording is not paused, pause the recording */
@@ -274,15 +288,45 @@ const RecordPage = () => {
     stopAudioStreaming(socket, localStream, setIsAudioStreaming);
   }
 
+  /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
+   when first render */
   useEffect(() => {
-    initiateConnection(
-      setSocket,
-      setPeerConnection,
-      setLocalStream,
-      setSocketFailedToConnect,
-      handleSetInformation,
-      dispatchCurrentCommand
-    );
+    /* when the page loads, validate the token kept in authCtx first by sending GET request to the backend, 
+      if the token is valid, it should return the associated user_id back. 
+    */
+    let user_id;
+    const validateToken = async () => {
+      user_id = await checkUserTokenAPIHandler(authCtx.token);
+    }
+    validateToken().then(() => {
+
+      /* if there exists an user_id associated with the token, then the user is authenticated.
+       it should initiate the connection to the Backend Streaming Server via socket and webRTC.
+       Otherwise, it should prompt the user to re-login again and redirect user to the login page.
+      */
+      if (user_id) {
+        console.log("user_id associated with token:", user_id)
+        initiateConnection(
+          setSocket,
+          setPeerConnection,
+          setLocalStream,
+          setSocketFailedToConnect,
+          handleSetInformation,
+          dispatchCurrentCommand
+        );
+      } else {
+        console.log("Failed to validate token, redirecting user back to login page")
+        setReLoginModal({
+          header: "Re-Login needed",
+          content: (
+            <p>
+              <span style={{ color: "red" }}>Your session has already expired.</span> Re-login is needed.
+              The system will redirect you to the login page.
+            </p>
+          ),
+        })
+      }
+    });
   }, []);
 
   const modalConfirmContent = (
@@ -296,9 +340,132 @@ const RecordPage = () => {
     </p>
   );
 
-  /* components to be rendered */
   const PDRETableComponentToBeRendered = (
     <Fragment>
+      <div className={classes.current_command_box}>
+        <CurrentCommandBox
+          command={currentCommand.command}
+          tooth={currentCommand.tooth}
+        />
+      </div>
+      <div className={classes.droplist}>
+        <DropdownButton
+          className={classes.box}
+          title={`Q${quadrant}`}
+          onSelect={handleSelect}
+        >
+          <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
+          <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
+          <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
+          <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
+        </DropdownButton>
+      </div>
+      <div className="centered">
+        {quadrant === 1 && (
+          <RecordInformation
+            information={information[0]}
+            currentCommand={currentCommand}
+            handleSetInformation={handleSetInformation}
+            handleUndoToothMissing={handleUndoToothMissing}
+            handleAddToothMissing={handleAddToothMissing}
+          />
+        )}
+        {quadrant === 2 && (
+          <RecordInformation
+            information={information[1]}
+            currentCommand={currentCommand}
+            handleSetInformation={handleSetInformation}
+            handleUndoToothMissing={handleUndoToothMissing}
+            handleAddToothMissing={handleAddToothMissing}
+          />
+        )}
+        {quadrant === 3 && (
+          <RecordInformation
+            information={information[2]}
+            currentCommand={currentCommand}
+            handleSetInformation={handleSetInformation}
+            handleUndoToothMissing={handleUndoToothMissing}
+            handleAddToothMissing={handleAddToothMissing}
+          />
+        )}
+        {quadrant === 4 && (
+          <RecordInformation
+            information={information[3]}
+            currentCommand={currentCommand}
+            handleSetInformation={handleSetInformation}
+            handleUndoToothMissing={handleUndoToothMissing}
+            handleAddToothMissing={handleAddToothMissing}
+          />
+        )}
+      </div>
+      <RecordControlBar
+        isPaused={isPaused}
+        isFinish={!isFinish}
+        pauseResumeHandler={pauseResumeHandler}
+        checkFinishHandler={checkFinishHandler}
+      />
+    </Fragment>
+  )
+
+  const ReconnectingScreenToBeRendered = (
+    <div className={`${classes["center-box"]} centered`}>
+      <Spinner animation="border" variant="danger" />
+      <p className={classes["waiting_text"]}>
+        Connecting to the server <br /> Please Wait
+      </p>
+    </div>
+  );
+
+  const FailedToConnectScreenToBeRendered = (
+    <div className={`${classes["center-box"]} centered`}>
+      <FiCloudOff size="45px" />
+      <p className={classes["waiting_text"]}>
+        <span style={{ color: "red" }}>
+          Failed to connect to the server
+        </span>
+        <br /> Please try again later.
+      </p>
+      <div className={classes["controls"]}>
+        <button
+          className={`${classes["control-button"]} ${classes["back-button"]}`}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Back
+        </button>
+        <button
+          className={`${classes["control-button"]} ${classes["reconnect-button"]}`}
+          onClick={() => {
+            setSocketFailedToConnect(false);
+            initiateConnection(
+              setSocket,
+              setPeerConnection,
+              setLocalStream,
+              setSocketFailedToConnect,
+              handleSetInformation,
+              dispatchCurrentCommand
+            );
+          }}
+        >
+          Reconnect
+        </button>
+      </div>
+    </div>
+  );
+
+  let CenterComponentToBeRendered;
+  if (isConnectionReady || isFinish) {
+    CenterComponentToBeRendered = PDRETableComponentToBeRendered
+  } else if (!isConnectionReady && !socketFailedToConnect && !isFinish) {
+    CenterComponentToBeRendered = ReconnectingScreenToBeRendered
+  } else if (socketFailedToConnect && !isFinish) {
+    CenterComponentToBeRendered = FailedToConnectScreenToBeRendered
+  }
+
+  return (
+    <Fragment>
+      {/* Modal for confirm finish recording */}
       {checkFinish && (
         <Modal
           header="Confirm Information"
@@ -309,7 +476,17 @@ const RecordPage = () => {
           modalType="confirm"
         />
       )}
+      {/* Modal for redirect user to re-login */}
+      {reLoginModal && (
+        <Modal
+          header={reLoginModal.header}
+          content={reLoginModal.content}
+          onOKClick={reLoginModalOKHandler}
+          modalType="info"
+        />
+      )}
       <div className="landing-page">
+        {/* TopInformationBar */}
         <div className={classes["top_bar"]}>
           <TopInformationBar
             date={date}
@@ -318,137 +495,11 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
-        <div className={classes.current_command_box}>
-          <CurrentCommandBox
-            command={currentCommand.command}
-            tooth={currentCommand.tooth}
-          />
-        </div>
-        <div className={classes.droplist}>
-          <DropdownButton
-            className={classes.box}
-            title={`Q${quadrant}`}
-            onSelect={handleSelect}
-          >
-            <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
-            <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
-            <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
-            <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
-          </DropdownButton>
-        </div>
-        <div className="centered">
-          {quadrant === 1 && (
-            <RecordInformation
-              information={information[0]}
-              currentCommand={currentCommand}
-              handleSetInformation={handleSetInformation}
-              handleUndoToothMissing={handleUndoToothMissing}
-              handleAddToothMissing={handleAddToothMissing}
-            />
-          )}
-          {quadrant === 2 && (
-            <RecordInformation
-              information={information[1]}
-              currentCommand={currentCommand}
-              handleSetInformation={handleSetInformation}
-              handleUndoToothMissing={handleUndoToothMissing}
-              handleAddToothMissing={handleAddToothMissing}
-            />
-          )}
-          {quadrant === 3 && (
-            <RecordInformation
-              information={information[2]}
-              currentCommand={currentCommand}
-              handleSetInformation={handleSetInformation}
-              handleUndoToothMissing={handleUndoToothMissing}
-              handleAddToothMissing={handleAddToothMissing}
-            />
-          )}
-          {quadrant === 4 && (
-            <RecordInformation
-              information={information[3]}
-              currentCommand={currentCommand}
-              handleSetInformation={handleSetInformation}
-              handleUndoToothMissing={handleUndoToothMissing}
-              handleAddToothMissing={handleAddToothMissing}
-            />
-          )}
-        </div>
-        <RecordControlBar
-          isPaused={isPaused}
-          isFinish={!isFinish}
-          pauseResumeHandler={pauseResumeHandler}
-          checkFinishHandler={checkFinishHandler}
-        />
+
+        {/* Center */}
+        {CenterComponentToBeRendered}
       </div>
     </Fragment>
-  );
-
-  const ReconnectingScreenToBeRendered = (
-    <div className="landing-page">
-      <div className="centered">
-        <div className={classes["center-box"]}>
-          <Spinner animation="border" variant="danger" />
-          <p className={classes["waiting_text"]}>
-            Connecting to the server <br /> Please Wait
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const FailedToConnectScreenToBeRendered = (
-    <div className="landing-page">
-      <div className="centered">
-        <div className={classes["center-box"]}>
-          <FiCloudOff size="45px" />
-          <p className={classes["waiting_text"]}>
-            <span style={{ color: "red" }}>
-              Failed to connect to the server
-            </span>
-            <br /> Please try again later.
-          </p>
-          <div className={classes["controls"]}>
-            <button
-              className={`${classes["control-button"]} ${classes["back-button"]}`}
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Back
-            </button>
-            <button
-              className={`${classes["control-button"]} ${classes["reconnect-button"]}`}
-              onClick={() => {
-                setSocketFailedToConnect(false);
-                initiateConnection(
-                  setSocket,
-                  setPeerConnection,
-                  setLocalStream,
-                  setSocketFailedToConnect
-                );
-              }}
-            >
-              Reconnect
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  /* connection successful - show PDRE table */
-  if (true || isConnectionReady || isFinish) {
-    return PDRETableComponentToBeRendered;
-
-    /* trying to connect screen (when first load) */
-  } else if (!isConnectionReady && !socketFailedToConnect && !isFinish) {
-    return ReconnectingScreenToBeRendered;
-
-    /* failed to connect screen (when first load) */
-  } else if (socketFailedToConnect && !isFinish) {
-    return FailedToConnectScreenToBeRendered;
-  }
+  )
 };
-
 export default RecordPage;
