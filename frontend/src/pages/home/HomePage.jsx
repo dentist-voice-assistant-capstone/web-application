@@ -28,7 +28,7 @@ const HomePage = () => {
     if (authCtx.isLoggedIn) {
       fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
     }
-  }, [token]);
+  }, [authCtx.isLoggedIn, token]);
   // =============================================================
 
   console.log("userData", userData);
