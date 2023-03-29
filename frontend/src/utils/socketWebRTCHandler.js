@@ -42,13 +42,23 @@ const getAudioTrackAndAddToTheConnection = async (peerConnection, localStream, s
  * This function initates connection between frontend and backend streaming 
  * via socket and webRTC.
 */
-const initiateConnection = async (userId, setSocket, setPeerConnection, setLocalStream, setSocketFailedToConnect, handleSetInformation, dispatchCurrentCommand) => {
+const initiateConnection = async (
+  userId,
+  setSocket,
+  setPeerConnection,
+  setLocalStream,
+  setIsSocketReconnecting,
+  setSocketFailedToConnect,
+  setIsAudioStreaming,
+  handleSetInformation,
+  dispatchCurrentCommand) => {
   const autoChangeToothTimer = {
     timerID: null,
     timerStatus: null,
     callbackFunction: null,
     parameters: null
   }
+  let isSocketConnectionLost = false;
 
   /* 1) initiate RTCPeerConnectionObject and socket object */
   const pc = new RTCPeerConnection(RTC_CONFIG);
@@ -58,40 +68,44 @@ const initiateConnection = async (userId, setSocket, setPeerConnection, setLocal
     query: { userId: userId }
   });
 
+  s.on("connect_error", (err) => {
+    console.log("set isSocketConnectionLost to true, connect_error event!")
+    if (!isSocketConnectionLost)
+      isSocketConnectionLost = true;
+  })
+
   s.io.on("reconnect_attempt", (attempt) => {
     console.log(`socket connection error, trying to reconnect #${attempt}`)
+    setIsSocketReconnecting(true)
   })
 
   s.io.on("reconnect_failed", () => {
     console.log(`maximum reconnect attempts reached, cannot connect socket`)
+    setIsSocketReconnecting(false)
     setSocketFailedToConnect(true)
   })
 
   s.on("connect", () => {
     console.log("socket connection successful!")
+    console.log(`socket connected, id = ${s.id}`)
+
+    if (isSocketConnectionLost) {
+      console.log("connection after lost connection!!")
+      if (pc.connectionState !== "connected") {
+        reConnection(s, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming);
+      }
+      setIsSocketReconnecting(false);
+      isSocketConnectionLost = false;
+    }
+
     setSocketFailedToConnect(false)
-    // TODO: need to reconnect via webRTC after succesfully connect via sockets !!!
   })
 
-  /* 2) set event for socket */
-  // receiving SDP answer from backend streaming server
-  s.on("answer", async (answer) => {
-    console.log("received answer from server", answer);
-    try {
-      await pc.setRemoteDescription(answer);
-      console.log("finish setting answer");
-    } catch (err) {
-      alert(err);
-    }
-  });
+  /* 2) set events for socket */
+  // 2.1) events for SDP Exchange
+  setUpEventForSDPExchangeBetweenPeerConnectionsViaSocket(s, pc);
 
-  // receiving candidate from backend streaming server
-  s.on("candidate", async (candidate) => {
-    if (candidate) {
-      await pc.addIceCandidate(candidate);
-    }
-  });
-
+  // 2.2) events for recieving periodental value from backend streaming
   // receiving updated command from backend streaming server
   s.on("update_command", async (data) => {
     console.log("update_command", data);
@@ -201,32 +215,8 @@ const initiateConnection = async (userId, setSocket, setPeerConnection, setLocal
     }
   })
 
-  /* 3) set event for RTCPeerConnecton */
-  // listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
-  pc.onicecandidate = ({ candidate }) => {
-    if (candidate) {
-      s.emit("candidate", candidate);
-    }
-  };
-  // In case of needing to re-exchange SDP between the client and the server (negotiation)
-  pc.onnegotiationneeded = async () => {
-    try {
-      await pc.setLocalDescription(await pc.createOffer());
-      // sending offer to server
-      s.emit("offer", pc.localDescription);
-    } catch (err) {
-      alert(err);
-    }
-  };
-  // listen for connectionstate change
-  pc.onconnectionstatechange = (event) => {
-    if (pc.connectionState === "connected") {
-      // start streaming
-      console.log("PEERS CONNECTED");
-      // update the peerConnection to re update the isConnectionReady variable
-      setPeerConnection(pc);
-    }
-  };
+  /* 3) set event for RTCPeerConnection */
+  setUpEventForRTCPeerConnection(pc, s, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming);
 
   /* 4) get the localStream and then add tracks from the localStream to the peerConnection */
   // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
@@ -234,8 +224,78 @@ const initiateConnection = async (userId, setSocket, setPeerConnection, setLocal
 
   setPeerConnection(pc);
   setSocket(s);
+}
 
-  console.log(`socket connected, id = ${s.id}`)
+/* This function is called after initating a new socket and peerConnection for connecting to the backend server.
+ * This function will handle answers and candidates sent from the server for SDP exchange. (webRTC connection)
+ */
+const setUpEventForSDPExchangeBetweenPeerConnectionsViaSocket = (socket, peerConnection) => {
+  // receiving SDP answer from backend streaming server
+  socket.on("answer", async (answer) => {
+    console.log("received answer from server", answer);
+    try {
+      // make sure that the RTCPeerConnection object is in the correct state before calling the setRemoteDescription() method.
+      if (peerConnection.signalingState != "have-local-offer") {
+        return;
+      }
+      await peerConnection.setRemoteDescription(answer);
+      console.log("finish setting answer");
+    } catch (err) {
+      alert(err);
+    }
+  });
+
+  // receiving candidate from backend streaming server
+  socket.on("candidate", async (candidate) => {
+    console.log("recieved candidate from server", candidate);
+    if (candidate) {
+      await peerConnection.addIceCandidate(candidate);
+    }
+  });
+}
+
+/* This function is called when the peerConnection is being set up.
+ * This function will set up needed events for the peerConnection. 
+ */
+const setUpEventForRTCPeerConnection = (peerConnection, socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming) => {
+  // listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
+  peerConnection.onicecandidate = ({ candidate }) => {
+    if (candidate) {
+      socket.emit("candidate", candidate);
+    }
+  };
+
+  // In case of needing to re-exchange SDP between the client and the server (negotiation)
+  peerConnection.onnegotiationneeded = async () => {
+    try {
+      await peerConnection.setLocalDescription(await peerConnection.createOffer());
+      // sending offer to server
+      socket.emit("offer", peerConnection.localDescription);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  // listen for connectionstate change
+  peerConnection.onconnectionstatechange = (event) => {
+    console.log("peerConnection connection state change")
+    // update the peerConnection to re update the isConnectionReady variable
+    setPeerConnection(peerConnection);
+    if (peerConnection.connectionState === "connected") {
+      console.log("PEERS CONNECTED");
+      startAudioStreaming(socket, null, setIsAudioStreaming)
+    }
+  };
+
+  // for detect connection lost
+  peerConnection.oniceconnectionstatechange = (event) => {
+    if (peerConnection.iceConnectionState === 'disconnected') {
+      console.log("webRTC Connection lost, attempt to reconnect");
+      // ==================================================================
+      // reConnection(socket, setSocket, setPeerConnection, setLocalStream);
+      // ==================================================================
+    }
+  }
 }
 
 /* This function is called when the user want to set the missing of the specific tooth to FALSE.
@@ -264,9 +324,12 @@ const addToothMissing = (socket, q, i) => {
 const startAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
   console.log("== start streaming ==")
 
-  localStream.getTracks().forEach((track) => {
-    track.enabled = true;
-  });
+  if (localStream) {
+    localStream.getTracks().forEach((track) => {
+      track.enabled = true;
+    });
+  }
+
   socket.emit("start_record");
   setIsAudioStreaming(true);
 }
@@ -283,6 +346,33 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
   socket.emit("stop_record");
   setIsAudioStreaming(false);
 }
+
+/* This function is called once the user successfully reconnect via sockets after the connection is lost.
+ * This function will set-up new webRTC connection by creating a new peer connection.
+ */
+
+const reConnection = async (socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming) => {
+  console.log("webRTC reconnecting....")
+
+  // socket -> socket client object
+
+  /* 1) initiate RTCPeerConnectionObject object */
+  const pc = new RTCPeerConnection(RTC_CONFIG);
+
+  /* 2) override socket events for SDP exchange */
+  setUpEventForSDPExchangeBetweenPeerConnectionsViaSocket(socket, pc)
+
+  /* 3) set event for RTCPeerConnection */
+  setUpEventForRTCPeerConnection(pc, socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming);
+
+  /* 4) get the localStream and then add tracks from the localStream to the peerConnection */
+  // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
+  await getAudioTrackAndAddToTheConnection(pc, null, setLocalStream);
+
+  setPeerConnection(pc);
+  setSocket(socket);
+}
+
 
 /* This function is called when the user finish the recording process by
  * pressing "finish" button and confirm. This function will terminate the

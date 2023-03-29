@@ -100,11 +100,13 @@ io.on("connection", (socket) => {
 
   // When client send start record
   socket.on("start_record", async () => {
+    console.log(`[${socket.id}] start streaming`)
     is_record = true;
   });
 
   // When client send stop record
   socket.on("stop_record", async () => {
+    console.log(`[${socket.id}] stop streaming`)
     is_record = false;
   });
 

@@ -183,6 +183,7 @@ const RecordPage = () => {
 
   /* states for socket.io connection */
   const [socket, setSocket] = useState(null);
+  const [isSocketReconnecting, setIsSocketReconnecting] = useState(false);
   const [socketFailedToConnect, setSocketFailedToConnect] = useState(false);
 
   /* states for WebRTC Connection (streaming audio to backend) */
@@ -225,7 +226,7 @@ const RecordPage = () => {
   const reLoginModalOKHandler = () => {
     setReLoginModal();
     authCtx.logout();
-    navigate("/");
+    navigate("/login");
   }
 
   const checkFinishHandler = () => {
@@ -283,15 +284,6 @@ const RecordPage = () => {
   const isSocketConnected = !!socket ? socket.connected : false;
 
   /* determine that the connection is ready or not ? */
-  if (!!socket && !!peerConnection) {
-    console.log({
-      "peerConnection": !!peerConnection,
-      "peerConnection.connectionState": peerConnection.connectionState,
-      "socket": !!socket,
-      "isSocketConnected": isSocketConnected
-    })
-  }
-
   const isConnectionReady =
     !!peerConnection &&
     peerConnection.connectionState === "connected" &&
@@ -304,6 +296,24 @@ const RecordPage = () => {
   } else if (isConnectionReady && isPaused && isAudioStreaming) {
     stopAudioStreaming(socket, localStream, setIsAudioStreaming);
   }
+
+  // FOR TESTING ================================================================
+  if (!!socket && !!peerConnection && !!localStream) {
+    console.log({
+      "peerConnection": !!peerConnection,
+      "peerConnection.connectionState": peerConnection.connectionState,
+      "peerConnection.iceConnectionState": peerConnection.iceConnectionState,
+      "socket": !!socket,
+      "isSocketConnected": isSocketConnected,
+      "isSocketReconnecting": isSocketReconnecting,
+      "socketFailedToConnect": socketFailedToConnect,
+      "localStream": localStream,
+      "isPaused": isPaused,
+      "isAudioStreaming": isAudioStreaming,
+      "isConnectionReady": isConnectionReady
+    })
+  }
+  // F===========================================================================
 
   /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
    when first render */
@@ -327,7 +337,9 @@ const RecordPage = () => {
           setSocket,
           setPeerConnection,
           setLocalStream,
+          setIsSocketReconnecting,
           setSocketFailedToConnect,
+          setIsAudioStreaming,
           handleSetInformation,
           dispatchCurrentCommand
         );
@@ -481,7 +493,9 @@ const RecordPage = () => {
               setSocket,
               setPeerConnection,
               setLocalStream,
+              setIsSocketReconnecting,
               setSocketFailedToConnect,
+              setIsAudioStreaming,
               handleSetInformation,
               dispatchCurrentCommand
             );

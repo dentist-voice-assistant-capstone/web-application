@@ -10,7 +10,7 @@ import SummaryPage from "./pages/record/SummaryPage";
 
 export const ROUTES = [
   { path: "/", element: <HomePage /> },
-  { path: "*", element: <HomePage /> },
+  // { path: "*", element: <HomePage /> },
   { path: "/account/edit", element: <AccountEditPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
   { path: "/summary", element: <SummaryPage /> }, //maybe delete later
@@ -23,7 +23,7 @@ export const ROUTES_NOT_LOGIN = [
   { path: "/register/email_confirmation", element: <EmailConfirmPage /> },
   { path: "/register/verification/:id", element: <VerificationPage /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "*", element: <LoginPage /> },
+  // { path: "*", element: <LoginPage /> },
   { path: "/streaming", element: <AudioStreamingPage /> },
   { path: "/record", element: <RecordPage /> }, //maybe delete later
   { path: "/summary", element: <SummaryPage /> }, //maybe delete later
