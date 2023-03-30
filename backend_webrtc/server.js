@@ -1,33 +1,40 @@
-const ToothTable = require("./teeth/ToothTable.js")
+const ToothTable = require("./teeth/ToothTable.js");
+const Record = require("./models/recordModel");
 
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
+const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
-const gowajee_service = require('./utils/gowajee_service.js');
+const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
-const RATE = 48000 // Sample rate of the input audio
+const RATE = 48000; // Sample rate of the input audio
 
 // gRPC Denpendencies
-const grpc = require('@grpc/grpc-js');
+const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 
 // Load Gowajee proto for gRPC
-const SPEECH2TEXT_PROTO_PATH = './proto/speech2text.proto'
-let speech2text_packageDefinition = protoLoader.loadSync(SPEECH2TEXT_PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-let speech2text_protoc = grpc.loadPackageDefinition(speech2text_packageDefinition).gowajee.speech.speech2text;
+const SPEECH2TEXT_PROTO_PATH = "./proto/speech2text.proto";
+let speech2text_packageDefinition = protoLoader.loadSync(
+  SPEECH2TEXT_PROTO_PATH,
+  {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+  }
+);
+let speech2text_protoc = grpc.loadPackageDefinition(
+  speech2text_packageDefinition
+).gowajee.speech.speech2text;
 
 // Load NER Backend proto for gRPC
-const NER_PROTO_PATH = './proto/ner_model.proto'
+const NER_PROTO_PATH = "./proto/ner_model.proto";
 let ner_packageDefinition = protoLoader.loadSync(NER_PROTO_PATH, {
   keepCase: true,
   longs: String,
@@ -49,7 +56,7 @@ const io = new Server(server, {
 });
 
 // Open Socket Connection
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   // Initialize parameter in socket section
   let sink = null;
   let audioTrack = null;
@@ -61,8 +68,30 @@ io.on("connection", (socket) => {
   let old_i = null;
   let old_side = "";
   let toothTable = new ToothTable();
+  // ----------------- Update record data from MongoDB if userID exists and not exceed time limit ----------------- //
+  const currentTimestamp = Date.now();
+  const userID = socket.handshake.query.userId;
+  // if userID exists in MongoDb, check timestamp difference
+  const dataByUserID = await Record.findOne({ userID });
+  console.log("Get data by user ID", dataByUserID);
+  if (dataByUserID) {
+    const timestampDifference =
+      (currentTimestamp - new Date(dataByUserID.timestamp)) / (1000 * 60 * 60);
+    console.log("Timestamp difference", timestampDifference);
+    if (timestampDifference < 24) {
+      toothTable.importValue(dataByUserID.recordData);
+    }
+  }
+  console.log("Tooth table data", toothTable);
+  toothTable.showPDREValue();
+  // -------------------------------------------------------------------------------------------------------------- //
 
-  console.log("socket id:", socket.id, ", userId:", socket.handshake.query.userId)
+  console.log(
+    "socket id:",
+    socket.id,
+    ", userId:",
+    socket.handshake.query.userId
+  );
 
   // Connect to gRPC Gowajee Streaming Backend
   let gowajee_stub = new speech2text_protoc.GowajeeSpeechToText(
@@ -71,7 +100,7 @@ io.on("connection", (socket) => {
     grpc.credentials.createInsecure()
   );
 
-  // Connect to NER Backend 
+  // Connect to NER Backend
   let ner_stub = new ner_protoc.NERBackend(
     // `localhost:${process.env.NER_BACKEND_PORT}`,
     `${process.env.NER_BACKEND_IP}:${process.env.NER_BACKEND_PORT}`,
@@ -100,13 +129,13 @@ io.on("connection", (socket) => {
 
   // When client send start record
   socket.on("start_record", async () => {
-    console.log(`[${socket.id}] start streaming`)
+    console.log(`[${socket.id}] start streaming`);
     is_record = true;
   });
 
   // When client send stop record
   socket.on("stop_record", async () => {
-    console.log(`[${socket.id}] stop streaming`)
+    console.log(`[${socket.id}] stop streaming`);
     is_record = false;
   });
 
@@ -118,7 +147,7 @@ io.on("connection", (socket) => {
     });
     toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
     console.log("undo_missing:", toothData);
-  })
+  });
 
   // When client add missing
   socket.on("add_missing", async (toothData) => {
@@ -128,7 +157,7 @@ io.on("connection", (socket) => {
     });
     toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
     console.log("add_missing:", toothData);
-  })
+  });
 
   // When disconnect end the streaming
   socket.on("disconnect", () => {
@@ -143,7 +172,6 @@ io.on("connection", (socket) => {
 
   // When new audio track is added, then assign audio track
   pc.ontrack = (event) => {
-
     // Initilize Parameter for Gowajee Streaming Stub
     request = gowajee_service.init_streaming_request();
 
@@ -156,32 +184,32 @@ io.on("connection", (socket) => {
       if (err) console.log(err);
     });
 
-
     // Query new audio track
     audioTrack = event.streams[0].getAudioTracks()[0];
     // Convert AudioTrack type to mp3/wav format
     sink = new RTCAudioSink(audioTrack);
     // When new data coming, send to Gowajee server
     sink.ondata = (data) => {
-      if (data.samples.buffer && is_record) { // Send request to Gowajee if is_record is true!!
+      if (data.samples.buffer && is_record) {
+        // Send request to Gowajee if is_record is true!!
         request.audio_data = new Uint8Array(data.samples.buffer); // set request's audio data to the income audio
         gowajee_call.write(request); // send/call for streaming transcribe method
       }
-    }
+    };
 
     // When receive response from Gowajee Server, Send it to ner backend server
-    gowajee_call.on('data', (response) => {
+    gowajee_call.on("data", (response) => {
       ner_call.write(response);
       // }).once('error', () => {
       //   console.log("end grpc streaming");
     });
 
-    ner_call.on('data', (response) => {
+    ner_call.on("data", (response) => {
       // console.log(response.response);
       let semanticList = response.response;
       let isUpdate = false;
 
-      semanticList.forEach(semantic => {
+      semanticList.forEach(async (semantic) => {
         mode = semantic.command;
         pd_re_bop = ["PDRE", "BOP"];
         mo_mgj = ["MO", "MGJ"];
@@ -196,7 +224,12 @@ io.on("connection", (socket) => {
           }
           tooth_side = semantic.data.tooth_side;
 
-          if ((!(old_command === mode) || !(q === old_q) || !(i === old_i) || !(tooth_side === old_side))) {
+          if (
+            !(old_command === mode) ||
+            !(q === old_q) ||
+            !(i === old_i) ||
+            !(tooth_side === old_side)
+          ) {
             sendUpdateDisplayToFrontEnd(socket, mode, q, i, tooth_side);
             // Clear the ToothValue when start a command to handle the repeat tooth value problem.
             if (mode === "PDRE" && !!q && !!i && !!tooth_side) {
@@ -222,26 +255,45 @@ io.on("connection", (socket) => {
           if (mode === "PDRE") {
             target = semantic.data.payload;
             mode = semantic.data.is_number_PD ? "PD" : "RE";
-          }
-          else {
-            target = semantic.data.BOP_payload
+          } else {
+            target = semantic.data.BOP_payload;
           }
 
           // console.log(mode, q, i, side, position, '-->', target)
           let next_tooth = null;
           // toothTable.updateValue(q, i, mode, target, side, position);
           if (toothTable.updateValue(q, i, mode, target, side, position)) {
-            if (mode === "RE" && (((((q === 1 || q === 3) && side === "buccal") || ((q === 2 || q === 4) && side === "lingual")) && position === "mesial") ||
-              ((((q === 1 || q === 3) && side === "lingual") || ((q === 2 || q === 4) && side === "buccal")) && position === "distal"))) {
-              next_tooth = toothTable.findNextAvailableTooth(q, i, side)
+            if (
+              mode === "RE" &&
+              (((((q === 1 || q === 3) && side === "buccal") ||
+                ((q === 2 || q === 4) && side === "lingual")) &&
+                position === "mesial") ||
+                ((((q === 1 || q === 3) && side === "lingual") ||
+                  ((q === 2 || q === 4) && side === "buccal")) &&
+                  position === "distal"))
+            ) {
+              next_tooth = toothTable.findNextAvailableTooth(q, i, side);
             }
-            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side, position, next_tooth);
+            sendUpdateToothTableDataToFrontEnd(
+              socket,
+              q,
+              i,
+              mode,
+              target,
+              side,
+              position,
+              next_tooth
+            );
             if (next_tooth) {
-              toothTable.clearToothValue(next_tooth.q, next_tooth.i, "PDRE", side);
+              toothTable.clearToothValue(
+                next_tooth.q,
+                next_tooth.i,
+                "PDRE",
+                side
+              );
             }
           }
-        }
-        else if (mo_mgj.includes(mode)) {
+        } else if (mo_mgj.includes(mode)) {
           q = semantic.data.zee.first_zee;
           i = semantic.data.zee.second_zee;
           target = semantic.data.payload;
@@ -250,17 +302,25 @@ io.on("connection", (socket) => {
           let next_tooth = null;
           if (toothTable.updateValue(q, i, mode, target)) {
             if (mode === "MGJ") {
-              next_tooth = toothTable.findNextAvailableTooth(q, i, "buccal")
+              next_tooth = toothTable.findNextAvailableTooth(q, i, "buccal");
             }
-            sendUpdateToothTableDataToFrontEnd(socket, q, i, mode, target, side = null, position = null, next_tooth = next_tooth);
+            sendUpdateToothTableDataToFrontEnd(
+              socket,
+              q,
+              i,
+              mode,
+              target,
+              (side = null),
+              (position = null),
+              (next_tooth = next_tooth)
+            );
             if (next_tooth) {
               toothTable.clearToothValue(next_tooth.q, next_tooth.i, mode);
             }
           }
-        }
-        else if (mode === "Missing") {
+        } else if (mode === "Missing") {
           missing_list = semantic.data.missing;
-          missing_list.forEach(missing_tooth => {
+          missing_list.forEach((missing_tooth) => {
             q = missing_tooth.first_zee;
             i = missing_tooth.second_zee;
             target = true;
@@ -271,24 +331,60 @@ io.on("connection", (socket) => {
           });
         }
         // toothTable.showPDREValue();
+        // ----------------- Update record data to MongoDB ----------------- //
+        const timestamp = new Date();
+        const updateData = {
+          recordData: toothTable.exportValue(),
+          timestamp: timestamp.toISOString(),
+        };
+        console.log("Update Data", updateData);
+        const recordData = await Record.findOneAndUpdate(
+          { userID: socket.handshake.query.userId },
+          updateData,
+          { new: true, upsert: true }
+        );
+        console.log(recordData);
+        // ----------------------------------------------------------------- //
       });
       // }).once('error', () => {
       //   console.log("end grpc streaming");
-    });;
+    });
   };
 });
 
-const sendUpdateToothTableDataToFrontEnd = (socket, q, i, mode, target, side = null, position = null, next_tooth = null) => {
-  data = { q, i, mode, target, side, position, next_tooth }
+const sendUpdateToothTableDataToFrontEnd = (
+  socket,
+  q,
+  i,
+  mode,
+  target,
+  side = null,
+  position = null,
+  next_tooth = null
+) => {
+  data = { q, i, mode, target, side, position, next_tooth };
   // console.log("data", data);
   socket.emit("data", data);
-}
+};
 
 const sendUpdateDisplayToFrontEnd = (socket, command, q, i, tooth_side) => {
-  data = { command, q, i, tooth_side }
+  data = { command, q, i, tooth_side };
   // console.log("update_command", data);
   socket.emit("update_command", data);
-}
+};
+
+// Connect MongoDB
+const DB = process.env.DATABASE_LOCAL;
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    console.log("DB connection successful!");
+  });
 
 server.listen(process.env.SERVER_PORT, () => {
   console.log(`listening on *:${process.env.SERVER_PORT}`);
