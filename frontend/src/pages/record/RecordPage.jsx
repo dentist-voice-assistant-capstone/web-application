@@ -249,7 +249,9 @@ const RecordPage = () => {
       localStream,
       setSocket,
       setPeerConnection,
-      setLocalStream
+      setLocalStream,
+      setIsAudioStreaming,
+      setWebRTCFailedToConnect
     );
 
     navigate("/summary", {
@@ -373,24 +375,27 @@ const RecordPage = () => {
   }, []);
 
   /* terminate connection, if the user press the back button on the browser */
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      terminateConnection(
-        socket,
-        peerConnection,
-        localStream,
-        setSocket,
-        setPeerConnection,
-        setLocalStream
-      );
-    }
-    window.addEventListener("popstate", handleBeforeUnload);
-    return () => {
-      setTimeout(() => {
-        window.removeEventListener("popstate", handleBeforeUnload);
-      }, 0);
-    };
-  }, [socket, peerConnection, localStream]);
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     terminateConnection(
+  //       socket,
+  //       peerConnection,
+  //       localStream,
+  //       setSocket,
+  //       setPeerConnection,
+  //       setLocalStream,
+  //       setIsAudioStreaming,
+  //       setWebRTCFailedToConnect
+  //     );
+  //   }
+  //   window.addEventListener("popstate", handleBeforeUnload);
+  //   return () => {
+  //     console.log("clear connection from popstate...")
+  //     setTimeout(() => {
+  //       window.removeEventListener("popstate", handleBeforeUnload);
+  //     }, 0);
+  //   };
+  // }, [socket, peerConnection, localStream]);
 
   const modalConfirmContent = (
     <p>

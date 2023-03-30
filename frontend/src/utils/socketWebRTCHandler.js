@@ -102,13 +102,8 @@ const initiateConnection = async (
     // detect socket connection lost
     if (!isSocketConnectionLost) {
       isSocketConnectionLost = true;
-
-      console.log("removing old peerConnection...")
-      pc.close()
-      removeEventsForRTCPeerConnection(pc, s, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect);
-
-      setPeerConnection(null);
       setWebRTCFailedToConnect(true);
+      clearWebRTCPeerConnection(pc, s, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect);
     }
   })
 
@@ -282,14 +277,14 @@ const setUpEventForSDPExchangeBetweenPeerConnectionsViaSocket = (socket, peerCon
 }
 
 // FUNCTIONS FOR HANDLING RTCPeerConnection EVENTS ===========================================================================
-// listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
+// icecandidate -> listen for local ICE candidates on the local RTCPeerConnection, send the event.candidate to the server via socket.io
 const onIceCandidate = (socket, event) => {
   if (event.candidate) {
     socket.emit("candidate", event.candidate);
   }
 };
 
-// In case of needing to re-exchange SDP between the client and the server (negotiation)
+// negotiationneeded -> In case of needing to re-exchange SDP between the client and the server (negotiation)
 const onNegotiationNeeded = async (socket, event) => {
   let peerConnection = event.target
   try {
@@ -301,26 +296,27 @@ const onNegotiationNeeded = async (socket, event) => {
   }
 }
 
-// listen for connectionstate change
+// connectionstatechange -> listen for connectionstate change
 const onConnectionStateChange = (socket, setIsAudioStreaming, setPeerConnection, setWebRTCFailedToConnect, event) => {
   let peerConnection = event.target;
 
   console.log("peerConnection.connectionState change to", peerConnection.connectionState)
   // update the peerConnection to re update the isConnectionReady variable
-  setPeerConnection(peerConnection);
+  // setPeerConnection(peerConnection);
 
   if (peerConnection.connectionState === "connected") {
     console.log("PEERS CONNECTED");
-    // IMPORTANT: emits an start streaming signal, once the webRTC peers are connected! ====== 
+    // IMPORTANT: emits a start streaming signal, once the webRTC peers are connected! ====== 
     startAudioStreaming(socket, null, setIsAudioStreaming)
     setWebRTCFailedToConnect(false)
   }
 }
 
-// for detect connection lost
+// iceconnectionstatechange
 const onIceConnectionStateChange = (event) => {
   let peerConnection = event.target;
 
+  // for detect connection lost
   if (peerConnection.iceConnectionState === 'disconnected') {
     console.log("webRTC Connection lost, attempt to reconnect");
   }
@@ -333,17 +329,15 @@ const addEventsForRTCPeerConnection = (peerConnection, socket, setSocket, setPee
   peerConnection.addEventListener('icecandidate', onIceCandidate.bind(null, socket));
   peerConnection.addEventListener('negotiationneeded', onNegotiationNeeded.bind(null, socket));
   peerConnection.addEventListener('connectionstatechange', onConnectionStateChange.bind(null, socket, setIsAudioStreaming, setPeerConnection, setWebRTCFailedToConnect));
-  peerConnection.addEventListener('iceconnectionstatechange', onIceConnectionStateChange.bind(null));
+  peerConnection.addEventListener('iceconnectionstatechange', onIceConnectionStateChange);
 }
 
 const removeEventsForRTCPeerConnection = (peerConnection, socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect) => {
   peerConnection.removeEventListener('icecandidate', onIceCandidate.bind(null, socket));
   peerConnection.removeEventListener('negotiationneeded', onNegotiationNeeded.bind(null, socket));
   peerConnection.removeEventListener('connectionstatechange', onConnectionStateChange.bind(null, socket, setIsAudioStreaming, setPeerConnection, setWebRTCFailedToConnect));
-  peerConnection.removeEventListener('iceconnectionstatechange', onIceConnectionStateChange.bind(null));
+  peerConnection.removeEventListener('iceconnectionstatechange', onIceConnectionStateChange);
 }
-
-
 
 /* This function is called when the user want to set the missing of the specific tooth to FALSE.
  * This function will emit an message through the socket channel "undo_missing"
@@ -421,12 +415,11 @@ const reConnection = async (socket, setSocket, setPeerConnection, setLocalStream
   setSocket(socket);
 }
 
-
 /* This function is called when the user finish the recording process by
  * pressing "finish" button and confirm. This function will terminate the
  * connection (webRTC and socket) between frontend and backend-streaming.
  */
-const terminateConnection = (socket, peerConnection, localStream, setSocket, setPeerConnection, setLocalStream) => {
+const terminateConnection = (socket, peerConnection, localStream, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect) => {
   if (socket) {
     socket.disconnect(); // socket disconnect
   }
@@ -438,7 +431,7 @@ const terminateConnection = (socket, peerConnection, localStream, setSocket, set
   }
 
   if (peerConnection) {
-    peerConnection.close(); // close webRTCConnection
+    clearWebRTCPeerConnection(peerConnection, socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect)
   }
 
   console.log("connnection terminated.")
@@ -446,6 +439,16 @@ const terminateConnection = (socket, peerConnection, localStream, setSocket, set
   setSocket(null);
   setPeerConnection(null);
   setLocalStream(null);
+}
+
+const clearWebRTCPeerConnection = (
+  peerConnection, socket,
+  setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect) => {
+
+  console.log("clearing webRTC object and unsubscribe events...")
+  peerConnection.close();
+  removeEventsForRTCPeerConnection(peerConnection, socket, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect);
+  setPeerConnection(null);
 }
 
 export {
