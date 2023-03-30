@@ -47,7 +47,7 @@
   padding-left: 6px;
   padding-right: 6px;
   width: 110px;
-  margin-left: 15%;
+  /* margin-left: 22rem; */
 }
 
 .finishButton {
@@ -56,13 +56,12 @@
   border-color: white;
   border-style: none;
   border-radius: 5px;
-  margin: auto;
+  /* margin: auto; */
   height: 36px;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 8%;
   width: 110px;
 }
 
@@ -127,8 +126,21 @@
   flex-wrap: inherit;
   align-items: center;
   justify-content: space-between;
-  margin-left: 31%;
+  /* margin-left: 0%; */
   width: 100%;
+  /* border: 1px solid red; */
+}
+
+.pauseResumeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.finishContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 .blinking {
@@ -137,16 +149,24 @@
   width: 40px;
   background-color: red;
   border-radius: 50%;
-  margin-left: -40%;
   color: transparent;
+  margin-left: 20px;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
-  animation: blinkingBackground 1s infinite;
+  animation: blinking 1s infinite;
 }
+
+.dummy {
+  height: 40px;
+  width: 40px;
+  margin-left: 20px;
+  visibility: hidden;
+}
+
 @keyframes blinkingBackground {
   0% {
     background-color: #000000;
@@ -162,5 +182,49 @@
   } */
   100% {
     background-color: #ff0000;
+  }
+}
+
+/* currentConenctionStatus Box */
+.connectionStatusBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 3%;
+  width: 10rem;
+  /* border: 1px solid red; */
+}
+
+.connectionStatusBox p {
+  padding: 0;
+  margin: 0;
+}
+
+.connectionStatusBox.unknown p {
+  visibility: hidden;
+}
+
+.connectionStatusBox.connected p {
+  color: lime;
+}
+
+.connectionStatusBox.disconnected p {
+  color: var(--primary-color-error);
+}
+
+.connectionStatusBox.reconnecting p {
+  color: var(--primary-color-highlight);
+  animation: blinking 1s infinite ease-in;
+}
+
+@keyframes blinking {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

@@ -189,6 +189,7 @@ const RecordPage = () => {
   /* states for WebRTC Connection (streaming audio to backend) */
   const [peerConnection, setPeerConnection] = useState(null);
   const [localStream, setLocalStream] = useState(null);
+  const [webRTCFailedToConnect, setWebRTCFailedToConnect] = useState(false);
 
   /* states for enable/disable streaming audio */
   const [isAudioStreaming, setIsAudioStreaming] = useState(false);
@@ -297,6 +298,17 @@ const RecordPage = () => {
     stopAudioStreaming(socket, localStream, setIsAudioStreaming);
   }
 
+  let currentConnectionStatus;
+  if (isConnectionReady) {
+    currentConnectionStatus = "Connected";
+  } else if (!isConnectionReady && isSocketReconnecting) {
+    currentConnectionStatus = "Reconnecting";
+  } else if (!isConnectionReady && (socketFailedToConnect || webRTCFailedToConnect)) {
+    currentConnectionStatus = "Disconnected";
+  } else {
+    currentConnectionStatus = "Unknown";
+  }
+
   // FOR TESTING ================================================================
   if (!!socket && !!peerConnection && !!localStream) {
     console.log({
@@ -339,6 +351,7 @@ const RecordPage = () => {
           setLocalStream,
           setIsSocketReconnecting,
           setSocketFailedToConnect,
+          setWebRTCFailedToConnect,
           setIsAudioStreaming,
           handleSetInformation,
           dispatchCurrentCommand
@@ -453,6 +466,7 @@ const RecordPage = () => {
         isFinish={!isFinish}
         pauseResumeHandler={pauseResumeHandler}
         checkFinishHandler={checkFinishHandler}
+        currentConnectionStatus={currentConnectionStatus}
       />
     </Fragment>
   )
@@ -495,6 +509,7 @@ const RecordPage = () => {
               setLocalStream,
               setIsSocketReconnecting,
               setSocketFailedToConnect,
+              setWebRTCFailedToConnect,
               setIsAudioStreaming,
               handleSetInformation,
               dispatchCurrentCommand
