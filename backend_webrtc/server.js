@@ -1,11 +1,10 @@
-const ToothTable = require("./teeth/ToothTable.js");
-const Record = require("./models/recordModel");
+const ToothTable = require("./teeth/ToothTable.js")
 
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
-const mongoose = require("mongoose");
 const http = require("http");
+const axios = require('axios');
 const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
@@ -69,19 +68,19 @@ io.on("connection", async (socket) => {
   let old_side = "";
   let toothTable = new ToothTable();
   // ----------------- Update record data from MongoDB if userID exists and not exceed time limit ----------------- //
-  const currentTimestamp = Date.now();
-  const userID = socket.handshake.query.userId;
-  // if userID exists in MongoDb, check timestamp difference
-  const dataByUserID = await Record.findOne({ userID });
-  console.log("Get data by user ID", dataByUserID);
-  if (dataByUserID) {
-    const timestampDifference =
-      (currentTimestamp - new Date(dataByUserID.timestamp)) / (1000 * 60 * 60);
-    console.log("Timestamp difference", timestampDifference);
-    if (timestampDifference < 24) {
-      toothTable.importValue(dataByUserID.recordData);
-    }
-  }
+  // const currentTimestamp = Date.now();
+  // const userID = socket.handshake.query.userId;
+  // // if userID exists in MongoDb, check timestamp difference
+  // const dataByUserID = await Record.findOne({ userID });
+  // console.log("Get data by user ID", dataByUserID);
+  // if (dataByUserID) {
+  //   const timestampDifference =
+  //     (currentTimestamp - new Date(dataByUserID.timestamp)) / (1000 * 60 * 60);
+  //   console.log("Timestamp difference", timestampDifference);
+  //   if (timestampDifference < 24) {
+  //     toothTable.importValue(dataByUserID.recordData);
+  //   }
+  // }
   console.log("Tooth table data", toothTable);
   toothTable.showPDREValue();
   // -------------------------------------------------------------------------------------------------------------- //
@@ -332,18 +331,18 @@ io.on("connection", async (socket) => {
         }
         // toothTable.showPDREValue();
         // ----------------- Update record data to MongoDB ----------------- //
-        const timestamp = new Date();
-        const updateData = {
-          recordData: toothTable.exportValue(),
-          timestamp: timestamp.toISOString(),
-        };
-        console.log("Update Data", updateData);
-        const recordData = await Record.findOneAndUpdate(
-          { userID: socket.handshake.query.userId },
-          updateData,
-          { new: true, upsert: true }
-        );
-        console.log(recordData);
+        // const timestamp = new Date();
+        // const updateData = {
+        //   recordData: toothTable.exportValue(),
+        //   timestamp: timestamp.toISOString(),
+        // };
+        // console.log("Update Data", updateData);
+        // const recordData = await Record.findOneAndUpdate(
+        //   { userID: socket.handshake.query.userId },
+        //   updateData,
+        //   { new: true, upsert: true }
+        // );
+        // console.log(recordData);
         // ----------------------------------------------------------------- //
       });
       // }).once('error', () => {
@@ -372,19 +371,6 @@ const sendUpdateDisplayToFrontEnd = (socket, command, q, i, tooth_side) => {
   // console.log("update_command", data);
   socket.emit("update_command", data);
 };
-
-// Connect MongoDB
-const DB = process.env.DATABASE_LOCAL;
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    console.log("DB connection successful!");
-  });
 
 server.listen(process.env.SERVER_PORT, () => {
   console.log(`listening on *:${process.env.SERVER_PORT}`);

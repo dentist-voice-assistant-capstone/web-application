@@ -5,6 +5,7 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const userRouter = require("./routes/userRoutes");
+const recordRouter = require("./routes/recordRoutes");
 
 const corsOptions = {
   origin: `http://${process.env.FRONTEND_IP}:${process.env.FRONTEND_PORT}`,
@@ -23,6 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "25kb" }));
 
 app.use("/user", userRouter);
+app.use("/record", recordRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
