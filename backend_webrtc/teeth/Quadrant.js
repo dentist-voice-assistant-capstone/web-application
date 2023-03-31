@@ -14,17 +14,23 @@ class Quadrant {
   exportValue() {
     let result = [];
     this.teeth.forEach((tooth) => result.push(tooth.exportValue()));
+    // if quadrant = 1 or quadrant = 4, reverse the result list.
+    if (this.quadrant === 1 || this.quadrant === 4) {
+      result.reverse();
+    }
     return {
       quadrant: this.quadrant,
-      teeth: result,
+      idxArray: result,
     };
   }
 
   importValue(quadrantData) {
-    const teeth = quadrantData.teeth;
-    for (let i = 0; i < this.teeth.length; i++) {
-      this.teeth[i].importValue(teeth[i]);
+    const teeth = quadrantData.idxArray;
+    // if quadrant = 1 or quadrant = 4, reverse the result list.
+    if (this.quadrant === 1 || this.quadrant === 4) {
+      teeth.reverse();
     }
+    teeth.forEach((tooth, index) => this.teeth[index].importValue(tooth));
     return;
   }
 }

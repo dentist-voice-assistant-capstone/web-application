@@ -8,7 +8,10 @@ const userRouter = require("./routes/userRoutes");
 const recordRouter = require("./routes/recordRoutes");
 
 const corsOptions = {
-  origin: `http://${process.env.FRONTEND_IP}:${process.env.FRONTEND_PORT}`,
+  origin: [
+    `http://${process.env.FRONTEND_IP}:${process.env.FRONTEND_PORT}`,
+    `http://${process.env.BACKEND_WEB_RTC_IP}:${process.env.BACKEND_WEB_RTC_PORT}`,
+  ],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 

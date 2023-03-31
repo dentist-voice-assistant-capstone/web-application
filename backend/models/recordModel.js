@@ -17,7 +17,7 @@ const recordSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  recordData: { type: Object },
+  recordData: { type: Array },
 });
 
 const Record = mongoose.model("Record", recordSchema);

@@ -1,10 +1,10 @@
-const ToothTable = require("./teeth/ToothTable.js")
+const ToothTable = require("./teeth/ToothTable.js");
 
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
 const http = require("http");
-const axios = require('axios');
+const axios = require("axios");
 const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
@@ -49,7 +49,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   // Create CORS, in order to give an access to front-end server
   cors: {
-    origin: `http://${process.env.IP_ADDRESS}:${process.env.CLIENT_PORT}`,
+    origin: `http://${process.env.CLIENT_IP}:${process.env.CLIENT_PORT}`,
     methods: ["GET", "POST"],
   },
 });
@@ -67,20 +67,29 @@ io.on("connection", async (socket) => {
   let old_i = null;
   let old_side = "";
   let toothTable = new ToothTable();
-  // ----------------- Update record data from MongoDB if userID exists and not exceed time limit ----------------- //
-  // const currentTimestamp = Date.now();
-  // const userID = socket.handshake.query.userId;
-  // // if userID exists in MongoDb, check timestamp difference
-  // const dataByUserID = await Record.findOne({ userID });
-  // console.log("Get data by user ID", dataByUserID);
-  // if (dataByUserID) {
-  //   const timestampDifference =
-  //     (currentTimestamp - new Date(dataByUserID.timestamp)) / (1000 * 60 * 60);
-  //   console.log("Timestamp difference", timestampDifference);
-  //   if (timestampDifference < 24) {
-  //     toothTable.importValue(dataByUserID.recordData);
-  //   }
-  // }
+  // ----------------- Update record data from MongoDB if userID exists ----------------- //
+  // Sample token
+  let token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MjFhMmMzOTliODg0NTdlODBhNDZkZSIsImlhdCI6MTY4MDEwMjAxMiwiZXhwIjoxNjg3ODc4MDEyfQ.p8-uTTUVMt3qUe7JrQe0TeRZ1mwy8RsfbyfapQfeBSs";
+  // const token = socket.handshake.query.token;
+  // Send request to backend server to get previous record data if exists
+  let config = {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  };
+  let url = `http://${process.env.NORMAL_BACKEND_IP}:${process.env.NORMAL_BACKEND_PORT}/record`;
+  await axios
+    .get(url, config)
+    .then((response) => response.data)
+    .then((data) => {
+      if (data.data) {
+        let recordData = data.data.recordData;
+        toothTable.importValue(recordData);
+      }
+    })
+    .catch((err) => console.log(err));
   console.log("Tooth table data", toothTable);
   toothTable.showPDREValue();
   // -------------------------------------------------------------------------------------------------------------- //
@@ -331,18 +340,18 @@ io.on("connection", async (socket) => {
         }
         // toothTable.showPDREValue();
         // ----------------- Update record data to MongoDB ----------------- //
-        // const timestamp = new Date();
-        // const updateData = {
-        //   recordData: toothTable.exportValue(),
-        //   timestamp: timestamp.toISOString(),
-        // };
-        // console.log("Update Data", updateData);
-        // const recordData = await Record.findOneAndUpdate(
-        //   { userID: socket.handshake.query.userId },
-        //   updateData,
-        //   { new: true, upsert: true }
-        // );
-        // console.log(recordData);
+        let config = {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          withCredentials: true,
+        };
+        let updatedData = {
+          recordData: toothTable.exportValue(),
+          timestamp: Date.now(),
+        };
+        let url = `http://${process.env.NORMAL_BACKEND_IP}:${process.env.NORMAL_BACKEND_PORT}/record`;
+        await axios.post(url, updatedData, config);
         // ----------------------------------------------------------------- //
       });
       // }).once('error', () => {

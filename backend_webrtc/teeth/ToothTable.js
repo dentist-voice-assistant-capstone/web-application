@@ -174,18 +174,14 @@ class ToothTable {
   }
 
   exportValue() {
-    let result = [];
-    this.quadrants.forEach((quadrant) => result.push(quadrant.exportValue()));
-    return {
-      data: result,
-    };
+    let ex_data = [];
+    this.quadrants.forEach((quadrant) => ex_data.push(quadrant.exportValue()));
+    return ex_data;
   }
 
   importValue(recordData) {
-    const quadrants = recordData.data;
-    for (let i = 0; i < this.quadrants.length; i++) {
-      this.quadrants[i].importValue(quadrants[i]);
-    }
+    const quadrants = recordData;
+    quadrants.forEach((quadrant, index) => this.quadrants[index].importValue(quadrant));
     return;
   }
 }
