@@ -104,6 +104,9 @@ const initiateConnection = async (
       isSocketConnectionLost = true;
       setWebRTCFailedToConnect(true);
       clearWebRTCPeerConnection(pc, s, setSocket, setPeerConnection, setLocalStream, setIsAudioStreaming, setWebRTCFailedToConnect);
+
+      // clear currentCommand cursor
+      dispatchCurrentCommand({ type: "CLEAR_COMMAND" });
     }
   })
 

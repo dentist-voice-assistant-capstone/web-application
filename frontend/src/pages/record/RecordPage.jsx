@@ -191,6 +191,9 @@ const RecordPage = () => {
   const [localStream, setLocalStream] = useState(null);
   const [webRTCFailedToConnect, setWebRTCFailedToConnect] = useState(false);
 
+  /* states for checking that the connections has been successfully initiated once */
+  const [isOnceConnected, setIsOnceConnected] = useState(false);
+
   /* states for enable/disable streaming audio */
   const [isAudioStreaming, setIsAudioStreaming] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -272,6 +275,24 @@ const RecordPage = () => {
     setInformation(newInformation);
   };
 
+  const reconnectHandler = () => {
+    setSocketFailedToConnect(false);
+    initiateConnection(
+      userId,
+      setSocket,
+      setPeerConnection,
+      setLocalStream,
+      setIsSocketReconnecting,
+      setSocketFailedToConnect,
+      setWebRTCFailedToConnect,
+      setIsAudioStreaming,
+      handleSetInformation,
+      dispatchCurrentCommand
+    );
+  }
+
+  // ========================================================================
+  /* functions for handling add/undo tooth missing */
   const handleUndoToothMissing = (q, i) => {
     handleSetInformation(q, i, null, "Missing", false);
     undoToothMissing(socket, q, i);
@@ -281,7 +302,6 @@ const RecordPage = () => {
     handleSetInformation(q, i, null, "Missing", true);
     addToothMissing(socket, q, i);
   };
-
   // ========================================================================
   /* determine the socket's connection status */
   const isSocketConnected = !!socket ? socket.connected : false;
@@ -303,9 +323,12 @@ const RecordPage = () => {
   let currentConnectionStatus;
   if (isConnectionReady) {
     currentConnectionStatus = "Connected";
+    if (!isOnceConnected) {
+      setIsOnceConnected(true);
+    }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
-  } else if (!isConnectionReady && (socketFailedToConnect || webRTCFailedToConnect)) {
+  } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
     currentConnectionStatus = "Disconnected";
   } else {
     currentConnectionStatus = "Unknown";
@@ -324,9 +347,13 @@ const RecordPage = () => {
       "localStream": localStream,
       "isPaused": isPaused,
       "isAudioStreaming": isAudioStreaming,
-      "isConnectionReady": isConnectionReady
+      "isConnectionReady": isConnectionReady,
+      "webRTCFailedToConnect": webRTCFailedToConnect
     })
   }
+
+
+
   // F===========================================================================
 
   /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
@@ -375,27 +402,30 @@ const RecordPage = () => {
   }, []);
 
   /* terminate connection, if the user press the back button on the browser */
-  // useEffect(() => {
-  //   const handleBeforeUnload = () => {
-  //     terminateConnection(
-  //       socket,
-  //       peerConnection,
-  //       localStream,
-  //       setSocket,
-  //       setPeerConnection,
-  //       setLocalStream,
-  //       setIsAudioStreaming,
-  //       setWebRTCFailedToConnect
-  //     );
-  //   }
-  //   window.addEventListener("popstate", handleBeforeUnload);
-  //   return () => {
-  //     console.log("clear connection from popstate...")
-  //     setTimeout(() => {
-  //       window.removeEventListener("popstate", handleBeforeUnload);
-  //     }, 0);
-  //   };
-  // }, [socket, peerConnection, localStream]);
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      terminateConnection(
+        socket,
+        peerConnection,
+        localStream,
+        setSocket,
+        setPeerConnection,
+        setLocalStream,
+        setIsAudioStreaming,
+        setWebRTCFailedToConnect
+      );
+      // clear data in the table
+      console.log("clear data in the table", EX_DATA)
+      setInformation(EX_DATA);
+    }
+    window.addEventListener("popstate", handleBeforeUnload);
+    return () => {
+      console.log("clear connection from popstate...")
+      setTimeout(() => {
+        window.removeEventListener("popstate", handleBeforeUnload);
+      }, 0);
+    };
+  }, [socket, peerConnection, localStream, setInformation]);
 
   const modalConfirmContent = (
     <p>
@@ -472,6 +502,7 @@ const RecordPage = () => {
         pauseResumeHandler={pauseResumeHandler}
         checkFinishHandler={checkFinishHandler}
         currentConnectionStatus={currentConnectionStatus}
+        reconnectHandler={reconnectHandler}
       />
     </Fragment>
   )
@@ -505,21 +536,7 @@ const RecordPage = () => {
         </button>
         <button
           className={`${classes["control-button"]} ${classes["reconnect-button"]}`}
-          onClick={() => {
-            setSocketFailedToConnect(false);
-            initiateConnection(
-              userId,
-              setSocket,
-              setPeerConnection,
-              setLocalStream,
-              setIsSocketReconnecting,
-              setSocketFailedToConnect,
-              setWebRTCFailedToConnect,
-              setIsAudioStreaming,
-              handleSetInformation,
-              dispatchCurrentCommand
-            );
-          }}
+          onClick={reconnectHandler}
         >
           Reconnect
         </button>
@@ -528,11 +545,11 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (true || isConnectionReady || isFinish) { // add true for testing
+  if (isOnceConnected) { // add true for testing
     CenterComponentToBeRendered = PDRETableComponentToBeRendered
-  } else if (!isConnectionReady && !socketFailedToConnect && !isFinish) {
+  } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
     CenterComponentToBeRendered = ReconnectingScreenToBeRendered
-  } else if (socketFailedToConnect && !isFinish) {
+  } else if (!isOnceConnected && !isConnectionReady && socketFailedToConnect) {
     CenterComponentToBeRendered = FailedToConnectScreenToBeRendered
   }
 
@@ -568,6 +585,10 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
+        <button onClick={() => {
+          console.log("hihi");
+          setInformation(EX_DATA);
+        }}> test </button>
 
         {/* Center */}
         {CenterComponentToBeRendered}

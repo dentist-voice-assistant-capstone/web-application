@@ -19,7 +19,7 @@ const RTC_CONFIG = {
 };
 
 // socket reconnection
-const SOCKET_RECONNECTION_ATTEMPTS = 20;
+const SOCKET_RECONNECTION_ATTEMPTS = 3;
 const SOCKET_RECONNECTION_DELAY = 500; //milliseconds
 
 // Auto change Quadrant Delay

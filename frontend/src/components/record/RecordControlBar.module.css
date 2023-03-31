@@ -191,7 +191,7 @@
   align-items: center;
   justify-content: center;
   margin-left: 3%;
-  width: 10rem;
+  width: 12rem;
   /* border: 1px solid red; */
 }
 
@@ -215,6 +215,23 @@
 .connectionStatusBox.reconnecting p {
   color: var(--primary-color-highlight);
   animation: blinking 1s infinite ease-in;
+}
+
+.reconnectIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 0.8rem;
+  width: 40px;
+  height: 2rem;
+  border-radius: 5px;
+  padding: 5px;
+  background: gray;
+}
+
+.reconnectIconContainer:hover {
+  background-color: darkgrey;
 }
 
 @keyframes blinking {
