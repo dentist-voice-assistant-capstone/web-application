@@ -6,7 +6,7 @@ const recordSchema = new mongoose.Schema({
     required: [true, "User must have an ID"],
     unique: true,
   },
-  patienceId: {
+  patientId: {
     type: String,
   },
   timestamp: {
