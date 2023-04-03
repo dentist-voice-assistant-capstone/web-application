@@ -30,11 +30,11 @@ const SummaryPage = () => {
   const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
   const userData = state.state.userData;
 
-  const patienceID = state.state.patienceID;
+  const patientID = state.state.patientID;
   const dentistID = state.state.dentistID;
   const date = state.state.date;
 
-  const file_name = `${patienceID}_${date}`;
+  const file_name = `${patientID}_${date}`;
 
   const [information, setInformation] = useState(
     Object.assign([], state.state.information)
@@ -185,7 +185,7 @@ const SummaryPage = () => {
         <div className={classes.information_box}>
           <InformationBox
             dentistID={dentistID}
-            patienceID={patienceID}
+            patientID={patientID}
             date={date}
           />
         </div>

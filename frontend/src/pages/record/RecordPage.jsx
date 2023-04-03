@@ -160,23 +160,23 @@ const RecordPage = () => {
   const authCtx = useContext(AuthContext);
 
   let userData = null;
-  let patienceID = null;
+  let patientID = null;
   let dentistID = null;
   try {
     userData = state.state.userData;
-    patienceID = state.state.patienceID;
+    patientID = state.state.patientID;
     dentistID = state.state.dentistID;
-  } catch (err) {
-  }
+  } catch (err) {}
   // =========== FOR TESTING ======================
   // const userData = { email: "test@hotmail.com" };
-  // const patienceID = "123456";
+  // const patientID = "123456";
   // const dentistID = "654321";
   // ===============================================
 
   const current = new Date();
-  const date = `${current.getDate()}/${current.getMonth() + 1
-    }/${current.getFullYear()}`;
+  const date = `${current.getDate()}/${
+    current.getMonth() + 1
+  }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   const [userId, setUserId] = useState(null);
@@ -231,7 +231,7 @@ const RecordPage = () => {
     setReLoginModal();
     authCtx.logout();
     navigate("/login");
-  }
+  };
 
   const checkFinishHandler = () => {
     /* if click "Finish" button, if the recording is not paused, pause the recording */
@@ -261,7 +261,7 @@ const RecordPage = () => {
       state: {
         information: information,
         userData: userData,
-        patienceID: patienceID,
+        patientID: patientID,
         dentistID: dentistID,
         date: date,
       },
@@ -289,7 +289,7 @@ const RecordPage = () => {
       handleSetInformation,
       dispatchCurrentCommand
     );
-  }
+  };
 
   // ========================================================================
   /* functions for handling add/undo tooth missing */
@@ -328,7 +328,11 @@ const RecordPage = () => {
     }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
-  } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
+  } else if (
+    !isConnectionReady &&
+    socketFailedToConnect &&
+    webRTCFailedToConnect
+  ) {
     currentConnectionStatus = "Disconnected";
   } else {
     currentConnectionStatus = "Unknown";
@@ -337,22 +341,20 @@ const RecordPage = () => {
   // FOR TESTING ================================================================
   if (!!socket && !!peerConnection && !!localStream) {
     console.log({
-      "peerConnection": !!peerConnection,
+      peerConnection: !!peerConnection,
       "peerConnection.connectionState": peerConnection.connectionState,
       "peerConnection.iceConnectionState": peerConnection.iceConnectionState,
-      "socket": !!socket,
-      "isSocketConnected": isSocketConnected,
-      "isSocketReconnecting": isSocketReconnecting,
-      "socketFailedToConnect": socketFailedToConnect,
-      "localStream": localStream,
-      "isPaused": isPaused,
-      "isAudioStreaming": isAudioStreaming,
-      "isConnectionReady": isConnectionReady,
-      "webRTCFailedToConnect": webRTCFailedToConnect
-    })
+      socket: !!socket,
+      isSocketConnected: isSocketConnected,
+      isSocketReconnecting: isSocketReconnecting,
+      socketFailedToConnect: socketFailedToConnect,
+      localStream: localStream,
+      isPaused: isPaused,
+      isAudioStreaming: isAudioStreaming,
+      isConnectionReady: isConnectionReady,
+      webRTCFailedToConnect: webRTCFailedToConnect,
+    });
   }
-
-
 
   // F===========================================================================
 
@@ -365,14 +367,14 @@ const RecordPage = () => {
     let uId;
     const validateToken = async () => {
       uId = await checkUserTokenAPIHandler(authCtx.token);
-    }
+    };
     validateToken().then(() => {
       /* if there exists an uId associated with the token, then the user is authenticated.
        it should initiate the connection to the Backend Streaming Server via socket and webRTC.
        Otherwise, it should prompt the user to re-login again and redirect user to the login page.
       */
       if (uId) {
-        console.log("uId associated with token:", uId)
+        console.log("uId associated with token:", uId);
         initiateConnection(
           uId,
           setSocket,
@@ -387,16 +389,21 @@ const RecordPage = () => {
         );
         setUserId(uId);
       } else {
-        console.log("Failed to validate token, redirecting user back to login page")
+        console.log(
+          "Failed to validate token, redirecting user back to login page"
+        );
         setReLoginModal({
           header: "Re-Login needed",
           content: (
             <p>
-              <span style={{ color: "red" }}>Your session has already expired.</span> Re-login is needed.
-              The system will redirect you to the login page.
+              <span style={{ color: "red" }}>
+                Your session has already expired.
+              </span>{" "}
+              Re-login is needed. The system will redirect you to the login
+              page.
             </p>
           ),
-        })
+        });
       }
     });
   }, []);
@@ -415,12 +422,12 @@ const RecordPage = () => {
         setWebRTCFailedToConnect
       );
       // clear data in the table
-      console.log("clear data in the table", EX_DATA)
+      console.log("clear data in the table", EX_DATA);
       setInformation(EX_DATA);
-    }
+    };
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
-      console.log("clear connection from popstate...")
+      console.log("clear connection from popstate...");
       setTimeout(() => {
         window.removeEventListener("popstate", handleBeforeUnload);
       }, 0);
@@ -505,7 +512,7 @@ const RecordPage = () => {
         reconnectHandler={reconnectHandler}
       />
     </Fragment>
-  )
+  );
 
   const ReconnectingScreenToBeRendered = (
     <div className={`${classes["center-box"]} centered`}>
@@ -520,9 +527,7 @@ const RecordPage = () => {
     <div className={`${classes["center-box"]} centered`}>
       <FiCloudOff size="45px" />
       <p className={classes["waiting_text"]}>
-        <span style={{ color: "red" }}>
-          Failed to connect to the server
-        </span>
+        <span style={{ color: "red" }}>Failed to connect to the server</span>
         <br /> Please try again later.
       </p>
       <div className={classes["controls"]}>
@@ -545,12 +550,13 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (isOnceConnected) { // add true for testing
-    CenterComponentToBeRendered = PDRETableComponentToBeRendered
+  if (isOnceConnected) {
+    // add true for testing
+    CenterComponentToBeRendered = PDRETableComponentToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
-    CenterComponentToBeRendered = ReconnectingScreenToBeRendered
+    CenterComponentToBeRendered = ReconnectingScreenToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && socketFailedToConnect) {
-    CenterComponentToBeRendered = FailedToConnectScreenToBeRendered
+    CenterComponentToBeRendered = FailedToConnectScreenToBeRendered;
   }
 
   return (
@@ -580,20 +586,25 @@ const RecordPage = () => {
         <div className={classes["top_bar"]}>
           <TopInformationBar
             date={date}
-            patienceID={patienceID}
+            patientID={patientID}
             dentistID={dentistID}
             isSummary={false}
           />
         </div>
-        <button onClick={() => {
-          console.log("hihi");
-          setInformation(EX_DATA);
-        }}> test </button>
+        <button
+          onClick={() => {
+            console.log("hihi");
+            setInformation(EX_DATA);
+          }}
+        >
+          {" "}
+          test{" "}
+        </button>
 
         {/* Center */}
         {CenterComponentToBeRendered}
       </div>
     </Fragment>
-  )
+  );
 };
 export default RecordPage;

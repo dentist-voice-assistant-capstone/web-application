@@ -1,6 +1,6 @@
 import classes from "./InformationBox.module.css";
 
-const CurrentCommandBox = ({ dentistID, patienceID, date }) => {
+const CurrentCommandBox = ({ dentistID, patientID, date }) => {
   return (
     <div className={classes["information-box__mainbox"]}>
       <div className={classes["information-box__subbox"]}>
@@ -8,8 +8,8 @@ const CurrentCommandBox = ({ dentistID, patienceID, date }) => {
         <p>{dentistID}</p>
       </div>
       <div className={classes["information-box__subbox"]}>
-        <p>Patience ID: </p>
-        <p>{patienceID}</p>
+        <p>Patient ID: </p>
+        <p>{patientID}</p>
       </div>
       <div className={classes["information-box__subbox"]}>
         <p>Date: </p>
