@@ -352,9 +352,7 @@ const RecordPage = () => {
     })
   }
 
-
-
-  // F===========================================================================
+  // ===========================================================================
 
   /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
    when first render */
@@ -585,6 +583,7 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
+        {/* testing button -> reset the table (doesn't work now T_T) */}
         <button onClick={() => {
           console.log("hihi");
           setInformation(EX_DATA);

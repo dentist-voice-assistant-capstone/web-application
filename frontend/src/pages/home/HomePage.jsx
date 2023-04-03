@@ -23,12 +23,14 @@ const HomePage = () => {
   const token = authCtx.token;
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const isLoggedIn = authCtx.isLoggedIn;
+
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    if (authCtx.isLoggedIn) {
+    if (isLoggedIn) {
       fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
     }
-  }, [authCtx.isLoggedIn, token]);
+  }, [isLoggedIn, token]);
   // =============================================================
 
   console.log("userData", userData);
@@ -128,7 +130,16 @@ const HomePage = () => {
             </p>
           </div>
           <div className={classes.actions}>
-            <button onClick={checkIsStartHandler}>Getting Started</button>
+            {isLoggedIn && (
+              <Fragment>
+                <button onClick={checkIsStartHandler}>Start New Recording</button>
+                <button disabled>Resume Recording</button>
+              </Fragment>
+            )}
+            {!isLoggedIn && (
+              <button onClick={checkIsStartHandler}>Getting Started</button>
+            )}
+
           </div>
           {/* <div className={classes.actions}>
             <button onClick={editAccountMenuOnClickHandler}>
