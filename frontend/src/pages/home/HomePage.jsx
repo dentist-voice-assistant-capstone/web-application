@@ -32,16 +32,16 @@ const HomePage = () => {
   const isLoggedIn = authCtx.isLoggedIn;
 
   const checkIsLatestRecordAbleToBeRestored = (latestRecordData) => {
-    if (!latestRecordData.finished) {
+    if (!!latestRecordData && !latestRecordData.finished) {
       setIsResumeButtonDisabled(false)
     } else {
       setIsResumeButtonDisabled(true)
     }
+    console.log("haha")
   }
 
   const formatRecordTimeStamp = (timestamp) => {
     const date = new Date(timestamp);
-
     const options = {
       year: 'numeric',
       month: 'long',
@@ -50,9 +50,8 @@ const HomePage = () => {
       minute: 'numeric',
       hour12: false
     }
-
     const formattedDateString = date.toLocaleString('en-US', options)
-    return formattedDateString
+    return formattedDateString.replace(" at", ",")
   }
 
   useEffect(() => {
@@ -65,12 +64,13 @@ const HomePage = () => {
     // fetch userData and LatestRecordData
     if (isLoggedIn) {
       fetchInformation(token).then(({ userData, latestRecordData }) => {
+        console.log("userData:", userData)
+        console.log("latestRecordData:", latestRecordData)
+
         checkIsLatestRecordAbleToBeRestored(latestRecordData)
         setUserData(userData)
         setLatestRecordData(latestRecordData)
         setIsLoaded(true)
-        console.log("userData:", userData)
-        console.log("latestRecordData:", latestRecordData)
       }).catch((err) => {
         if (err.message === "Cannot connect to backend server") {
           console.log(`${err.message}`);
@@ -143,10 +143,9 @@ const HomePage = () => {
           You have an unfinished record
           <br />
           PatientID:
-          <b style={{ color: "black" }}>{" " + latestRecordData.patientId || "null"}</b>
+          <b style={{ color: "black" }}>{" " + (latestRecordData.patientId !== "" ? latestRecordData.patientId : "<unknown>")}</b>
           <br />
-          at
-          <b style={{ color: "black" }}>{" " + formatRecordTimeStamp(latestRecordData.timestamp)}</b>
+          Time: <b style={{ color: "black" }}>{" " + formatRecordTimeStamp(latestRecordData.timestamp)}</b>
           <br />
         </p>
         <p>
