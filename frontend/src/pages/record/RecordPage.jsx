@@ -194,6 +194,9 @@ const RecordPage = () => {
   /* states for checking that the connections has been successfully initiated once */
   const [isOnceConnected, setIsOnceConnected] = useState(false);
 
+  /* states for memorizing connection lost */
+  const [isNotConnected, setIsNotConnected] = useState(true);
+
   /* states for enable/disable streaming audio */
   const [isAudioStreaming, setIsAudioStreaming] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -204,7 +207,7 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
-  const [information, setInformation] = useState(EX_DATA);
+  const [information, setInformation] = useState(JSON.parse(JSON.stringify(EX_DATA))); // deep copy
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
 
@@ -320,16 +323,34 @@ const RecordPage = () => {
     stopAudioStreaming(socket, localStream, setIsAudioStreaming);
   }
 
+  /* displaying and changing cureentConnectionStatus logic */
   let currentConnectionStatus;
   if (isConnectionReady) {
     currentConnectionStatus = "Connected";
-    if (!isOnceConnected) {
-      setIsOnceConnected(true);
+
+    if (isNotConnected) {
+      // detect connected after connection lost ------------------------
+      if (!isOnceConnected) {
+        setIsOnceConnected(true);
+      }
+      setIsNotConnected(false)
+      console.log("play sound connection success here...")
+      // ---------------------------------------------------------------
     }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
+    // detect connection lost after connected --------------------------
+    if (!isNotConnected) {
+      setIsNotConnected(true)
+    }
+    // -----------------------------------------------------------------
   } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
     currentConnectionStatus = "Disconnected";
+    // detect connection lost after connected --------------------------
+    if (!isNotConnected) {
+      setIsNotConnected(true)
+    }
+    // -----------------------------------------------------------------
   } else {
     currentConnectionStatus = "Unknown";
   }
