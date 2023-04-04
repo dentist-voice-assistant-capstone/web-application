@@ -14,7 +14,7 @@ exports.updateRecordData = catchAsync(async (req, res) => {
   const userId = req.user._id;
   const recordData = await Record.findOneAndUpdate(
     { userId: userId },
-    req.body,
+    { ...req.body, timestamp: Date.now() },
     { new: true, upsert: true }
   );
   res.status(200).json({

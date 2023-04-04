@@ -11,11 +11,11 @@ const recordSchema = new mongoose.Schema({
   },
   timestamp: {
     type: Date,
-    default: Date.now,
+    // default: Date.now,
   },
   finished: {
     type: Boolean,
-    default: false,
+    // default: false,
   },
   recordData: { type: Array },
 });
