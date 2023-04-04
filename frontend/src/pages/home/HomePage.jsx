@@ -6,6 +6,7 @@ import {
   startAPIHandler,
   fetchUserInfoAPIHandler,
 } from "../../utils/apiHandler";
+import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
 import Modal from "../../components/ui/Modal";
@@ -23,17 +24,35 @@ const HomePage = () => {
   const token = authCtx.token;
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [latestRecordData, setLatestRecordData] = useState(null);
+
   const isLoggedIn = authCtx.isLoggedIn;
 
-  // fetching user data, when loaded page =========================
   useEffect(() => {
-    if (isLoggedIn) {
-      fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
+    const fetchInformation = async (token) => {
+      let userData = await fetchUserInfoAPIHandler(token);
+      let latestRecordData = await fetchUserLatestRecordAPIHandler(token);
+      return { userData, latestRecordData };
     }
-  }, [isLoggedIn, token]);
-  // =============================================================
 
-  console.log("userData", userData);
+    // fetch userData and LatestRecordData
+    if (isLoggedIn) {
+      fetchInformation(token).then(({ userData, latestRecordData }) => {
+        setUserData(userData)
+        setLatestRecordData(latestRecordData)
+        setIsLoaded(true)
+        console.log("userData:", userData)
+        console.log("latestRecordData:", latestRecordData)
+      }).catch((err) => {
+        if (err.message === "Cannot connect to backend server") {
+          console.log(`${err.message}`);
+        }
+      })
+    }
+  }, []);
+
+  // console.log("userData", userData);
+
   function startHandler() {
     startAPIHandler();
     navigate("/record", {

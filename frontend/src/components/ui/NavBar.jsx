@@ -78,7 +78,7 @@ function NavBar(props) {
           // </div>
           <div className={classes["content-right"]}>
             <div className={classes["right-component"]}>
-              {props.userData.email}
+              {!!props.userData ? props.userData.email : ""}
             </div>
             {props.isEditEnable && (
               <button

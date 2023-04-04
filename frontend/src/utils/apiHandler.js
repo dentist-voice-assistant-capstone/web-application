@@ -143,40 +143,69 @@ const startAPIHandler = () => {
   console.log("Starting");
 };
 
-const fetchUserInfoAPIHandler = (
-  token,
-  setUserData,
-  setIsLoaded,
-  setUpdateError
-) => {
+// const fetchUserInfoAPIHandler = (
+//   token,
+//   setUserData,
+//   setIsLoaded,
+//   setUpdateError
+// ) => {
+//   const config = {
+//     headers: { Authorization: `Bearer ${token}` },
+//   };
+//   axios
+//     .get(USER_INFO_ENDPOINT, config)
+//     .then((result) => {
+//       // console.log(result)
+//       if (result.status === 200) {
+//         let userInfoData = result.data.data.user;
+//         setIsLoaded(true);
+//         setUserData({
+//           email: userInfoData.email,
+//           dentistName: userInfoData.dentistName || "",
+//           dentistSurname: userInfoData.dentistSurname || "",
+//           dentistID: userInfoData.dentistID || "",
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       if (!error.response) {
+//         setUpdateError({
+//           header: "Connection Error",
+//           content: <p>Cannot connect to backend server.</p>,
+//         });
+//         return false;
+//       }
+//     });
+// };
+
+const fetchUserInfoAPIHandler = async (token) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  axios
-    .get(USER_INFO_ENDPOINT, config)
-    .then((result) => {
-      // console.log(result)
-      if (result.status === 200) {
-        let userInfoData = result.data.data.user;
-        setIsLoaded(true);
-        setUserData({
-          email: userInfoData.email,
-          dentistName: userInfoData.dentistName || "",
-          dentistSurname: userInfoData.dentistSurname || "",
-          dentistID: userInfoData.dentistID || "",
-        });
-      }
-    })
-    .catch((error) => {
-      if (!error.response) {
-        setUpdateError({
-          header: "Connection Error",
-          content: <p>Cannot connect to backend server.</p>,
-        });
-        return false;
-      }
-    });
-};
+
+  try {
+    const result = await axios.get(USER_INFO_ENDPOINT, config);
+    if (result.status === 200) {
+      let userDataFetched = result.data.data.user;
+      let userDataReturned = {
+        email: userDataFetched.email,
+        // dentistName, dentistSurname, dentistID may be null
+        dentistName: userDataFetched.dentistName || "",
+        dentistSurname: userDataFetched.dentistSurname || "",
+        dentistID: userDataFetched.dentistID || ""
+      };
+      return userDataReturned
+    }
+  } catch (err) {
+    if (!err.response) {
+      throw new Error("Cannot connect to backend server")
+    }
+    // other error
+    const response = err.response
+    console.log("ERROR!!", response.status, response.statusText)
+    return null
+  }
+}
 
 const updateUserProfileAPIHandler = (
   token,

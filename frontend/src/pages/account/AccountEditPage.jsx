@@ -30,10 +30,30 @@ const AccountEditPage = () => {
 
   const sideBarMenuLabels = ["Account", "Change Password"];
 
+  const isLoggedIn = authCtx.isLoggedIn;
+
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded, setUpdateError);
-  }, [token]);
+    const fetchUserInfo = async (token) => {
+      let userData = await fetchUserInfoAPIHandler(token);
+      return { userData };
+    }
+
+    if (isLoggedIn) {
+      fetchUserInfo(token).then(({ userData }) => {
+        setUserData(userData);
+        setIsLoaded(true);
+      }).catch((err) => {
+        console.log("err!!", err.message)
+        if (err.message === "Cannot connect to backend server") {
+          setUpdateError({
+            header: "Connection Error",
+            content: <p>Cannot connect to backend server.</p>,
+          });
+        }
+      })
+    }
+  }, []);
   // =============================================================
 
   const changeMenuHandler = (event) => {
@@ -130,9 +150,8 @@ const AccountEditPage = () => {
               <h2>User Profile</h2>
               {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
                 <div
-                  className={`${classes["account-edit__sidebar-menu"]} ${
-                    idx === idxMenuSelected ? classes["selected"] : ""
-                  }`}
+                  className={`${classes["account-edit__sidebar-menu"]} ${idx === idxMenuSelected ? classes["selected"] : ""
+                    }`}
                   key={sidebarMenuLabel}
                   idx={idx}
                   onClick={changeMenuHandler}
