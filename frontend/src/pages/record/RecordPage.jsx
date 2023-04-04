@@ -23,6 +23,7 @@ import classes from "./RecordPage.module.css";
 import { EX_DATA } from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
+import { postRecordAPIHandler } from "../../utils/recordAPIHandler";
 
 import {
   initiateConnection,
@@ -158,6 +159,7 @@ const RecordPage = () => {
   const state = useLocation();
 
   const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
 
   let userData = null;
   let patienceID = null;
@@ -276,6 +278,10 @@ const RecordPage = () => {
       return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
     });
     setInformation(newInformation);
+
+    // updated record data to database *******************************
+    postRecordAPIHandler(token, newInformation, patienceID);
+    // ***************************************************************
   };
 
   const reconnectHandler = () => {
@@ -372,28 +378,26 @@ const RecordPage = () => {
       "webRTCFailedToConnect": webRTCFailedToConnect
     })
   }
-
   // ===========================================================================
-
   /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
    when first render */
   useEffect(() => {
     /* when the page loads, validate the token kept in authCtx first by sending GET request to the backend, 
       if the token is valid, it should return the associated user_id back. 
     */
-    let uId;
     const validateToken = async () => {
-      uId = await checkUserTokenAPIHandler(authCtx.token);
+      let userId = await checkUserTokenAPIHandler(token);
+      return { userId }
     }
-    validateToken().then(() => {
+    validateToken().then(({ userId }) => {
       /* if there exists an uId associated with the token, then the user is authenticated.
        it should initiate the connection to the Backend Streaming Server via socket and webRTC.
        Otherwise, it should prompt the user to re-login again and redirect user to the login page.
       */
-      if (uId) {
-        console.log("uId associated with token:", uId)
+      if (userId) {
+        console.log("userId associated with token:", userId)
         initiateConnection(
-          uId,
+          userId,
           setSocket,
           setPeerConnection,
           setLocalStream,
@@ -404,7 +408,7 @@ const RecordPage = () => {
           handleSetInformation,
           dispatchCurrentCommand
         );
-        setUserId(uId);
+        setUserId(userId);
       } else {
         console.log("Failed to validate token, redirecting user back to login page")
         setReLoginModal({

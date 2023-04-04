@@ -1,4 +1,5 @@
 import { Fragment, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AccountEditForm from "../../components/account/AccountEditForm";
 import PasswordEditForm from "../../components/account/PasswordEditForm";
@@ -14,6 +15,8 @@ import {
 import classes from "./AccountEditPage.module.css";
 
 const AccountEditPage = () => {
+  const navigate = useNavigate();
+
   // states for editing, sidebar menu selection
   const [isEditing, setIsEditing] = useState(false);
   const [idxMenuSelected, setIdxMenuSelected] = useState(0);
@@ -97,6 +100,7 @@ const AccountEditPage = () => {
   const infoModalOkHandler = () => {
     setUpdateInfo();
     authCtx.logout();
+    navigate("/login")
   };
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)

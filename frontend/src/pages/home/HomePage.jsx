@@ -20,13 +20,40 @@ const HomePage = () => {
   const [isStart, setIsStart] = useState(false);
   const [isContinue, setIsContinue] = useState(false);
 
-  const authCtx = useContext(AuthContext);
-  const token = authCtx.token;
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [latestRecordData, setLatestRecordData] = useState(null);
+  const [isResumeButtonDisabled, setIsResumeButtonDisabled] = useState(true);
 
+  const [isResume, setIsResume] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
   const isLoggedIn = authCtx.isLoggedIn;
+
+  const checkIsLatestRecordAbleToBeRestored = (latestRecordData) => {
+    if (!latestRecordData.finished) {
+      setIsResumeButtonDisabled(false)
+    } else {
+      setIsResumeButtonDisabled(true)
+    }
+  }
+
+  const formatRecordTimeStamp = (timestamp) => {
+    const date = new Date(timestamp);
+
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }
+
+    const formattedDateString = date.toLocaleString('en-US', options)
+    return formattedDateString
+  }
 
   useEffect(() => {
     const fetchInformation = async (token) => {
@@ -38,6 +65,7 @@ const HomePage = () => {
     // fetch userData and LatestRecordData
     if (isLoggedIn) {
       fetchInformation(token).then(({ userData, latestRecordData }) => {
+        checkIsLatestRecordAbleToBeRestored(latestRecordData)
         setUserData(userData)
         setLatestRecordData(latestRecordData)
         setIsLoaded(true)
@@ -53,6 +81,7 @@ const HomePage = () => {
 
   // console.log("userData", userData);
 
+  // Start New Recording ===============================================
   function startHandler() {
     startAPIHandler();
     navigate("/record", {
@@ -99,9 +128,37 @@ const HomePage = () => {
       </span>
     </p>
   );
+  // Resume Recording ===============================================
+  const checkIsResumeHandler = () => {
+    setIsResume((prevIsResume) => {
+      return !prevIsResume
+    })
+  }
+
+  let modalResumeContent;
+  if (latestRecordData) {
+    modalResumeContent = (
+      <div>
+        <p>
+          You have an unfinished record
+          <br />
+          PatientID:
+          <b style={{ color: "black" }}>{" " + latestRecordData.patientId || "null"}</b>
+          <br />
+          at
+          <b style={{ color: "black" }}>{" " + formatRecordTimeStamp(latestRecordData.timestamp)}</b>
+          <br />
+        </p>
+        <p>
+          Press <b style={{ color: "green" }}>OK</b> to resume recording
+        </p>
+      </div>
+    )
+  }
 
   return (
     <Fragment>
+      {/* Modals */}
       {isStart && (
         <InputModal
           header="Please enter required information"
@@ -122,6 +179,14 @@ const HomePage = () => {
           onCancelClick={checkIsContinueHandler}
           okButtonText="Confirm"
           modalType="input_confirm"
+        />
+      )}
+      {isResume && (
+        <Modal
+          header="Resume Recording"
+          modalType="input_confirm"
+          onCancelClick={checkIsResumeHandler}
+          content={modalResumeContent}
         />
       )}
 
@@ -152,7 +217,7 @@ const HomePage = () => {
             {isLoggedIn && (
               <Fragment>
                 <button onClick={checkIsStartHandler}>Start New Recording</button>
-                <button disabled>Resume Recording</button>
+                <button onClick={checkIsResumeHandler} disabled={isResumeButtonDisabled}>Resume Recording</button>
               </Fragment>
             )}
             {!isLoggedIn && (
