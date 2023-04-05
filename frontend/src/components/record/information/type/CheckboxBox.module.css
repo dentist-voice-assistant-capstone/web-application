@@ -3,4 +3,11 @@
   flex-direction: row;
   gap: 2px;
   height: 32;
+  box-sizing: border-box;
+  margin: auto;
+}
+
+.direction.highlighted {
+  box-shadow: 0px 0px 0px 7px var(--secondary-color-highlight);
+  border-radius: 15px;
 }

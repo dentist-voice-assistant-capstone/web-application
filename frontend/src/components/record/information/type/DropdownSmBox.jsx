@@ -11,8 +11,12 @@ function RecordDropdownBox({
   mode,
   data,
   handleSetInformation,
-  isFinish,
+  positionToBeHighlighted,
 }) {
+  const spec_id =
+    quadrant === 1 || quadrant === 4
+      ? ["distal", "middle", "mesial"]
+      : ["mesial", "middle", "distal"];
   return (
     <div className={classes.direction}>
       <DropdownSm
@@ -20,30 +24,30 @@ function RecordDropdownBox({
         side={side}
         id={id}
         mode={mode}
-        specific_id={0}
-        data={data[0]}
+        specific_id={spec_id[0]}
+        data={data[spec_id[0]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        isHighlighted={positionToBeHighlighted === spec_id[0] ? true : false}
       />
       <DropdownSm
         quadrant={quadrant}
         id={id}
         side={side}
         mode={mode}
-        specific_id={1}
-        data={data[1]}
+        specific_id={spec_id[1]}
+        data={data[spec_id[1]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        isHighlighted={positionToBeHighlighted === spec_id[1] ? true : false}
       />
       <DropdownSm
         quadrant={quadrant}
         id={id}
         side={side}
         mode={mode}
-        specific_id={2}
-        data={data[2]}
+        specific_id={spec_id[2]}
+        data={data[spec_id[2]]}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        isHighlighted={positionToBeHighlighted === spec_id[2] ? true : false}
       />
     </div>
   );

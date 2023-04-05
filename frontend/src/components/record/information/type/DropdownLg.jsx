@@ -10,20 +10,19 @@ function DropdownLg({
   mode,
   data,
   handleSetInformation,
-  isFinish,
+  isHighlighted,
 }) {
-  const [value, setValue] = useState(data);
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target);
-    setValue(target);
   };
   return (
     <DropdownButton
-      className={classes.largebox}
-      title={value}
+      className={`${classes["largebox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
-      disabled={isFinish}
     >
+      <Dropdown.Item eventKey="">-</Dropdown.Item>
       <Dropdown.Item eventKey="1">1</Dropdown.Item>
       <Dropdown.Item eventKey="2">2</Dropdown.Item>
       <Dropdown.Item eventKey="3">3</Dropdown.Item>

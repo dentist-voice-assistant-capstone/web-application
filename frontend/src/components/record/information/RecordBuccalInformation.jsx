@@ -10,12 +10,25 @@ const RecordBuccalInformation = ({
   buccalInformation,
   mgj,
   handleSetInformation,
-  isFinish,
+  currentCommand,
 }) => {
   const pd = buccalInformation.PD;
   const re = buccalInformation.RE;
   const bop = buccalInformation.BOP;
   const side = buccalInformation.side;
+
+  const command =
+    !!currentCommand && !!currentCommand.command
+      ? currentCommand.command
+      : null;
+
+  const positionToBeHighlighted =
+    !!currentCommand && !!currentCommand.position
+      ? currentCommand.position
+      : null;
+
+  const isMGJHighlighted = !!currentCommand && command === "MGJ" ? true : false;
+  const isBOPHighlighted = !!currentCommand && command === "BOP" ? true : false;
 
   return (
     <div className={classes.direction}>
@@ -26,7 +39,9 @@ const RecordBuccalInformation = ({
         mode={"PD"}
         data={pd}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        positionToBeHighlighted={
+          command === "PDRE" ? positionToBeHighlighted : null
+        }
       />
       <DropdownSmBox
         quadrant={quadrant}
@@ -35,7 +50,9 @@ const RecordBuccalInformation = ({
         mode={"RE"}
         data={re}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        positionToBeHighlighted={
+          command === "PDRE" ? positionToBeHighlighted : null
+        }
       />
       <CheckboxBox
         quadrant={quadrant}
@@ -44,7 +61,7 @@ const RecordBuccalInformation = ({
         mode={"BOP"}
         data={bop}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        isHighlighted={isBOPHighlighted}
       />
       <DropdownLg
         quadrant={quadrant}
@@ -53,7 +70,7 @@ const RecordBuccalInformation = ({
         mode={"MGJ"}
         data={mgj}
         handleSetInformation={handleSetInformation}
-        isFinish={isFinish}
+        isHighlighted={isMGJHighlighted}
       />
     </div>
   );

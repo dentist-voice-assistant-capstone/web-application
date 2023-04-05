@@ -26,3 +26,15 @@ backend/package-lock.json
 
 backend_webrtc/node_modules
 backend_webrtc/package-lock.json
+
+backend_ner/model/onnx_model-quantized.onnx
+
+backend_ner/ner_onnx.ipynb
+
+# ignore all Python cache files
+**/__pycache__/
+*.pyc
+backend_ner/__pycache__
+backend_ner/utils/__pycache__
+
+backend/config.env

@@ -1,45 +1,115 @@
 import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import classes from "./NavBar.module.css";
 import "bootstrap/dist/css/bootstrap.css";
 import LogoutButton from "./LogoutButton";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import AuthContext from "../../store/auth-context";
-import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
+
+import { FaHome } from "react-icons/fa";
 
 function NavBar(props) {
-  console.log(props);
+  const navigate = useNavigate();
 
-  // states for handling initial fetching user's data
-  const authCtx = useContext(AuthContext);
-  const token = authCtx.token;
-  const [userData, setUserData] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const homeMenuOnClickHandler = () => {
+    navigate("/");
+  };
 
-  // fetching user data, when loaded page =========================
-  useEffect(() => {
-    fetchUserInfoAPIHandler(token, setUserData, setIsLoaded);
-  }, [token]);
-  // =============================================================
+  function editAccountMenuOnClickHandler() {
+    navigate("/account/edit");
+  }
+
+  function loginMenuOnClickHandler() {
+    navigate("/login");
+  }
+
+  function registerMenuOnClickHandler() {
+    navigate("/register");
+  }
+
+  const [hoverClass, setHoverClass] = useState("home-icon");
+
+  const mouseEnterHandler = () => {
+    // console.log(isMouseOver);
+    setIsMouseOver(!isMouseOver);
+    isMouseOver ? setHoverClass("home-icon-hover") : setHoverClass("home-icon");
+  };
+
+  const [isMouseOver, setIsMouseOver] = useState(false);
 
   return (
-    // <Navbar bg="light">
+    // <Navbar bg="black" variant="dark">
     //   <Container>
-    //     <Navbar.Brand>Brand link</Navbar.Brand>
-    //     <Nav className="me-auto">
-    //       <LogoutButton></LogoutButton>
-    //     </Nav>
+    //     {props.isLoaded && (
+    //       <Navbar.Brand className={classes.actions}>
+    //         {props.userData.email}
+    //       </Navbar.Brand>
+    //     )}
+    //     <div>adfasdfasdf</div>
+    //     <LogoutButton></LogoutButton>
     //   </Container>
     // </Navbar>
-    <Navbar bg="black" variant="dark">
-      <Container>
-        {isLoaded && (
-          <Navbar.Brand className={classes.actions}>
-            {userData.email}
-          </Navbar.Brand>
+    <Navbar bg="black" variant="dark" fixed="top">
+      {/* <Container> */}
+      <Navbar.Brand className={classes.actions}>
+        {props.isSummary && (
+          <div className={classes["content-left"]}>
+            <FaHome
+              className={classes["home-icon"]}
+              size={40}
+              onClick={props.checkBackToHomeHandler}
+            />
+          </div>
         )}
-        {isLoaded && <LogoutButton></LogoutButton>}
-      </Container>
+        {!props.isSummary && (
+          <div className={classes["content-left"]}>
+            <FaHome
+              className={classes["home-icon"]}
+              size={40}
+              onClick={homeMenuOnClickHandler}
+            />
+          </div>
+        )}
+
+        {props.isLoaded && (
+          // <div className={classes["content-center"]}>
+          //   {props.userData.email}
+          // </div>
+          <div className={classes["content-right"]}>
+            <div className={classes["right-component"]}>
+              {!!props.userData ? props.userData.email : ""}
+            </div>
+            {props.isEditEnable && (
+              <button
+                className={classes["right-component"]}
+                onClick={editAccountMenuOnClickHandler}
+              >
+                Account Edit
+              </button>
+            )}
+            <LogoutButton className={classes["right-component"]} />
+          </div>
+        )}
+
+        {!props.isLoaded && (
+          <div className={classes["content-right"]}>
+            <button
+              className={classes["right-component"]}
+              onClick={loginMenuOnClickHandler}
+            >
+              Sign In
+            </button>
+            <button
+              className={classes["right-component"]}
+              onClick={registerMenuOnClickHandler}
+            >
+              Sign Up
+            </button>
+          </div>
+        )}
+      </Navbar.Brand>
+      {/* </Container> */}
     </Navbar>
   );
 }

@@ -4,6 +4,11 @@
 } */
 
 /* Clear floats after the columns */
+.control-bar {
+  z-index: 1;
+  position: absolute;
+}
+
 .row:after {
   content: "";
   display: table;
@@ -16,6 +21,7 @@
   border: 0;
   color: white;
   width: 100%;
+  height: 56px;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
@@ -33,11 +39,15 @@
   border-style: none;
   border-radius: 5px;
   margin: auto;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding-left: 6px;
   padding-right: 6px;
   width: 110px;
-  margin-left: 17%;
-  position: fixed;
+  /* margin-left: 22rem; */
 }
 
 .finishButton {
@@ -46,20 +56,69 @@
   border-color: white;
   border-style: none;
   border-radius: 5px;
-  margin: auto;
-  margin-right: 8%;
+  /* margin: auto; */
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 110px;
 }
 
-.summaryButton {
+.exportButton {
+  background-color: white;
+  color: black;
+  border-color: white;
+  border-style: none;
+  border-radius: 5px;
+  margin: auto;
+  width: 180px;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10%;
+}
+
+.saveAsButton {
   background-color: green;
   color: white;
   border-color: white;
   border-style: none;
   border-radius: 5px;
+  height: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
-  margin-left: 25%;
-  width: 110px;
+  margin-right: 10%;
+  width: 180px;
+}
+
+.icon {
+  padding-right: 10px;
+}
+
+.finishButton:hover {
+  background-color: var(--primary-color-hover);
+  transition: var(--transition-hover);
+}
+
+.saveAsButton:hover {
+  background-color: var(--primary-color-hover);
+  transition: var(--transition-hover);
+}
+
+.exportButton:hover {
+  background-color: var(--secondary-color-hover);
+  transition: var(--transition-hover);
+}
+
+.recordButton:hover {
+  background-color: var(--secondary-color-hover);
+  transition: var(--transition-hover);
 }
 
 .recordControlContainer {
@@ -67,26 +126,47 @@
   flex-wrap: inherit;
   align-items: center;
   justify-content: space-between;
-  margin-left: 31%;
+  /* margin-left: 0%; */
   width: 100%;
+  /* border: 1px solid red; */
+}
+
+.pauseResumeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.finishContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 .blinking {
   display: flex;
-  height: auto;
-  width: auto;
+  height: 40px;
+  width: 40px;
   background-color: red;
   border-radius: 50%;
-  margin-left: 40%;
   color: transparent;
+  margin-left: 20px;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
-  animation: blinkingBackground 1s infinite;
+  animation: blinking 1s infinite;
 }
+
+.dummy {
+  height: 40px;
+  width: 40px;
+  margin-left: 20px;
+  visibility: hidden;
+}
+
 @keyframes blinkingBackground {
   0% {
     background-color: #000000;
@@ -102,5 +182,66 @@
   } */
   100% {
     background-color: #ff0000;
+  }
+}
+
+/* currentConenctionStatus Box */
+.connectionStatusBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 3%;
+  width: 12rem;
+  /* border: 1px solid red; */
+}
+
+.connectionStatusBox p {
+  padding: 0;
+  margin: 0;
+}
+
+.connectionStatusBox.unknown p {
+  visibility: hidden;
+}
+
+.connectionStatusBox.connected p {
+  color: lime;
+}
+
+.connectionStatusBox.disconnected p {
+  color: var(--primary-color-error);
+}
+
+.connectionStatusBox.reconnecting p {
+  color: var(--primary-color-highlight);
+  animation: blinking 1s infinite ease-in;
+}
+
+.reconnectIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 0.8rem;
+  width: 40px;
+  height: 2rem;
+  border-radius: 5px;
+  padding: 5px;
+  background: gray;
+}
+
+.reconnectIconContainer:hover {
+  background-color: darkgrey;
+}
+
+@keyframes blinking {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

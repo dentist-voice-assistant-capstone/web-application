@@ -10,25 +10,126 @@
 }
 
 .actions {
-  margin-top: 2rem;
-  text-align: center;
+  padding-top: 1rem;
+  text-align: left;
+  padding-left: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 500px;
+}
+
+/* iPad */
+@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .header {
+    padding-top: 7rem;
+    padding-left: 5rem;
+    text-align: left;
+    font-weight: 700;
+  }
+}
+
+/* WideScreen */
+@media (min-width: 1201px) or (min-height: 1001px) {
+  .header {
+    padding-top: 10rem;
+    padding-left: 5rem;
+    text-align: left;
+    font-weight: 700;
+  }
+}
+/* iPad */
+@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .information {
+    padding-top: 2rem;
+    padding-left: 5rem;
+    text-align: left;
+    font-weight: 500;
+    width: 50%;
+  }
+}
+
+/* WideScreen */
+@media (min-width: 1201px) or (min-height: 1001px) {
+  .information {
+    padding-top: 2rem;
+    padding-left: 5rem;
+    text-align: left;
+    font-weight: 500;
+    width: 40%;
+  }
 }
 
 .actions button {
   border-radius: 10px;
-  font-size: 26px;
-  width: 50%;
-  height: 100px;
+  font-size: 16px;
+  /* width: 160px; */
+  height: 30px;
+  align-items: center;
   border: 0;
-  background-color: black;
-  color: white;
+  background-color: rgb(255, 255, 255);
+  border: 1.5px solid black;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.actions button:hover:enabled {
+  background-color: var(--secondary-color-hover);
+  transition: var(--transition-hover);
+  position: relative;
+  top: -2px;
+  transition: top 0.2s ease-in-out;
 }
 
 .actions button:disabled,
-.actions button:disabled:hover {
+.actions button:hover:disabled {
   background-color: gray;
+  color: darkgray;
+  border-color: gray;
+  transition: none;
 }
 
-.actions button:hover {
-  background-color: green;
+.navbar {
+  background-color: rgb(0, 0, 0);
+  width: 100%;
+  height: 56px;
+}
+
+.top-bar {
+  z-index: 1;
+  position: absolute;
+}
+
+/* iPad */
+@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .image-section {
+    background-image: url(../../images/homepage_new.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    height: 100%;
+    background-color: #acad90;
+    width: auto;
+  }
+}
+
+/* WideScreen */
+@media (min-width: 1201px) or (min-height: 1001px) {
+  .image-section {
+    background-image: url(../../images/homepage_new.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    height: 100%;
+    background-color: #acad90;
+    width: auto;
+  }
+}
+
+.home-icon {
+  /* size: 40px; */
+  color: rgb(0, 0, 0);
+}
+
+.home-icon:hover {
+  transition: var(--transition-hover);
+  color: var(--primary-color-highlight);
 }

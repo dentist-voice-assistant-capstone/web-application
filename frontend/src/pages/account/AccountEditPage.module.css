@@ -1,6 +1,5 @@
 /* variable declare */
 :root {
-  --main-border-radius: 10px;
   --main-background-color: #f0f0f0;
 }
 
@@ -15,21 +14,24 @@
 }
 
 .account-edit__main {
-  margin-top: 0px;
-  height: 800px;
   width: 70%;
+  margin-top: 10vh;
+  position: fixed;
   display: flex;
   background-color: white;
-  border-radius: var(--main-border-radius);
-  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  margin-left: 15vw;
+  border: solid black;
+  border-width: var(--primary-border-width);
+  border-radius: var(--primary-border-radius);
+  /* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3); */
 }
 
 .account-edit__sidebar {
-  height: 100%;
   width: 225px;
   box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.3);
   background-color: #d4d4d4;
-  border-radius: var(--main-border-radius) 0px 0px var(--main-border-radius);
+  border-radius: var(--primary-border-radius) 0px 0px
+    var(--primary-border-radius);
 }
 
 .account-edit__sidebar h2 {
@@ -59,5 +61,30 @@
   width: 100%;
   /* border: 1px solid yellow; */
   flex: 1;
-  padding: 160px 100px 50px 100px;
+  padding: 140px 100px 50px 100px;
+}
+
+/* iPad */
+@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .image-section {
+    /* aspect-ratio: 1; */
+    background-image: url(../../images/background_template.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-color: #acad90;
+    height: 100vh;
+    width: 100vw;
+  }
+}
+
+/* WideScreen */
+@media (min-width: 1201px) or (min-height: 1001px) {
+  .image-section {
+    background-image: url(../../images/background_template.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-color: #acad90;
+    height: 100vh;
+    width: 100vw;
+  }
 }

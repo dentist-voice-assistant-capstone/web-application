@@ -1,3 +1,7 @@
+// Backend Streaming URL
+const URL_BACKEND = `http://${process.env.REACT_APP_BACKEND_IP}:${process.env.REACT_APP_BACKEND_PORT}`;
+const URL_BACKEND_STREAMING = `http://${process.env.REACT_APP_BACKEND_STREAMING_IP}:${process.env.REACT_APP_BACKEND_STREAMING_PORT}`;
+
 // user fields
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 12;
@@ -14,132 +18,32 @@ const RTC_CONFIG = {
   ],
 };
 
-// Backend Streaming URL
-const URL_BACKEND_STREAMING = "http://localhost:3001";
-
 // socket reconnection
-const SOCKET_RECONNECTION_ATTEMPTS = 2;
-const SOCKET_RECONNECTION_DELAY = 1500; //milliseconds
+const SOCKET_RECONNECTION_ATTEMPTS = 3;
+const SOCKET_RECONNECTION_DELAY = 500; //milliseconds
+
+// Auto change Quadrant Delay
+const AUTO_CHANGE_QUADRANT_DELAY = 1000; //milliseconds
 
 const EX_DATA = [
   {
     quadrant: 1,
     idxArray: [
       {
-        ID: 1,
+        ID: 8,
         missing: false,
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 2,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 3,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 4,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 5,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 6,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -151,35 +55,135 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
         MGJ: null,
       },
       {
-        ID: 8,
+        ID: 6,
         missing: false,
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 5,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 4,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 3,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 2,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 1,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -197,15 +201,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -217,15 +221,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -237,15 +241,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -257,15 +261,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -277,15 +281,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -297,15 +301,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -317,15 +321,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -337,15 +341,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -362,15 +366,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -382,15 +386,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -402,15 +406,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -422,15 +426,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -442,15 +446,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -462,15 +466,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -482,15 +486,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -502,15 +506,15 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -522,120 +526,20 @@ const EX_DATA = [
     quadrant: 4,
     idxArray: [
       {
-        ID: 1,
+        ID: 8,
         missing: false,
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 2,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 3,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 4,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 5,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-        ],
-        MO: null,
-        MGJ: null,
-      },
-      {
-        ID: 6,
-        missing: false,
-        depended_side_data: [
-          {
-            side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
-          },
-          {
-            side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -647,35 +551,135 @@ const EX_DATA = [
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
         MGJ: null,
       },
       {
-        ID: 8,
+        ID: 6,
         missing: false,
         depended_side_data: [
           {
             side: "buccal",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
           {
             side: "lingual",
-            PD: [null, null, null],
-            RE: [null, null, null],
-            BOP: [false, false, false],
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 5,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 4,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 3,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 2,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+        ],
+        MO: null,
+        MGJ: null,
+      },
+      {
+        ID: 1,
+        missing: false,
+        depended_side_data: [
+          {
+            side: "buccal",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
+          },
+          {
+            side: "lingual",
+            PD: { mesial: null, middle: null, distal: null },
+            RE: { mesial: null, middle: null, distal: null },
+            BOP: { mesial: null, middle: null, distal: null },
           },
         ],
         MO: null,
@@ -692,8 +696,10 @@ export {
   SURNAME_MAX_LENGTH,
   DENTISTID_MAX_LENGTH,
   RTC_CONFIG,
+  URL_BACKEND,
   URL_BACKEND_STREAMING,
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY,
+  AUTO_CHANGE_QUADRANT_DELAY,
   EX_DATA,
 };

@@ -1,9 +1,9 @@
 .register-form {
-  width: 85%;
+  width: 100%;
 }
 
 .register-form__sections {
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   /* border: 1px solid yellowgreen; */
 }
 
@@ -14,7 +14,7 @@
 }
 
 .register-form__items-list li {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .register-form__items {

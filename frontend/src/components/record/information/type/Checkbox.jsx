@@ -9,13 +9,9 @@ function Checkbox({
   specific_id,
   data,
   handleSetInformation,
-  isFinish,
 }) {
-  const [isChecked, setIsChecked] = useState(data);
-
   const handleSelect = (target) => {
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
-    setIsChecked(target);
   };
 
   return (
@@ -23,12 +19,11 @@ function Checkbox({
       <input
         type="checkbox"
         onChange={() => {
-          handleSelect(!isChecked);
+          handleSelect(!data);
         }}
-        disabled={isFinish}
       />
       <span
-        className={`checkbox ${isChecked ? "checkbox--active" : ""}`}
+        className={`checkbox ${data ? "checkbox--active" : ""}`}
         // This element is purely decorative so
         // we hide it for screen readers
         aria-hidden="true"

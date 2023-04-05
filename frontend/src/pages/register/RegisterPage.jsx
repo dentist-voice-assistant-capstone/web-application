@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import RegisterForm from "../../components/register/RegisterForm";
 import Modal from "../../components/ui/Modal";
 import { userRegisterAPIHandler } from "../../utils/apiHandler";
+import NavBar from "../../components/ui/NavBar";
 
-import "./RegisterPage.css";
+import classes from "./RegisterPage.module.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -40,15 +41,20 @@ const RegisterPage = () => {
         />
       )}
       <div className="landing-page">
-        <div className="register centered">
-          <div className="register__label">Register</div>
-          <RegisterForm
-            onRegisterSubmit={registerSubmitHandler}
-            isEmailDuplicated={isEmailDuplicated}
-            setIsEmailDuplicated={setIsEmailDuplicated}
-          />
-          <div className="register__login">
-            Already have an account? <a href="/login">LOGIN HERE</a>
+        <NavBar isLoaded={false}></NavBar>
+        <div className={classes["image-section"]}>
+          <div className="centered">
+            <div className={classes.register}>
+              <div className={classes["register__label"]}>Register</div>
+              <RegisterForm
+                onRegisterSubmit={registerSubmitHandler}
+                isEmailDuplicated={isEmailDuplicated}
+                setIsEmailDuplicated={setIsEmailDuplicated}
+              />
+              <div className={classes["register__login"]}>
+                Already have an account? <a href="/login">LOGIN HERE</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

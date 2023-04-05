@@ -1,30 +1,246 @@
 import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
-import { useNavigate, useLocation } from "react-router-dom";
-import { startAPIHandler } from "../../utils/apiHandler";
+import { useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect, Fragment } from "react";
+import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
+import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
+import AuthContext from "../../store/auth-context";
+import InputModal from "../../components/ui/InputModal";
+import Modal from "../../components/ui/Modal";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  function startHandler() {
-    startAPIHandler(); // just console.log("starting")
-    navigate("/record");
+  const [userData, setUserData] = useState(null);
+  const [patientID, setPatientID] = useState("");
+  const [dentistID, setDentistID] = useState("");
+  const [isStart, setIsStart] = useState(false);
+  const [isContinue, setIsContinue] = useState(false);
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const [latestRecordData, setLatestRecordData] = useState(null);
+  const [isResumeButtonDisabled, setIsResumeButtonDisabled] = useState(true);
+
+  const [isResume, setIsResume] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const token = authCtx.token;
+  const isLoggedIn = authCtx.isLoggedIn;
+
+  const checkIsLatestRecordAbleToBeRestored = (latestRecordData) => {
+    if (!!latestRecordData && !latestRecordData.finished) {
+      setIsResumeButtonDisabled(false)
+    } else {
+      setIsResumeButtonDisabled(true)
+    }
   }
 
-  function editAccountMenuOnClickHandler() {
-    navigate("/account/edit");
+  const formatRecordTimeStamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }
+    const formattedDateString = date.toLocaleString('en-US', options)
+    return formattedDateString.replace(" at", ",")
+  }
+
+  useEffect(() => {
+    const fetchInformation = async (token) => {
+      let userData = await fetchUserInfoAPIHandler(token);
+      let latestRecordData = await fetchUserLatestRecordAPIHandler(token);
+      return { userData, latestRecordData };
+    }
+
+    // fetch userData and LatestRecordData
+    if (isLoggedIn) {
+      fetchInformation(token).then(({ userData, latestRecordData }) => {
+        console.log("userData:", userData)
+        console.log("latestRecordData:", latestRecordData)
+
+        checkIsLatestRecordAbleToBeRestored(latestRecordData)
+        setUserData(userData)
+        setLatestRecordData(latestRecordData)
+        setIsLoaded(true)
+      }).catch((err) => {
+        if (err.message === "Cannot connect to backend server") {
+          console.log(`${err.message}`);
+        }
+      })
+    }
+  }, []);
+
+  // console.log("userData", userData);
+
+  // Start New Recording ===============================================
+  function startHandler(mode = "new") {
+    if (mode === "new") {
+      navigate("/record", {
+        state: {
+          userData: userData,
+          patientID: patientID,
+          dentistID: dentistID,
+          mode: mode
+        },
+      });
+    } else if (mode === "resume") {
+      navigate("/record", {
+        state: {
+          userData: userData,
+          patientID: latestRecordData.patientId,
+          dentistID: userData.dentistID,
+          mode: mode,
+          latestInformation: latestRecordData.recordData
+        }
+      })
+    }
+  }
+
+  const checkIsStartHandler = () => {
+    if (isLoaded) {
+      setDentistID(userData.dentistID);
+      setIsStart((prevcheckIsStart) => {
+        return !prevcheckIsStart;
+      });
+
+      if (!isStart && !isContinue) {
+        setDentistID(userData.dentistID);
+        setPatientID("");
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const checkIsContinueHandler = () => {
+    checkIsStartHandler();
+    setIsContinue((prevcheckIsContinue) => {
+      return !prevcheckIsContinue;
+    });
+  };
+
+  const modalRecheckContent = (
+    <p>
+      Dentist ID: {dentistID}
+      <br />
+      Patient ID: {patientID}
+      <br />
+      Once confirmed,{" "}
+      <span style={{ color: "red" }}>
+        <b> this procedure cannot be reversed.</b>
+      </span>
+    </p>
+  );
+  // Resume Recording ===============================================
+  const checkIsResumeHandler = () => {
+    setIsResume((prevIsResume) => {
+      return !prevIsResume
+    })
+  }
+
+  let modalResumeContent;
+  if (latestRecordData) {
+    modalResumeContent = (
+      <div>
+        <p>
+          You have an unfinished record
+          <br />
+          Patient ID:
+          <b style={{ color: "black" }}>{" " + (latestRecordData.patientId !== "" ? latestRecordData.patientId : "<unknown>")}</b>
+          <br />
+          Time: <b style={{ color: "black" }}>{" " + formatRecordTimeStamp(latestRecordData.timestamp)}</b>
+          <br />
+        </p>
+        <p>
+          Press <b style={{ color: "green" }}>OK</b> to resume recording
+        </p>
+      </div>
+    )
   }
 
   return (
-    <div className="landing-page">
-      <NavBar email={"email"}></NavBar>
-      <div className={classes.actions}>
-        <button onClick={startHandler}>Start</button>
+    <Fragment>
+      {/* Modals */}
+      {isStart && (
+        <InputModal
+          header="Please enter required information"
+          modalType="input"
+          dentistID={dentistID}
+          patientID={patientID}
+          setDentistID={setDentistID}
+          setPatientID={setPatientID}
+          onCancelClick={checkIsStartHandler}
+          onOKClick={checkIsContinueHandler}
+        />
+      )}
+      {isContinue && (
+        <Modal
+          header="Confirm to continue"
+          content={modalRecheckContent}
+          onOKClick={() => { startHandler("new") }}
+          onCancelClick={checkIsContinueHandler}
+          okButtonText="Confirm"
+          modalType="input_confirm"
+        />
+      )}
+      {isResume && (
+        <Modal
+          header="Resume Recording"
+          modalType="input_confirm"
+          onOKClick={() => { startHandler("resume") }}
+          onCancelClick={checkIsResumeHandler}
+          content={modalResumeContent}
+        />
+      )}
+
+      <div className="landing-page">
+        <div className={classes["image-section"]}>
+          <div className={classes["top-bar"]}>
+            <NavBar
+              userData={userData}
+              isLoaded={isLoaded}
+              isEditEnable={true}
+            ></NavBar>
+          </div>
+          <div>
+            <h1 className={classes.header}>
+              Dentist Voice-Controlled Assistant
+            </h1>
+            <p className={classes.information}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ante
+              eros, aliquam et nisl vitae, accumsan volutpat tellus. Suspendisse
+              eget pharetra magna. Donec id nibh ac elit mollis finibus. Fusce
+              gravida turpis dui, vel vulputate ante scelerisque et. Ut finibus
+              diam quis ultrices vulputate. Nulla sapien turpis, ullamcorper sed
+              nibh a, viverra dignissim lectus. Pellentesque tincidunt imperdiet
+              odio, id aliquam nunc sodales et.
+            </p>
+          </div>
+          <div className={classes.actions}>
+            {isLoggedIn && (
+              <Fragment>
+                <button onClick={checkIsStartHandler}>Start New Recording</button>
+                <button onClick={checkIsResumeHandler} disabled={isResumeButtonDisabled}>Resume Recording</button>
+              </Fragment>
+            )}
+            {!isLoggedIn && (
+              <button onClick={checkIsStartHandler}>Getting Started</button>
+            )}
+
+          </div>
+          {/* <div className={classes.actions}>
+            <button onClick={editAccountMenuOnClickHandler}>
+              Account Edit
+            </button>
+          </div> */}
+        </div>
       </div>
-      <div className={classes.actions}>
-        <button onClick={editAccountMenuOnClickHandler}>Account Edit</button>
-      </div>
-    </div>
+    </Fragment>
   );
 };
 
