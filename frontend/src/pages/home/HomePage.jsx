@@ -12,7 +12,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
-  const [patienceID, setPatienceID] = useState("");
+  const [patientID, setPatientID] = useState("");
   const [dentistID, setDentistID] = useState("");
   const [isStart, setIsStart] = useState(false);
   const [isContinue, setIsContinue] = useState(false);
@@ -83,7 +83,7 @@ const HomePage = () => {
       navigate("/record", {
         state: {
           userData: userData,
-          patienceID: patienceID,
+          patientID: patientID,
           dentistID: dentistID,
           mode: mode
         },
@@ -92,7 +92,7 @@ const HomePage = () => {
       navigate("/record", {
         state: {
           userData: userData,
-          patienceID: latestRecordData.patientId,
+          patientID: latestRecordData.patientId,
           dentistID: userData.dentistID,
           mode: mode,
           latestInformation: latestRecordData.recordData
@@ -110,7 +110,7 @@ const HomePage = () => {
 
       if (!isStart && !isContinue) {
         setDentistID(userData.dentistID);
-        setPatienceID("");
+        setPatientID("");
       }
     } else {
       navigate("/login");
@@ -128,7 +128,7 @@ const HomePage = () => {
     <p>
       Dentist ID: {dentistID}
       <br />
-      Patience ID: {patienceID}
+      Patient ID: {patientID}
       <br />
       Once confirmed,{" "}
       <span style={{ color: "red" }}>
@@ -150,7 +150,7 @@ const HomePage = () => {
         <p>
           You have an unfinished record
           <br />
-          PatientID:
+          Patient ID:
           <b style={{ color: "black" }}>{" " + (latestRecordData.patientId !== "" ? latestRecordData.patientId : "<unknown>")}</b>
           <br />
           Time: <b style={{ color: "black" }}>{" " + formatRecordTimeStamp(latestRecordData.timestamp)}</b>
@@ -171,9 +171,9 @@ const HomePage = () => {
           header="Please enter required information"
           modalType="input"
           dentistID={dentistID}
-          patienceID={patienceID}
+          patientID={patientID}
           setDentistID={setDentistID}
-          setPatienceID={setPatienceID}
+          setPatientID={setPatientID}
           onCancelClick={checkIsStartHandler}
           onOKClick={checkIsContinueHandler}
         />

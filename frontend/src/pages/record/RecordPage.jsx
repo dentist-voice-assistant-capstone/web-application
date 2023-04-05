@@ -47,13 +47,13 @@ const RecordPage = () => {
 
   // retrieve information from state passed from the Homepage =========
   let userData = null;
-  let patienceID = null;
+  let patientID = null;
   let dentistID = null;
   let mode = null;
   let latestInformation = null;
   try {
     userData = state.state.userData;
-    patienceID = state.state.patienceID;
+    patientID = state.state.patientID;
     dentistID = state.state.dentistID;
     mode = state.state.mode;
     if (mode === "resume") {
@@ -63,7 +63,7 @@ const RecordPage = () => {
   }
   // =========== FOR TESTING ======================
   // const userData = { email: "test@hotmail.com" };
-  // const patienceID = "123456";
+  // const patientID = "123456";
   // const dentistID = "654321";
   // ===============================================
 
@@ -114,7 +114,7 @@ const RecordPage = () => {
 
     // updated record data to database *******************************
     postRecordAPIHandler(token, {
-      patientId: patienceID,
+      patientId: patientID,
       finished: false,
       recordData: newInformation
     });
@@ -146,7 +146,7 @@ const RecordPage = () => {
     setReLoginModal();
     authCtx.logout();
     navigate("/login");
-  }
+  };
 
   const checkFinishHandler = () => {
     /* if click "Finish" button, if the recording is not paused, pause the recording */
@@ -176,7 +176,7 @@ const RecordPage = () => {
       state: {
         information: information,
         userData: userData,
-        patienceID: patienceID,
+        patientID: patientID,
         dentistID: dentistID,
         date: date,
       },
@@ -184,7 +184,7 @@ const RecordPage = () => {
 
     // mark finished = true to the record kept in database
     postRecordAPIHandler(token, {
-      patientId: patienceID,
+      patientId: patientID,
       finished: true,
       recordData: latestInformation
     })
@@ -204,7 +204,7 @@ const RecordPage = () => {
       handleSetInformation,
       dispatchCurrentCommand
     );
-  }
+  };
 
   const initializeToothTableInformation = (latestInformation) => {
     setInformation(latestInformation)
@@ -332,16 +332,21 @@ const RecordPage = () => {
         );
         setUserId(userId);
       } else {
-        console.log("Failed to validate token, redirecting user back to login page")
+        console.log(
+          "Failed to validate token, redirecting user back to login page"
+        );
         setReLoginModal({
           header: "Re-Login needed",
           content: (
             <p>
-              <span style={{ color: "red" }}>Your session has already expired.</span> Re-login is needed.
-              The system will redirect you to the login page.
+              <span style={{ color: "red" }}>
+                Your session has already expired.
+              </span>{" "}
+              Re-login is needed. The system will redirect you to the login
+              page.
             </p>
           ),
-        })
+        });
       }
     });
   }, []);
@@ -364,7 +369,7 @@ const RecordPage = () => {
     }
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
-      console.log("clear connection from popstate...")
+      console.log("clear connection from popstate...");
       setTimeout(() => {
         window.removeEventListener("popstate", handleBeforeUnload);
       }, 0);
@@ -449,7 +454,7 @@ const RecordPage = () => {
         reconnectHandler={reconnectHandler}
       />
     </Fragment>
-  )
+  );
 
   const ReconnectingScreenToBeRendered = (
     <div className={`${classes["center-box"]} centered`}>
@@ -464,9 +469,7 @@ const RecordPage = () => {
     <div className={`${classes["center-box"]} centered`}>
       <FiCloudOff size="45px" />
       <p className={classes["waiting_text"]}>
-        <span style={{ color: "red" }}>
-          Failed to connect to the server
-        </span>
+        <span style={{ color: "red" }}>Failed to connect to the server</span>
         <br /> Please try again later.
       </p>
       <div className={classes["controls"]}>
@@ -489,12 +492,13 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (isOnceConnected) { // add true for testing
-    CenterComponentToBeRendered = PDRETableComponentToBeRendered
+  if (isOnceConnected) {
+    // add true for testing
+    CenterComponentToBeRendered = PDRETableComponentToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
-    CenterComponentToBeRendered = ReconnectingScreenToBeRendered
+    CenterComponentToBeRendered = ReconnectingScreenToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && socketFailedToConnect) {
-    CenterComponentToBeRendered = FailedToConnectScreenToBeRendered
+    CenterComponentToBeRendered = FailedToConnectScreenToBeRendered;
   }
 
   return (
@@ -524,7 +528,7 @@ const RecordPage = () => {
         <div className={classes["top_bar"]}>
           <TopInformationBar
             date={date}
-            patienceID={patienceID}
+            patientID={patientID}
             dentistID={dentistID}
             isSummary={false}
           />
@@ -532,13 +536,12 @@ const RecordPage = () => {
         {/* testing button -> reset the table (doesn't work now T_T) */}
         <button onClick={() => {
           console.log("hihi");
-          setInformation(EX_DATA);
         }}> test </button>
 
         {/* Center */}
         {CenterComponentToBeRendered}
       </div>
     </Fragment>
-  )
+  );
 };
 export default RecordPage;

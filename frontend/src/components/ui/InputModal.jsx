@@ -36,12 +36,12 @@ const InputModal = (props) => {
           />
         </div>
         <div className={classes["input_modal__control"]}>
-          <label htmlFor="Patience-ID">Patience ID</label>
+          <label htmlFor="Patient-ID">Patient ID</label>
           <input
-            type="Patience-ID"
-            id="Patience-ID"
-            onChange={(e) => props.setPatienceID(e.target.value)}
-            value={props.patienceID}
+            type="Patient-ID"
+            id="Patient-ID"
+            onChange={(e) => props.setPatientID(e.target.value)}
+            value={props.patientID}
           />
         </div>
 

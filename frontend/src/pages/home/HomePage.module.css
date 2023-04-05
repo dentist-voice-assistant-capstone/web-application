@@ -110,23 +110,6 @@
     background-color: #acad90;
     width: auto;
   }
-  /* .image-section {
-    position: relative;
-    background-color: #acad90;
-    background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
-  }
-
-  .image-section:before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 250px;
-    background: url(https://media.geeksforgeeks.org/wp-content/uploads/20200326181026/wave3.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-  } */
 }
 
 /* WideScreen */
