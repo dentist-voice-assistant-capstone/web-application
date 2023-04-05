@@ -19,10 +19,9 @@ function DropdownSm({
 
   const REDropdown = (
     <DropdownButton
-      className={`${classes["smallbox"]} ${
-        isHighlighted ? classes["highlighted"] : ""
-      }`}
-      title={data}
+      className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="">-</Dropdown.Item>
@@ -52,10 +51,9 @@ function DropdownSm({
 
   const PDDropdown = (
     <DropdownButton
-      className={`${classes["smallbox"]} ${
-        isHighlighted ? classes["highlighted"] : ""
-      }`}
-      title={data}
+      className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="">-</Dropdown.Item>

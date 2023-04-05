@@ -17,10 +17,9 @@ function DropdownLg({
   };
   return (
     <DropdownButton
-      className={`${classes["largebox"]} ${
-        isHighlighted ? classes["highlighted"] : ""
-      }`}
-      title={data}
+      className={`${classes["largebox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="">-</Dropdown.Item>
