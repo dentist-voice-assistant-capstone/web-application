@@ -14,21 +14,14 @@ const fetchUserLatestRecordAPIHandler = async (token) => {
   }
 }
 
-const postRecordAPIHandler = async (token, recordData, patientId = "", finished = false) => {
+const postRecordAPIHandler = async (token, recordDataToPost) => {
+  console.log("posting record to backend -> database")
+  console.log(recordDataToPost)
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-
-  const recordDataToPost = {
-    patientId: patientId,
-    finished: finished,
-    recordData: recordData
-  }
-
   const result = await axios.post(RECORD_ENDPOINT, recordDataToPost, config);
-  console.log("posting record to backend -> database")
   console.log(result)
 }
 
 export { fetchUserLatestRecordAPIHandler, postRecordAPIHandler };
-

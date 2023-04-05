@@ -22,6 +22,7 @@ import classes from "./RecordPage.module.css";
 /* import related data and functions */
 import { EX_DATA } from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+import { getListOfMissingToothFromInformation } from "../../utils/toothLogic";
 import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
 import { postRecordAPIHandler } from "../../utils/recordAPIHandler";
 
@@ -33,126 +34,9 @@ import {
   stopAudioStreaming,
   terminateConnection,
 } from "../../utils/socketWebRTCHandler";
-import { getToothStartPosition } from "../../utils/toothLogic";
+import { defaultCurrentCommand, currentCommandReducer } from "../../utils/toothLogic";
 
-const defaultCurrentCommand = {
-  command: null,
-  tooth: null,
-  side: null,
-  position: null,
-  quadrant: 1,
-};
-
-const currentCommandReducer = (prevCommand, action) => {
-  switch (action.type) {
-    case "CLEAR_COMMAND":
-      return defaultCurrentCommand;
-    case "UPDATE_COMMAND":
-      // if the quadrant is changed, then set new quadrant
-      let quadrant = prevCommand.quadrant;
-      if (!!action.payload.tooth) {
-        let newQuadrant = parseInt(action.payload.tooth.slice(0, 1));
-        quadrant = newQuadrant;
-      }
-      return { ...action.payload, quadrant };
-
-    case "NEXT_TOOTH":
-      if (!!!action.payload.next_tooth) {
-        return prevCommand;
-      }
-      let position = null;
-      if (action.payload.mode === "RE") {
-        position = getToothStartPosition(
-          action.payload.next_tooth.q,
-          action.payload.next_tooth.i,
-          prevCommand.side
-        );
-      }
-
-      let nextToothCommand = {
-        command: prevCommand.command,
-        tooth:
-          action.payload.next_tooth.q.toString() +
-          action.payload.next_tooth.i.toString(),
-        side: prevCommand.side,
-        position: position,
-        quadrant: action.payload.next_tooth.q,
-      };
-      return nextToothCommand;
-    case "UPDATE_PDRE_POSITION":
-      /* this action will work when the system receive the RE value of 
-        the latest tooth position
-      */
-      if (
-        prevCommand.command !== "PDRE" ||
-        !!!prevCommand.side ||
-        !!!prevCommand.tooth ||
-        !!!prevCommand.position ||
-        !!!action.payload ||
-        !!!action.payload.tooth ||
-        !!!action.payload.side ||
-        !!!action.payload.position
-      ) {
-        return prevCommand;
-      }
-
-      let tooth = prevCommand.tooth;
-      let q = parseInt(tooth.slice(0, 1));
-      let currentSide = prevCommand.side.toLowerCase();
-      let currentPosition = prevCommand.position.toLowerCase();
-
-      if (
-        tooth !== action.payload.tooth ||
-        currentSide !== action.payload.side.toLowerCase() ||
-        currentPosition !== action.payload.position.toLowerCase()
-      ) {
-        return prevCommand;
-      }
-
-      let positionArray;
-      if (
-        ((q === 1 || q === 3) && currentSide === "buccal") ||
-        ((q === 2 || q === 4) && currentSide === "lingual")
-      ) {
-        positionArray = ["distal", "middle", "mesial"];
-      } else if (
-        ((q === 1 || q === 3) && currentSide === "lingual") ||
-        ((q === 2 || q === 4) && currentSide === "buccal")
-      ) {
-        positionArray = ["mesial", "middle", "distal"];
-      }
-
-      let currentPositionIndex = positionArray.findIndex(
-        (p) => p === currentPosition
-      );
-
-      // console.log("currentPositionIndex", currentPositionIndex);
-
-      // stay at the same zee, just move the position
-      if (currentPositionIndex < 2) {
-        let newPosition = positionArray[currentPositionIndex + 1];
-        return {
-          command: "PDRE",
-          tooth: tooth,
-          side: currentSide,
-          position: newPosition,
-          quadrant: q,
-        };
-      } else {
-        return prevCommand;
-      }
-    case "CHANGE_QUADRANT":
-      let quadrantToChange = action.payload.quadrant;
-      if (quadrantToChange !== prevCommand.quadrant) {
-        return { ...prevCommand, quadrant: quadrantToChange };
-      } else {
-        return prevCommand;
-      }
-
-    default:
-      return prevCommand;
-  }
-};
+const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
 
 const RecordPage = () => {
   const navigate = useNavigate();
@@ -161,13 +45,20 @@ const RecordPage = () => {
   const authCtx = useContext(AuthContext);
   const token = authCtx.token;
 
+  // retrieve information from state passed from the Homepage =========
   let userData = null;
   let patienceID = null;
   let dentistID = null;
+  let mode = null;
+  let latestInformation = null;
   try {
     userData = state.state.userData;
     patienceID = state.state.patienceID;
     dentistID = state.state.dentistID;
+    mode = state.state.mode;
+    if (mode === "resume") {
+      latestInformation = state.state.latestInformation
+    }
   } catch (err) {
   }
   // =========== FOR TESTING ======================
@@ -209,7 +100,25 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
-  const [information, setInformation] = useState(JSON.parse(JSON.stringify(EX_DATA))); // deep copy
+  const [information, setInformation] = useState(defaultInformation);
+
+  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
+    console.log(information)
+
+    const newInformation = information.map((obj) => {
+      return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
+    });
+    setInformation(newInformation);
+
+    // updated record data to database *******************************
+    postRecordAPIHandler(token, {
+      patientId: patienceID,
+      finished: false,
+      recordData: newInformation
+    });
+    // ***************************************************************
+  };
+
   const [checkFinish, setCheckFinish] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
 
@@ -229,9 +138,8 @@ const RecordPage = () => {
     });
   };
 
-  /* states for modals */
+  /* states for relogin modal */
   const [reLoginModal, setReLoginModal] = useState(null);
-
   const reLoginModalOKHandler = () => {
     setReLoginModal();
     authCtx.logout();
@@ -248,7 +156,7 @@ const RecordPage = () => {
     });
   };
 
-  const confirmHandler = () => {
+  const confirmHandler = (latestInformation) => {
     setIsFinish(true);
     checkFinishHandler();
     terminateConnection(
@@ -271,17 +179,13 @@ const RecordPage = () => {
         date: date,
       },
     });
-  };
 
-  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
-    const newInformation = information.map((obj) => {
-      return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
-    });
-    setInformation(newInformation);
-
-    // updated record data to database *******************************
-    postRecordAPIHandler(token, newInformation, patienceID);
-    // ***************************************************************
+    // mark finished = true to the record kept in database
+    postRecordAPIHandler(token, {
+      patientId: patienceID,
+      finished: true,
+      recordData: latestInformation
+    })
   };
 
   const reconnectHandler = () => {
@@ -298,6 +202,16 @@ const RecordPage = () => {
       handleSetInformation,
       dispatchCurrentCommand
     );
+  }
+
+  const initializeToothTableInformation = (latestInformation) => {
+    setInformation(latestInformation)
+    const missingToothList = getListOfMissingToothFromInformation(latestInformation)
+    // send missing tooth to backend, once reconnects
+    for (const missingToothObj of missingToothList) {
+      console.log("missing tooth from latestData", missingToothObj)
+      addToothMissing(socket, missingToothObj.q, missingToothObj.i);
+    }
   }
 
   // ========================================================================
@@ -340,6 +254,7 @@ const RecordPage = () => {
         setIsOnceConnected(true);
       }
       setIsNotConnected(false)
+      initializeToothTableInformation(information)
       console.log("play sound connection success here...")
       // ---------------------------------------------------------------
     }
@@ -362,27 +277,32 @@ const RecordPage = () => {
   }
 
   // FOR TESTING ================================================================
-  if (!!socket && !!peerConnection && !!localStream) {
-    console.log({
-      "peerConnection": !!peerConnection,
-      "peerConnection.connectionState": peerConnection.connectionState,
-      "peerConnection.iceConnectionState": peerConnection.iceConnectionState,
-      "socket": !!socket,
-      "isSocketConnected": isSocketConnected,
-      "isSocketReconnecting": isSocketReconnecting,
-      "socketFailedToConnect": socketFailedToConnect,
-      "localStream": localStream,
-      "isPaused": isPaused,
-      "isAudioStreaming": isAudioStreaming,
-      "isConnectionReady": isConnectionReady,
-      "webRTCFailedToConnect": webRTCFailedToConnect
-    })
-  }
+  // if (!!socket && !!peerConnection && !!localStream) {
+  //   console.log({
+  //     "peerConnection": !!peerConnection,
+  //     "peerConnection.connectionState": peerConnection.connectionState,
+  //     "peerConnection.iceConnectionState": peerConnection.iceConnectionState,
+  //     "socket": !!socket,
+  //     "isSocketConnected": isSocketConnected,
+  //     "isSocketReconnecting": isSocketReconnecting,
+  //     "socketFailedToConnect": socketFailedToConnect,
+  //     "localStream": localStream,
+  //     "isPaused": isPaused,
+  //     "isAudioStreaming": isAudioStreaming,
+  //     "isConnectionReady": isConnectionReady,
+  //     "webRTCFailedToConnect": webRTCFailedToConnect
+  //   })
+  // }
   // ===========================================================================
   /* put '[]' in the second parameter of the useEffect to ensure that useEffect only runs once,
    when first render */
   useEffect(() => {
-    /* when the page loads, validate the token kept in authCtx first by sending GET request to the backend, 
+    /* when the page is loaded, instantiate the periodontal information based on the "mode" given */
+    if (mode === "resume") {
+      setInformation(latestInformation)
+    }
+
+    /* validate the token kept in authCtx first by sending GET request to the backend, 
       if the token is valid, it should return the associated user_id back. 
     */
     const validateToken = async () => {
@@ -438,8 +358,7 @@ const RecordPage = () => {
         setWebRTCFailedToConnect
       );
       // clear data in the table
-      console.log("clear data in the table", EX_DATA)
-      setInformation(EX_DATA);
+      setInformation(defaultInformation);
     }
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
@@ -583,7 +502,7 @@ const RecordPage = () => {
         <Modal
           header="Confirm Information"
           content={modalConfirmContent}
-          onOKClick={confirmHandler}
+          onOKClick={() => { confirmHandler(information) }}
           onCancelClick={checkFinishHandler}
           okButtonText="Save"
           modalType="confirm"

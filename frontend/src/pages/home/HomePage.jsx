@@ -2,10 +2,7 @@ import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect, Fragment } from "react";
-import {
-  startAPIHandler,
-  fetchUserInfoAPIHandler,
-} from "../../utils/apiHandler";
+import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
 import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
@@ -37,7 +34,6 @@ const HomePage = () => {
     } else {
       setIsResumeButtonDisabled(true)
     }
-    console.log("haha")
   }
 
   const formatRecordTimeStamp = (timestamp) => {
@@ -82,15 +78,27 @@ const HomePage = () => {
   // console.log("userData", userData);
 
   // Start New Recording ===============================================
-  function startHandler() {
-    startAPIHandler();
-    navigate("/record", {
-      state: {
-        userData: userData,
-        patienceID: patienceID,
-        dentistID: dentistID,
-      },
-    });
+  function startHandler(mode = "new") {
+    if (mode === "new") {
+      navigate("/record", {
+        state: {
+          userData: userData,
+          patienceID: patienceID,
+          dentistID: dentistID,
+          mode: mode
+        },
+      });
+    } else if (mode === "resume") {
+      navigate("/record", {
+        state: {
+          userData: userData,
+          patienceID: latestRecordData.patientId,
+          dentistID: userData.dentistID,
+          mode: mode,
+          latestInformation: latestRecordData.recordData
+        }
+      })
+    }
   }
 
   const checkIsStartHandler = () => {
@@ -174,7 +182,7 @@ const HomePage = () => {
         <Modal
           header="Confirm to continue"
           content={modalRecheckContent}
-          onOKClick={startHandler}
+          onOKClick={() => { startHandler("new") }}
           onCancelClick={checkIsContinueHandler}
           okButtonText="Confirm"
           modalType="input_confirm"
@@ -184,6 +192,7 @@ const HomePage = () => {
         <Modal
           header="Resume Recording"
           modalType="input_confirm"
+          onOKClick={() => { startHandler("resume") }}
           onCancelClick={checkIsResumeHandler}
           content={modalResumeContent}
         />

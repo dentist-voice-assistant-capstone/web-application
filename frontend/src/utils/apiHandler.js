@@ -139,10 +139,6 @@ const userLoginAPIHandler = (
     });
 };
 
-const startAPIHandler = () => {
-  console.log("Starting");
-};
-
 // const fetchUserInfoAPIHandler = (
 //   token,
 //   setUserData,
@@ -316,14 +312,12 @@ const checkUserTokenAPIHandler = async (token) => {
     console.log(response.status, response.statusText)
     return null;
   }
-
 }
 
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
   userLoginAPIHandler,
-  startAPIHandler,
   fetchUserInfoAPIHandler,
   updateUserProfileAPIHandler,
   updateUserPasswordAPIHandler,
