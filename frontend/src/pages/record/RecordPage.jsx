@@ -100,7 +100,9 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
-  const [information, setInformation] = useState(defaultInformation);
+  const startInformation = mode === "resume" ? latestInformation : defaultInformation
+
+  const [information, setInformation] = useState(startInformation);
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     console.log(information)
