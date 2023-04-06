@@ -98,7 +98,11 @@
   transition: var(--transition-hover);
 }
 
-.input_modal.input .input_modal__actions button.input_button {
+.input_modal.input .input_modal__actions button.ok_button:disabled {
+  background-color: gray;
+}
+
+/* .input_modal.input .input_modal__actions button.input_button {
   color: white;
   background-color: green;
 }
@@ -106,7 +110,7 @@
 .input_modal.input .input_modal__actions button.input_button:hover {
   background-color: var(--primary-color-hover);
   transition: var(--transition-hover);
-}
+} */
 
 .input_modal.input .input_modal__actions button.cancel_button {
   background-color: white;
@@ -134,7 +138,6 @@
 .input_modal__control {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   padding-right: 10px;
   margin-bottom: 1rem;
@@ -143,9 +146,17 @@
 }
 
 .input_modal__control label {
-  width: 150px;
+  display: flex;
+  justify-content: right;
+  width: 7.5em;
+  height: 100%;
   text-align: right;
   font-size: 20px;
+}
+
+.input_modal__control > div {
+  margin-left: 1.5em;
+  width: 30em;
 }
 
 .input_modal__control input {
@@ -153,8 +164,16 @@
   font: inherit;
   border-radius: 10px;
   border: 0;
-  margin-left: 3%;
-  padding: 0.25rem;
   width: 100%;
+  padding: 0.3rem 0.8rem 0.3rem 0.8rem;
   background-color: #ececec;
+}
+
+.input_modal__control.invalid input {
+  border: 1px solid var(--primary-color-error);
+}
+
+.input_modal__control div p {
+  font-size: 12px;
+  margin-bottom: 0;
 }

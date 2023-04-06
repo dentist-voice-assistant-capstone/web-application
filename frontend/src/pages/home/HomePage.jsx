@@ -66,6 +66,7 @@ const HomePage = () => {
         checkIsLatestRecordAbleToBeRestored(latestRecordData)
         setUserData(userData)
         setLatestRecordData(latestRecordData)
+        setDentistID(userData.dentistID)
         setIsLoaded(true)
       }).catch((err) => {
         if (err.message === "Cannot connect to backend server") {
@@ -77,9 +78,8 @@ const HomePage = () => {
 
   // console.log("userData", userData);
 
-  // Start New Recording ===============================================
   function startHandler(mode = "new") {
-    if (mode === "new") {
+    if (mode === "new") { /* start a new recording */
       navigate("/record", {
         state: {
           userData: userData,
@@ -88,7 +88,7 @@ const HomePage = () => {
           mode: mode
         },
       });
-    } else if (mode === "resume") {
+    } else if (mode === "resume") { /* resume recording */
       navigate("/record", {
         state: {
           userData: userData,
@@ -104,21 +104,21 @@ const HomePage = () => {
   const checkIsStartHandler = () => {
     if (isLoaded) {
       setDentistID(userData.dentistID);
+      setPatientID("");
       setIsStart((prevcheckIsStart) => {
         return !prevcheckIsStart;
       });
-
-      if (!isStart && !isContinue) {
-        setDentistID(userData.dentistID);
-        setPatientID("");
-      }
     } else {
       navigate("/login");
     }
   };
 
   const checkIsContinueHandler = () => {
-    checkIsStartHandler();
+    // hide "Please enter required information" modal
+    setIsStart((prevcheckIsStart) => {
+      return !prevcheckIsStart;
+    });
+    // show "Confirm to continue" modal 
     setIsContinue((prevcheckIsContinue) => {
       return !prevcheckIsContinue;
     });
@@ -136,7 +136,7 @@ const HomePage = () => {
       </span>
     </p>
   );
-  // Resume Recording ===============================================
+
   const checkIsResumeHandler = () => {
     setIsResume((prevIsResume) => {
       return !prevIsResume
@@ -170,7 +170,7 @@ const HomePage = () => {
         <InputModal
           header="Please enter required information"
           modalType="input"
-          dentistID={dentistID}
+          dentistID={userData.dentistID}
           patientID={patientID}
           setDentistID={setDentistID}
           setPatientID={setPatientID}

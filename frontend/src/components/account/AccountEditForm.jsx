@@ -2,6 +2,8 @@ import useInput from "../../hooks/use-input";
 import {
   validateMaxLength,
   validateEnglishLetter,
+  validateIllegalFileNameCharacters,
+  validateNoBlankValue
 } from "../../utils/validator";
 import {
   NAME_MAX_LENGTH,
@@ -48,7 +50,7 @@ const AccountEditForm = (props) => {
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
     reset: resetDentistID,
-  } = useInput("Dentist ID", [validateMaxLength], {
+  } = useInput("Dentist ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
     defaultValue: userDefaultData.dentistID,
   });
@@ -106,9 +108,8 @@ const AccountEditForm = (props) => {
       </div>
 
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasNameError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasNameError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="name">Name</label>
         <br />
@@ -125,9 +126,8 @@ const AccountEditForm = (props) => {
       </div>
 
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasSurnameError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasSurnameError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="surname">Surname</label>
         <br />
@@ -146,9 +146,8 @@ const AccountEditForm = (props) => {
       </div>
 
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasDentistIdError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasDentistIdError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="dentistId">Dentist ID</label>
         <br />
