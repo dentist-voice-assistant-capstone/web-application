@@ -7,6 +7,7 @@ import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
 import Modal from "../../components/ui/Modal";
+import { MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD } from "../../utils/constants";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,21 @@ const HomePage = () => {
   const isLoggedIn = authCtx.isLoggedIn;
 
   const checkIsLatestRecordAbleToBeRestored = (latestRecordData) => {
-    if (!!latestRecordData && !latestRecordData.finished) {
+    if (!!!latestRecordData) {
+      setIsResumeButtonDisabled(true)
+      return
+    }
+    if (!latestRecordData.finished) {
+      setIsResumeButtonDisabled(false)
+      return
+    }
+    // Convert timestamp to milliseconds
+    const recordTimestamp = Date.parse(latestRecordData.timestamp)
+    // Get the current time in milliseconds
+    const currentTimestamp = new Date().getTime();
+    // Calculate the difference between the current time and the timestamp
+    const timeDifference = currentTimestamp - recordTimestamp
+    if (timeDifference <= MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD) {
       setIsResumeButtonDisabled(false)
     } else {
       setIsResumeButtonDisabled(true)
@@ -44,10 +59,10 @@ const HomePage = () => {
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: false
+      hourCycle: 'h23',
     }
     const formattedDateString = date.toLocaleString('en-US', options)
-    return formattedDateString.replace(" at", ",")
+    return formattedDateString.replace(" at", "")
   }
 
   useEffect(() => {
