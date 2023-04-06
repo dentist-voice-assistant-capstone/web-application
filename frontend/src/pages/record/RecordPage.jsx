@@ -1,5 +1,5 @@
 /* import React Libraries */
-import { useState, useEffect, useReducer, useContext, Fragment } from "react";
+import { useState, useEffect, useReducer, useContext, useRef, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 /* import Custom Components */
@@ -20,7 +20,7 @@ import { FiCloudOff } from "react-icons/fi";
 import classes from "./RecordPage.module.css";
 
 /* import related data and functions */
-import { EX_DATA } from "../../utils/constants";
+import { EX_DATA, UPDATE_RECORD_EVERY_MILLISECONDS } from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 import { getListOfMissingToothFromInformation } from "../../utils/toothLogic";
 import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
@@ -101,23 +101,40 @@ const RecordPage = () => {
 
   /* states for teeth information */
   const startInformation = mode === "resume" ? latestInformation : defaultInformation
-
   const [information, setInformation] = useState(startInformation);
 
-  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
-    console.log(information)
+  /* state for keeping the interval id to update record */
+  const updateInformationIntervalIdRef = useRef(null);
+  const startUpdateInformationInterval = () => {
+    console.log("start timer...")
+    const id = setInterval(() => {
+      console.log("timer executed...")
+      postRecordAPIHandler(token, {
+        patientId: patientID,
+        finished: false,
+        recordData: information
+      })
+    }, UPDATE_RECORD_EVERY_MILLISECONDS)
+    updateInformationIntervalIdRef.current = id;
+  }
+  const stopUpdateInformationInterval = () => {
+    console.log("stop timer...")
+    clearInterval(updateInformationIntervalIdRef.current)
+    updateInformationIntervalIdRef.current = null;
+  }
 
+  const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
       return teethInformationHandler(obj, q, i, side, mode, target, spec_id);
     });
     setInformation(newInformation);
 
-    // updated record data to database *******************************
-    postRecordAPIHandler(token, {
-      patientId: patientID,
-      finished: false,
-      recordData: newInformation
-    });
+    // updated record data to database immediately ********************
+    // postRecordAPIHandler(token, {
+    //   patientId: patientID,
+    //   finished: false,
+    //   recordData: newInformation
+    // });
     // ***************************************************************
   };
 
@@ -161,6 +178,7 @@ const RecordPage = () => {
   const confirmHandler = (latestInformation) => {
     setIsFinish(true);
     checkFinishHandler();
+    stopUpdateInformationInterval();
     terminateConnection(
       socket,
       peerConnection,
@@ -171,7 +189,6 @@ const RecordPage = () => {
       setIsAudioStreaming,
       setWebRTCFailedToConnect
     );
-
     navigate("/summary", {
       state: {
         information: information,
@@ -251,29 +268,30 @@ const RecordPage = () => {
     currentConnectionStatus = "Connected";
 
     if (isNotConnected) {
-      // detect connected after connection lost ------------------------
+      // detect connected 
       if (!isOnceConnected) {
         setIsOnceConnected(true);
       }
-      setIsNotConnected(false)
-      initializeToothTableInformation(information)
-      console.log("play sound connection success here...")
-      // ---------------------------------------------------------------
+      setIsNotConnected(false);
+      initializeToothTableInformation(information);
+      startUpdateInformationInterval();
+      console.log("play sound connection success here...");
+
     }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
-    // detect connection lost after connected --------------------------
+    // detect connection lost after connected 
     if (!isNotConnected) {
-      setIsNotConnected(true)
+      setIsNotConnected(true);
+      stopUpdateInformationInterval();
     }
-    // -----------------------------------------------------------------
+
   } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
     currentConnectionStatus = "Disconnected";
-    // detect connection lost after connected --------------------------
+    // detect connection lost after connected 
     if (!isNotConnected) {
-      setIsNotConnected(true)
+      setIsNotConnected(true);
     }
-    // -----------------------------------------------------------------
   } else {
     currentConnectionStatus = "Unknown";
   }
@@ -370,6 +388,7 @@ const RecordPage = () => {
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
       console.log("clear connection from popstate...");
+      stopUpdateInformationInterval();
       setTimeout(() => {
         window.removeEventListener("popstate", handleBeforeUnload);
       }, 0);

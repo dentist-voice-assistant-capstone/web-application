@@ -21,11 +21,16 @@ const RTC_CONFIG = {
 };
 
 // socket reconnection
-const SOCKET_RECONNECTION_ATTEMPTS = 3;
+const SOCKET_RECONNECTION_ATTEMPTS = 5;
 const SOCKET_RECONNECTION_DELAY = 500; //milliseconds
 
 // Auto change Quadrant Delay
 const AUTO_CHANGE_QUADRANT_DELAY = 1000; //milliseconds
+
+// Update Record Interval
+const UPDATE_RECORD_EVERY_MILLISECONDS = 10000 //milliseconds
+
+const MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD = 24 * 60 * 60 * 1000 // 1 day in milliseconds
 
 const EX_DATA = [
   {
@@ -704,5 +709,7 @@ export {
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY,
   AUTO_CHANGE_QUADRANT_DELAY,
+  UPDATE_RECORD_EVERY_MILLISECONDS,
+  MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD,
   EX_DATA,
 };
