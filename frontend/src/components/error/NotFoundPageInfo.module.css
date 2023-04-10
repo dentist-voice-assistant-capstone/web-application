@@ -1,0 +1,38 @@
+.header {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 4rem;
+}
+
+.detail {
+  text-align: center;
+  font-size: 18px;
+  color: rgb(175, 17, 17);
+}
+
+.actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.actions button {
+  border-radius: 10px;
+  font-size: 18px;
+  width: 50%;
+  height: 40px;
+  border: 0;
+  background-color: black;
+  color: white;
+}
+
+.actions button:disabled,
+.actions button:disabled:hover {
+  background-color: gray;
+  transition: var(--transition-hover);
+}
+
+.actions button:hover {
+  background-color: rgb(13, 45, 185);
+  transition: var(--transition-hover);
+}
