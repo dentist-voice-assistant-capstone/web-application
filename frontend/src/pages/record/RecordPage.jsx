@@ -35,6 +35,7 @@ import {
   terminateConnection,
 } from "../../utils/socketWebRTCHandler";
 import { defaultCurrentCommand, currentCommandReducer } from "../../utils/toothLogic";
+import { playConnectionSound } from "../../utils/soundPlayerHandler";
 
 const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
 
@@ -275,8 +276,7 @@ const RecordPage = () => {
       setIsNotConnected(false);
       initializeToothTableInformation(information);
       startUpdateInformationInterval();
-      console.log("play sound connection success here...");
-
+      playConnectionSound(currentConnectionStatus);
     }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
@@ -284,11 +284,11 @@ const RecordPage = () => {
     if (!isNotConnected) {
       setIsNotConnected(true);
       stopUpdateInformationInterval();
+      playConnectionSound(currentConnectionStatus);
     }
 
   } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
     currentConnectionStatus = "Disconnected";
-    // detect connection lost after connected 
     if (!isNotConnected) {
       setIsNotConnected(true);
     }
@@ -552,10 +552,10 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
-        {/* testing button -> reset the table (doesn't work now T_T) */}
+        {/* test button */}
         <button onClick={() => {
-          console.log("hihi");
-        }}> test </button>
+          // new Audio(connectedSound).play()
+        }}> test</button>
 
         {/* Center */}
         {CenterComponentToBeRendered}
