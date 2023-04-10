@@ -52,7 +52,7 @@ const RegisterPage = () => {
                 setIsEmailDuplicated={setIsEmailDuplicated}
               />
               <div className={classes["register__login"]}>
-                Already have an account? <a href="/login">LOGIN HERE</a>
+                Already have an account? <a href="/login" style={{ marginLeft: "1em" }}>LOGIN HERE</a>
               </div>
             </div>
           </div>

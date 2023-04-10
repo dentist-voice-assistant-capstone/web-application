@@ -5,6 +5,7 @@ import {
   AUTO_CHANGE_QUADRANT_DELAY
 } from "../utils/constants";
 import { getToothStartPosition } from "./toothLogic";
+import { playConnectionSound } from "./soundPlayerHandler";
 
 /* Import modules for using sockets */
 import io from "socket.io-client";
@@ -125,6 +126,8 @@ const initiateConnection = async (
     setIsSocketReconnecting(false)
     // mark that it is fail to connect at the moment
     setSocketFailedToConnect(true)
+
+    playConnectionSound("Disconnected");
   })
 
   // 2.2) events for SDP Exchange

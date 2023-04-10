@@ -7,6 +7,7 @@ import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
 import Modal from "../../components/ui/Modal";
+import { MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD } from "../../utils/constants";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,21 @@ const HomePage = () => {
   const isLoggedIn = authCtx.isLoggedIn;
 
   const checkIsLatestRecordAbleToBeRestored = (latestRecordData) => {
-    if (!!latestRecordData && !latestRecordData.finished) {
+    if (!!!latestRecordData) {
+      setIsResumeButtonDisabled(true)
+      return
+    }
+    if (!latestRecordData.finished) {
+      setIsResumeButtonDisabled(false)
+      return
+    }
+    // Convert timestamp to milliseconds
+    const recordTimestamp = Date.parse(latestRecordData.timestamp)
+    // Get the current time in milliseconds
+    const currentTimestamp = new Date().getTime();
+    // Calculate the difference between the current time and the timestamp
+    const timeDifference = currentTimestamp - recordTimestamp
+    if (timeDifference <= MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD) {
       setIsResumeButtonDisabled(false)
     } else {
       setIsResumeButtonDisabled(true)
@@ -44,10 +59,10 @@ const HomePage = () => {
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: false
+      hourCycle: 'h23',
     }
     const formattedDateString = date.toLocaleString('en-US', options)
-    return formattedDateString.replace(" at", ",")
+    return formattedDateString.replace(" at", "")
   }
 
   useEffect(() => {
@@ -66,6 +81,7 @@ const HomePage = () => {
         checkIsLatestRecordAbleToBeRestored(latestRecordData)
         setUserData(userData)
         setLatestRecordData(latestRecordData)
+        setDentistID(userData.dentistID)
         setIsLoaded(true)
       }).catch((err) => {
         if (err.message === "Cannot connect to backend server") {
@@ -77,9 +93,8 @@ const HomePage = () => {
 
   // console.log("userData", userData);
 
-  // Start New Recording ===============================================
   function startHandler(mode = "new") {
-    if (mode === "new") {
+    if (mode === "new") { /* start a new recording */
       navigate("/record", {
         state: {
           userData: userData,
@@ -88,7 +103,7 @@ const HomePage = () => {
           mode: mode
         },
       });
-    } else if (mode === "resume") {
+    } else if (mode === "resume") { /* resume recording */
       navigate("/record", {
         state: {
           userData: userData,
@@ -104,21 +119,21 @@ const HomePage = () => {
   const checkIsStartHandler = () => {
     if (isLoaded) {
       setDentistID(userData.dentistID);
+      setPatientID("");
       setIsStart((prevcheckIsStart) => {
         return !prevcheckIsStart;
       });
-
-      if (!isStart && !isContinue) {
-        setDentistID(userData.dentistID);
-        setPatientID("");
-      }
     } else {
       navigate("/login");
     }
   };
 
   const checkIsContinueHandler = () => {
-    checkIsStartHandler();
+    // hide "Please enter required information" modal
+    setIsStart((prevcheckIsStart) => {
+      return !prevcheckIsStart;
+    });
+    // show "Confirm to continue" modal 
     setIsContinue((prevcheckIsContinue) => {
       return !prevcheckIsContinue;
     });
@@ -136,7 +151,7 @@ const HomePage = () => {
       </span>
     </p>
   );
-  // Resume Recording ===============================================
+
   const checkIsResumeHandler = () => {
     setIsResume((prevIsResume) => {
       return !prevIsResume
@@ -170,7 +185,7 @@ const HomePage = () => {
         <InputModal
           header="Please enter required information"
           modalType="input"
-          dentistID={dentistID}
+          dentistID={userData.dentistID}
           patientID={patientID}
           setDentistID={setDentistID}
           setPatientID={setPatientID}

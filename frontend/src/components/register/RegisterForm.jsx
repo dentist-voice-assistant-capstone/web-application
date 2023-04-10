@@ -2,11 +2,13 @@ import useInput from "../../hooks/use-input";
 import "./RegisterForm.css";
 import {
   validateEmptyInput,
+  validateNoBlankValue,
   validateEmail,
   validateLength,
   validateConfirmPassword,
   validateMaxLength,
   validateEnglishLetter,
+  validateIllegalFileNameCharacters
 } from "../../utils/validator";
 import {
   PASSWORD_MIN_LENGTH,
@@ -86,7 +88,7 @@ const RegisterForm = (props) => {
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
     reset: resetDentistID,
-  } = useInput("Dentist ID", [validateMaxLength], {
+  } = useInput("Dentist ID", [validateNoBlankValue, validateIllegalFileNameCharacters, validateMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
   });
 
@@ -156,9 +158,8 @@ const RegisterForm = (props) => {
           <ul className="register-form__items-list">
             {/* Email */}
             <li
-              className={`register-form__items ${
-                hasEmailError || props.isEmailDuplicated ? "invalid" : ""
-              }`}
+              className={`register-form__items ${hasEmailError || props.isEmailDuplicated ? "invalid" : ""
+                }`}
             >
               <label htmlFor="email">
                 Email<span className="required">*</span>
@@ -237,11 +238,10 @@ const RegisterForm = (props) => {
             <ul className="register-form__items-list">
               {/* Name */}
               <li
-                className={`register-form__items ${
-                  enteredName.trim().length !== 0
-                    ? stypeInputClasses(isNameValid, hasNameError)
-                    : ""
-                }`}
+                className={`register-form__items ${enteredName.trim().length !== 0
+                  ? stypeInputClasses(isNameValid, hasNameError)
+                  : ""
+                  }`}
               >
                 <label htmlFor="name">Name</label>
                 <div>
@@ -258,11 +258,10 @@ const RegisterForm = (props) => {
               </li>
               {/* Surname */}
               <li
-                className={`register-form__items ${
-                  enteredSurname.trim().length !== 0
-                    ? stypeInputClasses(isSurnameValid, hasSurnameError)
-                    : ""
-                }`}
+                className={`register-form__items ${enteredSurname.trim().length !== 0
+                  ? stypeInputClasses(isSurnameValid, hasSurnameError)
+                  : ""
+                  }`}
               >
                 <label htmlFor="surname">Surname</label>
                 <div>
@@ -281,11 +280,10 @@ const RegisterForm = (props) => {
               </li>
               {/* Dentist ID */}
               <li
-                className={`register-form__items ${
-                  enteredDentistId.trim().length !== 0
-                    ? stypeInputClasses(isDentistIdValid, hasDentistIdError)
-                    : ""
-                }`}
+                className={`register-form__items ${enteredDentistId.trim().length !== 0
+                  ? stypeInputClasses(isDentistIdValid, hasDentistIdError)
+                  : ""
+                  }`}
               >
                 <label htmlFor="dentistId">Dentist ID</label>
                 <div>
