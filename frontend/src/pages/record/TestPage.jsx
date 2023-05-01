@@ -1,4 +1,4 @@
-import classes from "./SummaryPage.module.css";
+import classes from "./TestPage.module.css";
 /* import React Libraries */
 import { useState, Fragment } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -162,7 +162,7 @@ const SummaryPage = () => {
             <Alert
               show={showSentSuccess}
               variant="success"
-              style={{ height: "5.5vh", border: 0, margin: 0 }}
+              style={{ height: "56px", border: 0, margin: 0 }}
             >
               Report has been sent successfully
             </Alert>
@@ -175,7 +175,20 @@ const SummaryPage = () => {
             isSummary={true}
             checkBackToHomeHandler={checkBackToHomeHandler}
           ></NavBar>
-        </div>{" "}
+        </div>
+        <button className={classes.rand_box} onClick={handleRandomInformation}>
+          random
+        </button>
+        <button className={classes.reset_box} onClick={handleResetInformation}>
+          reset
+        </button>
+        <div className={classes.information_box}>
+          <InformationBox
+            dentistID={dentistID}
+            patientID={patientID}
+            date={date}
+          />
+        </div>
         <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}
@@ -188,55 +201,43 @@ const SummaryPage = () => {
             <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
           </DropdownButton>
         </div>
-        <div className={classes["information_area"]}>
-          <div className={classes["information_user"]}>
-            <div className={classes["information_box"]}>
-              <InformationBox
-                dentistID={dentistID}
-                patientID={patientID}
-                date={date}
-              />
-            </div>
-          </div>
-
-          <div className={classes["information_process"]}>
-            {quadrant === 1 && (
-              <RecordInformation
-                information={information[0]}
-                currentCommand={false}
-                handleSetInformation={handleSetInformation}
-                handleUndoToothMissing={handleUndoToothMissing}
-                handleAddToothMissing={handleAddToothMissing}
-              />
-            )}
-            {quadrant === 2 && (
-              <RecordInformation
-                information={information[1]}
-                currentCommand={false}
-                handleSetInformation={handleSetInformation}
-                handleUndoToothMissing={handleUndoToothMissing}
-                handleAddToothMissing={handleAddToothMissing}
-              />
-            )}
-            {quadrant === 3 && (
-              <RecordInformation
-                information={information[2]}
-                currentCommand={false}
-                handleSetInformation={handleSetInformation}
-                handleUndoToothMissing={handleUndoToothMissing}
-                handleAddToothMissing={handleAddToothMissing}
-              />
-            )}
-            {quadrant === 4 && (
-              <RecordInformation
-                information={information[3]}
-                currentCommand={false}
-                handleSetInformation={handleSetInformation}
-                handleUndoToothMissing={handleUndoToothMissing}
-                handleAddToothMissing={handleAddToothMissing}
-              />
-            )}
-          </div>
+        <div className="centered">
+          {quadrant === 1 && (
+            <RecordInformation
+              information={information[0]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
+            />
+          )}
+          {quadrant === 2 && (
+            <RecordInformation
+              information={information[1]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
+            />
+          )}
+          {quadrant === 3 && (
+            <RecordInformation
+              information={information[2]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
+            />
+          )}
+          {quadrant === 4 && (
+            <RecordInformation
+              information={information[3]}
+              currentCommand={false}
+              handleSetInformation={handleSetInformation}
+              handleUndoToothMissing={handleUndoToothMissing}
+              handleAddToothMissing={handleAddToothMissing}
+            />
+          )}
         </div>
         <RecordControlSummaryBar
           createReport={createReport}

@@ -1,6 +1,6 @@
 .smallbox {
-  width: 32px;
-  height: 32px;
+  width: 2.5vw;
+  height: 4vh;
 }
 
 .smallbox.highlighted button {

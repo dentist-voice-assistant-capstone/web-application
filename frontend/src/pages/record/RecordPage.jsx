@@ -1,5 +1,12 @@
 /* import React Libraries */
-import { useState, useEffect, useReducer, useContext, useRef, Fragment } from "react";
+import {
+  useState,
+  useEffect,
+  useReducer,
+  useContext,
+  useRef,
+  Fragment,
+} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 /* import Custom Components */
@@ -20,7 +27,10 @@ import { FiCloudOff } from "react-icons/fi";
 import classes from "./RecordPage.module.css";
 
 /* import related data and functions */
-import { EX_DATA, UPDATE_RECORD_EVERY_MILLISECONDS } from "../../utils/constants";
+import {
+  EX_DATA,
+  UPDATE_RECORD_EVERY_MILLISECONDS,
+} from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 import { getListOfMissingToothFromInformation } from "../../utils/toothLogic";
 import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
@@ -34,7 +44,10 @@ import {
   stopAudioStreaming,
   terminateConnection,
 } from "../../utils/socketWebRTCHandler";
-import { defaultCurrentCommand, currentCommandReducer } from "../../utils/toothLogic";
+import {
+  defaultCurrentCommand,
+  currentCommandReducer,
+} from "../../utils/toothLogic";
 import { playConnectionSound } from "../../utils/soundPlayerHandler";
 
 const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
@@ -58,10 +71,9 @@ const RecordPage = () => {
     dentistID = state.state.dentistID;
     mode = state.state.mode;
     if (mode === "resume") {
-      latestInformation = state.state.latestInformation
+      latestInformation = state.state.latestInformation;
     }
-  } catch (err) {
-  }
+  } catch (err) {}
   // =========== FOR TESTING ======================
   // const userData = { email: "test@hotmail.com" };
   // const patientID = "123456";
@@ -69,8 +81,9 @@ const RecordPage = () => {
   // ===============================================
 
   const current = new Date();
-  const date = `${current.getDate()}/${current.getMonth() + 1
-    }/${current.getFullYear()}`;
+  const date = `${current.getDate()}/${
+    current.getMonth() + 1
+  }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   const [userId, setUserId] = useState(null);
@@ -101,28 +114,29 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
-  const startInformation = mode === "resume" ? latestInformation : defaultInformation
+  const startInformation =
+    mode === "resume" ? latestInformation : defaultInformation;
   const [information, setInformation] = useState(startInformation);
 
   /* state for keeping the interval id to update record */
   const updateInformationIntervalIdRef = useRef(null);
   const startUpdateInformationInterval = () => {
-    console.log("start timer...")
+    console.log("start timer...");
     const id = setInterval(() => {
-      console.log("timer executed...")
+      console.log("timer executed...");
       postRecordAPIHandler(token, {
         patientId: patientID,
         finished: false,
-        recordData: information
-      })
-    }, UPDATE_RECORD_EVERY_MILLISECONDS)
+        recordData: information,
+      });
+    }, UPDATE_RECORD_EVERY_MILLISECONDS);
     updateInformationIntervalIdRef.current = id;
-  }
+  };
   const stopUpdateInformationInterval = () => {
-    console.log("stop timer...")
-    clearInterval(updateInformationIntervalIdRef.current)
+    console.log("stop timer...");
+    clearInterval(updateInformationIntervalIdRef.current);
     updateInformationIntervalIdRef.current = null;
-  }
+  };
 
   const handleSetInformation = (q, i, side, mode, target, spec_id = NaN) => {
     const newInformation = information.map((obj) => {
@@ -204,8 +218,8 @@ const RecordPage = () => {
     postRecordAPIHandler(token, {
       patientId: patientID,
       finished: true,
-      recordData: latestInformation
-    })
+      recordData: latestInformation,
+    });
   };
 
   const reconnectHandler = () => {
@@ -225,14 +239,15 @@ const RecordPage = () => {
   };
 
   const initializeToothTableInformation = (latestInformation) => {
-    setInformation(latestInformation)
-    const missingToothList = getListOfMissingToothFromInformation(latestInformation)
+    setInformation(latestInformation);
+    const missingToothList =
+      getListOfMissingToothFromInformation(latestInformation);
     // send missing tooth to backend, once reconnects
     for (const missingToothObj of missingToothList) {
-      console.log("missing tooth from latestData", missingToothObj)
+      console.log("missing tooth from latestData", missingToothObj);
       addToothMissing(socket, missingToothObj.q, missingToothObj.i);
     }
-  }
+  };
 
   // ========================================================================
   /* functions for handling add/undo tooth missing */
@@ -269,7 +284,7 @@ const RecordPage = () => {
     currentConnectionStatus = "Connected";
 
     if (isNotConnected) {
-      // detect connected 
+      // detect connected
       if (!isOnceConnected) {
         setIsOnceConnected(true);
       }
@@ -280,14 +295,17 @@ const RecordPage = () => {
     }
   } else if (!isConnectionReady && isSocketReconnecting) {
     currentConnectionStatus = "Reconnecting";
-    // detect connection lost after connected 
+    // detect connection lost after connected
     if (!isNotConnected) {
       setIsNotConnected(true);
       stopUpdateInformationInterval();
       playConnectionSound(currentConnectionStatus);
     }
-
-  } else if (!isConnectionReady && (socketFailedToConnect && webRTCFailedToConnect)) {
+  } else if (
+    !isConnectionReady &&
+    socketFailedToConnect &&
+    webRTCFailedToConnect
+  ) {
     currentConnectionStatus = "Disconnected";
     if (!isNotConnected) {
       setIsNotConnected(true);
@@ -319,7 +337,7 @@ const RecordPage = () => {
   useEffect(() => {
     /* when the page is loaded, instantiate the periodontal information based on the "mode" given */
     if (mode === "resume") {
-      setInformation(latestInformation)
+      setInformation(latestInformation);
     }
 
     /* validate the token kept in authCtx first by sending GET request to the backend, 
@@ -327,15 +345,15 @@ const RecordPage = () => {
     */
     const validateToken = async () => {
       let userId = await checkUserTokenAPIHandler(token);
-      return { userId }
-    }
+      return { userId };
+    };
     validateToken().then(({ userId }) => {
       /* if there exists an uId associated with the token, then the user is authenticated.
        it should initiate the connection to the Backend Streaming Server via socket and webRTC.
        Otherwise, it should prompt the user to re-login again and redirect user to the login page.
       */
       if (userId) {
-        console.log("userId associated with token:", userId)
+        console.log("userId associated with token:", userId);
         initiateConnection(
           userId,
           setSocket,
@@ -384,7 +402,7 @@ const RecordPage = () => {
       );
       // clear data in the table
       setInformation(defaultInformation);
-    }
+    };
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
       console.log("clear connection from popstate...");
@@ -408,11 +426,37 @@ const RecordPage = () => {
 
   const PDRETableComponentToBeRendered = (
     <Fragment>
-      <div className={classes.current_command_box}>
-        <CurrentCommandBox
-          command={currentCommand.command}
-          tooth={currentCommand.tooth}
-        />
+      <div className={classes["information_user"]}>
+        <div className={classes["information_box"]}>
+          {/* test button */}
+          <button
+            onClick={() => {
+              // new Audio(connectedSound).play()
+            }}
+          >
+            {" "}
+            test
+          </button>
+
+          <div className={classes.current_command_box}>
+            <CurrentCommandBox
+              command={currentCommand.command}
+              tooth={currentCommand.tooth}
+            />
+          </div>
+          {/* <div className={classes.droplist}>
+            <DropdownButton
+              className={classes.box}
+              title={`Q${quadrant}`}
+              onSelect={handleSelect}
+            >
+              <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
+              <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
+              <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
+              <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
+            </DropdownButton>
+          </div> */}
+        </div>
       </div>
       <div className={classes.droplist}>
         <DropdownButton
@@ -426,7 +470,7 @@ const RecordPage = () => {
           <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
         </DropdownButton>
       </div>
-      <div className="centered">
+      <div className={classes["information_process"]}>
         {quadrant === 1 && (
           <RecordInformation
             information={information[0]}
@@ -511,7 +555,7 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (isOnceConnected) {
+  if (true) {
     // add true for testing
     CenterComponentToBeRendered = PDRETableComponentToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
@@ -527,7 +571,9 @@ const RecordPage = () => {
         <Modal
           header="Confirm Information"
           content={modalConfirmContent}
-          onOKClick={() => { confirmHandler(information) }}
+          onOKClick={() => {
+            confirmHandler(information);
+          }}
           onCancelClick={checkFinishHandler}
           okButtonText="Save"
           modalType="confirm"
@@ -552,10 +598,6 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
-        {/* test button */}
-        <button onClick={() => {
-          // new Audio(connectedSound).play()
-        }}> test</button>
 
         {/* Center */}
         {CenterComponentToBeRendered}

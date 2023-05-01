@@ -2,7 +2,8 @@
   /* position: flex-center; */
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  /* padding-left: 4vw; */
+  gap: 2.3625vw;
   /* margin: 5px; */
   /* background-color: aqua; */
   /* background-color: #f1f1f1; */
