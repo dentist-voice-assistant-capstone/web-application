@@ -243,13 +243,10 @@ const HomePage = () => {
               Dentist Voice-Controlled Assistant
             </h1>
             <p className={classes.information}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ante
-              eros, aliquam et nisl vitae, accumsan volutpat tellus. Suspendisse
-              eget pharetra magna. Donec id nibh ac elit mollis finibus. Fusce
-              gravida turpis dui, vel vulputate ante scelerisque et. Ut finibus
-              diam quis ultrices vulputate. Nulla sapien turpis, ullamcorper sed
-              nibh a, viverra dignissim lectus. Pellentesque tincidunt imperdiet
-              odio, id aliquam nunc sodales et.
+              This is a dentist assistance web-application developed by a group
+              of Engineering students from Chulalongkorn University, for the
+              purpose of educational use in Faculty of Dentistry, Chulalongkorn
+              University.
             </p>
           </div>
           <div className={classes.actions}>

@@ -1,13 +1,12 @@
-.home {
+/* .home {
   width: 1000px;
   height: 800px;
   padding: 0 2.5% 0 2.5%;
-  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .actions {
   padding-top: 1rem;
@@ -40,8 +39,8 @@
 } */
 
 .header {
-  padding-top: 10rem;
-  padding-left: 5rem;
+  padding-top: 10vh;
+  padding-left: 5vw;
   text-align: left;
   font-weight: 700;
   width: 80vw;
@@ -69,8 +68,8 @@
 } */
 
 .information {
-  padding-top: 2rem;
-  padding-left: 5rem;
+  padding-top: 5vh;
+  padding-left: 5vw;
   text-align: left;
   font-weight: 500;
   width: 50vw;
