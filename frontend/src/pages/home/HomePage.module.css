@@ -20,26 +20,34 @@
 }
 
 /* iPad */
-@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+/* @media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
   .header {
     padding-top: 7rem;
     padding-left: 5rem;
     text-align: left;
     font-weight: 700;
   }
-}
+} */
 
 /* WideScreen */
-@media (min-width: 1201px) or (min-height: 1001px) {
+/* @media (min-width: 1201px) or (min-height: 1001px) {
   .header {
     padding-top: 10rem;
     padding-left: 5rem;
     text-align: left;
     font-weight: 700;
   }
+} */
+
+.header {
+  padding-top: 10rem;
+  padding-left: 5rem;
+  text-align: left;
+  font-weight: 700;
+  width: 80vw;
 }
 /* iPad */
-@media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+/* @media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
   .information {
     padding-top: 2rem;
     padding-left: 5rem;
@@ -47,10 +55,10 @@
     font-weight: 500;
     width: 50%;
   }
-}
+} */
 
 /* WideScreen */
-@media (min-width: 1201px) or (min-height: 1001px) {
+/* @media (min-width: 1201px) or (min-height: 1001px) {
   .information {
     padding-top: 2rem;
     padding-left: 5rem;
@@ -58,6 +66,14 @@
     font-weight: 500;
     width: 40%;
   }
+} */
+
+.information {
+  padding-top: 2rem;
+  padding-left: 5rem;
+  text-align: left;
+  font-weight: 500;
+  width: 50vw;
 }
 
 .actions button {
