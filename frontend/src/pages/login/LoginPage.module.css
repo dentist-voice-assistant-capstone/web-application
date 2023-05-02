@@ -1,8 +1,7 @@
 .login {
-  width: 1000px;
-  height: 500px;
+  width: 70vw;
+  height: 60vh;
   padding: 0 2.5% 0 2.5%;
-  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,7 +13,7 @@
 }
 
 .login_label {
-  font-size: 64px;
+  font-size: 4vh;
   margin-bottom: 3rem;
 }
 .image-section {

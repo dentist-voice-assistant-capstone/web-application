@@ -57,7 +57,7 @@ function NavBar(props) {
           <div className={classes["content-left"]}>
             <FaHome
               className={classes["home-icon"]}
-              size={40}
+              size={"3vh"}
               onClick={props.checkBackToHomeHandler}
             />
           </div>
