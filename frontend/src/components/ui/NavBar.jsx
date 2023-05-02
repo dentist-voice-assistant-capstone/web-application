@@ -31,7 +31,6 @@ function NavBar(props) {
   const [hoverClass, setHoverClass] = useState("home-icon");
 
   const mouseEnterHandler = () => {
-    // console.log(isMouseOver);
     setIsMouseOver(!isMouseOver);
     isMouseOver ? setHoverClass("home-icon-hover") : setHoverClass("home-icon");
   };

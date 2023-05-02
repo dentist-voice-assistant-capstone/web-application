@@ -4,7 +4,7 @@ import { emailActivatedHandler } from "../../utils/apiHandler";
 
 const VerificationPage = () => {
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
   emailActivatedHandler(id);
   return (
     <div className="landing-page">

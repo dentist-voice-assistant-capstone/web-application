@@ -40,21 +40,22 @@ const AccountEditPage = () => {
     const fetchUserInfo = async (token) => {
       let userData = await fetchUserInfoAPIHandler(token);
       return { userData };
-    }
+    };
 
     if (isLoggedIn) {
-      fetchUserInfo(token).then(({ userData }) => {
-        setUserData(userData);
-        setIsLoaded(true);
-      }).catch((err) => {
-        console.log("err!!", err.message)
-        if (err.message === "Cannot connect to backend server") {
-          setUpdateError({
-            header: "Connection Error",
-            content: <p>Cannot connect to backend server.</p>,
-          });
-        }
-      })
+      fetchUserInfo(token)
+        .then(({ userData }) => {
+          setUserData(userData);
+          setIsLoaded(true);
+        })
+        .catch((err) => {
+          if (err.message === "Cannot connect to backend server") {
+            setUpdateError({
+              header: "Connection Error",
+              content: <p>Cannot connect to backend server.</p>,
+            });
+          }
+        });
     }
   }, []);
   // =============================================================
@@ -100,7 +101,7 @@ const AccountEditPage = () => {
   const infoModalOkHandler = () => {
     setUpdateInfo();
     authCtx.logout();
-    navigate("/login")
+    navigate("/login");
   };
 
   // select appropriate form to be displayed, depends on selected menu (default: Account)
@@ -154,8 +155,9 @@ const AccountEditPage = () => {
               <h2>User Profile</h2>
               {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
                 <div
-                  className={`${classes["account-edit__sidebar-menu"]} ${idx === idxMenuSelected ? classes["selected"] : ""
-                    }`}
+                  className={`${classes["account-edit__sidebar-menu"]} ${
+                    idx === idxMenuSelected ? classes["selected"] : ""
+                  }`}
                   key={sidebarMenuLabel}
                   idx={idx}
                   onClick={changeMenuHandler}

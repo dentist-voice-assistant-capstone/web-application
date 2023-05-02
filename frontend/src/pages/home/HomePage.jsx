@@ -76,9 +76,6 @@ const HomePage = () => {
     if (isLoggedIn) {
       fetchInformation(token)
         .then(({ userData, latestRecordData }) => {
-          console.log("userData:", userData);
-          console.log("latestRecordData:", latestRecordData);
-
           checkIsLatestRecordAbleToBeRestored(latestRecordData);
           setUserData(userData);
           setLatestRecordData(latestRecordData);
@@ -87,13 +84,11 @@ const HomePage = () => {
         })
         .catch((err) => {
           if (err.message === "Cannot connect to backend server") {
-            console.log(`${err.message}`);
+            // console.log(`${err.message}`);
           }
         });
     }
   }, []);
-
-  // console.log("userData", userData);
 
   function startHandler(mode = "new") {
     if (mode === "new") {

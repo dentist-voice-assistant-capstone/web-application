@@ -121,9 +121,9 @@ const RecordPage = () => {
   /* state for keeping the interval id to update record */
   const updateInformationIntervalIdRef = useRef(null);
   const startUpdateInformationInterval = () => {
-    console.log("start timer...");
+    // console.log("start timer...");
     const id = setInterval(() => {
-      console.log("timer executed...");
+      // console.log("timer executed...");
       postRecordAPIHandler(token, {
         patientId: patientID,
         finished: false,
@@ -133,7 +133,7 @@ const RecordPage = () => {
     updateInformationIntervalIdRef.current = id;
   };
   const stopUpdateInformationInterval = () => {
-    console.log("stop timer...");
+    // console.log("stop timer...");
     clearInterval(updateInformationIntervalIdRef.current);
     updateInformationIntervalIdRef.current = null;
   };
@@ -244,7 +244,7 @@ const RecordPage = () => {
       getListOfMissingToothFromInformation(latestInformation);
     // send missing tooth to backend, once reconnects
     for (const missingToothObj of missingToothList) {
-      console.log("missing tooth from latestData", missingToothObj);
+      // console.log("missing tooth from latestData", missingToothObj);
       addToothMissing(socket, missingToothObj.q, missingToothObj.i);
     }
   };
@@ -316,7 +316,7 @@ const RecordPage = () => {
 
   // FOR TESTING ================================================================
   // if (!!socket && !!peerConnection && !!localStream) {
-  //   console.log({
+  // console.log({
   //     "peerConnection": !!peerConnection,
   //     "peerConnection.connectionState": peerConnection.connectionState,
   //     "peerConnection.iceConnectionState": peerConnection.iceConnectionState,
@@ -353,7 +353,7 @@ const RecordPage = () => {
        Otherwise, it should prompt the user to re-login again and redirect user to the login page.
       */
       if (userId) {
-        console.log("userId associated with token:", userId);
+        // console.log("userId associated with token:", userId);
         initiateConnection(
           userId,
           setSocket,
@@ -368,9 +368,9 @@ const RecordPage = () => {
         );
         setUserId(userId);
       } else {
-        console.log(
-          "Failed to validate token, redirecting user back to login page"
-        );
+        // console.log(
+        //   "Failed to validate token, redirecting user back to login page"
+        // );
         setReLoginModal({
           header: "Re-Login needed",
           content: (
@@ -405,7 +405,7 @@ const RecordPage = () => {
     };
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
-      console.log("clear connection from popstate...");
+      // console.log("clear connection from popstate...");
       stopUpdateInformationInterval();
       setTimeout(() => {
         window.removeEventListener("popstate", handleBeforeUnload);

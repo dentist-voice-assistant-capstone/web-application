@@ -20,8 +20,6 @@ const RecordSection = ({
   const mgj = information.MGJ;
   const id = information.ID;
 
-  // console.log(tooth, currentCommand);
-
   let highlightCommandBuccalSide = false;
   let highlightCommandLingualSide = false;
   const command =
@@ -49,7 +47,7 @@ const RecordSection = ({
 
   const handleClickToothIDDiv = () => {
     handleAddToothMissing(quadrant, information.ID);
-  }
+  };
 
   return (
     <div>
@@ -65,8 +63,9 @@ const RecordSection = ({
             currentCommand={highlightCommandBuccalSide ? currentCommand : null}
           />
           <div
-            className={`${classes.title} ${!!currentCommand ? classes.hightlighted : null
-              }`}
+            className={`${classes.title} ${
+              !!currentCommand ? classes.hightlighted : null
+            }`}
             onClick={handleClickToothIDDiv}
           >{`${quadrant}${information.ID}`}</div>
           <RecordLingualInformation

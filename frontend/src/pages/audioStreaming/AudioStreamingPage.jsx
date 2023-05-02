@@ -71,10 +71,10 @@ const AudioStreamingPage = () => {
     /* 2) set event for socket */
     // receiving answer from backend streaming server
     s.on("answer", async (answer) => {
-      console.log("received answer from server", answer);
+      // console.log("received answer from server", answer);
       try {
         await pc.setRemoteDescription(answer);
-        console.log("finish setting answer");
+        // console.log("finish setting answer");
       } catch (err) {
         alert(err);
       }
@@ -107,11 +107,11 @@ const AudioStreamingPage = () => {
     pc.onconnectionstatechange = (event) => {
       if (pc.connectionState === "connected") {
         // start streaming
-        console.log("PEERS CONNECTED");
+        // console.log("PEERS CONNECTED");
       }
     };
     // ==========================================================================================
-    console.log("peerConnection created!");
+    // console.log("peerConnection created!");
 
     /* 4) get the localStream and then add the tracks from the localStream to the peerConnection */
     // this will also automatically trigger pc.onnegotiationneeded to send the offer to the server
@@ -124,7 +124,7 @@ const AudioStreamingPage = () => {
         mediaStream.getTracks().forEach((track) => {
           pc.addTrack(track, mediaStream);
         });
-        console.log("add track finished");
+        // console.log("add track finished");
         setLocalStream(mediaStream);
       });
 
@@ -155,14 +155,14 @@ const AudioStreamingPage = () => {
         if (first) {
           setGowajeeProb(gowajee_prob);
         }
-        console.log(gowajee_prob);
+        // console.log(gowajee_prob);
         // if gowajee_prob > GOWAJEE_THRESH, toggle the streaming
         if (gowajee_prob > GOWAJEE_THRESH) {
           if (first) {
-            console.log("Gowajee Detected");
+            // console.log("Gowajee Detected");
             toggleIsForcedStopStreaming();
           } else {
-            console.log("skipped!");
+            // console.log("skipped!");
           }
         } else if (!first) {
           first = gowajee_prob;
@@ -180,7 +180,7 @@ const AudioStreamingPage = () => {
 
   // FUNCTIONS for handling start/stop/toggle streaming ===============
   const startStreaming = () => {
-    console.log("start streaming");
+    // console.log("start streaming");
     localStream.getTracks().forEach((track) => {
       track.enabled = true;
     });
@@ -189,7 +189,7 @@ const AudioStreamingPage = () => {
   };
 
   const stopStreaming = () => {
-    console.log("stop streaming");
+    // console.log("stop streaming");
     socket.emit("stop_record");
     localStream.getTracks().forEach((track) => {
       track.enabled = false;
