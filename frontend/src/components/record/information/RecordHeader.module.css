@@ -26,6 +26,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  font-size: 2.5vh;
 }
 
 .side {
@@ -38,7 +39,7 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 2vh;
 }
 
 .highlighted {

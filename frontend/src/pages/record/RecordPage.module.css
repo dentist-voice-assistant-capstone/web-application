@@ -67,7 +67,7 @@
 
 .center-box .waiting_text {
   text-align: center;
-  font-size: 20px;
+  font-size: 3vh;
   margin-top: 25px;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .top_bar {
-  font-size: 18px;
+  font-size: 2.5vh;
   font-weight: bold;
   /* margin: 0;
   border: 0;

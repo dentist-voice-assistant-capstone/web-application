@@ -1,6 +1,5 @@
 .actions {
   border-radius: 10px;
-  font-size: 18px;
   font-size: 2.5vh;
   font-weight: bold;
   border: 0;
@@ -41,7 +40,7 @@
 }
 
 .content-right {
-  font-size: 18px;
+  font-size: 2.5vh;
   /* font-weight: bold; */
   width: 100%;
   text-align: center;
