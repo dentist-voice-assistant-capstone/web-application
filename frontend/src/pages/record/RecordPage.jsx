@@ -428,34 +428,12 @@ const RecordPage = () => {
     <Fragment>
       <div className={classes["information_user"]}>
         <div className={classes["information_box"]}>
-          {/* test button */}
-          <button
-            onClick={() => {
-              // new Audio(connectedSound).play()
-            }}
-          >
-            {" "}
-            test
-          </button>
-
           <div className={classes.current_command_box}>
             <CurrentCommandBox
               command={currentCommand.command}
               tooth={currentCommand.tooth}
             />
           </div>
-          {/* <div className={classes.droplist}>
-            <DropdownButton
-              className={classes.box}
-              title={`Q${quadrant}`}
-              onSelect={handleSelect}
-            >
-              <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
-              <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
-              <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
-              <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
-            </DropdownButton>
-          </div> */}
         </div>
       </div>
       <div className={classes.droplist}>
@@ -555,7 +533,7 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (true) {
+  if (isOnceConnected) {
     // add true for testing
     CenterComponentToBeRendered = PDRETableComponentToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
