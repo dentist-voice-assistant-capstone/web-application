@@ -533,7 +533,7 @@ const RecordPage = () => {
   );
 
   let CenterComponentToBeRendered;
-  if (isOnceConnected) {
+  if (true) {
     // add true for testing
     CenterComponentToBeRendered = PDRETableComponentToBeRendered;
   } else if (!isOnceConnected && !isConnectionReady && !socketFailedToConnect) {
