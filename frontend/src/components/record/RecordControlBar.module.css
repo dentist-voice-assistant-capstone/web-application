@@ -131,7 +131,7 @@
   align-items: center;
   justify-content: space-between;
   /* margin-left: 0%; */
-  width: 100%;
+  width: 94%;
   /* border: 1px solid red; */
 }
 
@@ -144,7 +144,7 @@
 .finishContainer {
   display: flex;
   align-items: center;
-  margin-right: 1rem;
+  /* margin-right: 1rem; */
 }
 
 .blinking {
