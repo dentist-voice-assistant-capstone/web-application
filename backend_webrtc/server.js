@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
       if (err) console.log(err);
     });
     toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
-    console.log("undo_missing:", toothData);
+    // console.log("undo_missing:", toothData);
   })
 
   // When client add missing
@@ -130,7 +130,7 @@ io.on("connection", (socket) => {
       if (err) console.log(err);
     });
     toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
-    console.log("add_missing:", toothData);
+    // console.log("add_missing:", toothData);
   })
 
   // When disconnect end the streaming
@@ -175,8 +175,8 @@ io.on("connection", (socket) => {
     // When receive response from Gowajee Server, Send it to ner backend server
     gowajee_call.on('data', (response) => {
       ner_call.write(response);
-      // }).once('error', () => {
-      //   console.log("end grpc streaming");
+      }).once('error', () => {
+        console.log("end grpc streaming");
     });
 
     ner_call.on('data', (response) => {
@@ -275,8 +275,8 @@ io.on("connection", (socket) => {
         }
         // toothTable.showPDREValue();
       });
-      // }).once('error', () => {
-      //   console.log("end grpc streaming");
+      }).once('error', () => {
+        console.log("end grpc streaming");
     });;
   };
 });
