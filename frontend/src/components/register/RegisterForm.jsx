@@ -1,15 +1,17 @@
 import useInput from "../../hooks/use-input";
 import "./RegisterForm.css";
-import {
-  validateEmptyInput,
-  validateNoBlankValue,
-  validateEmail,
-  validateLength,
-  validateConfirmPassword,
-  validateMaxLength,
-  validateEnglishLetter,
-  validateIllegalFileNameCharacters
-} from "../../utils/validator";
+// import {
+//   validateEmptyInput,
+//   validateNoBlankValue,
+//   validateEmail,
+//   validateLength,
+//   validateConfirmPassword,
+//   validateMaxLength,
+//   validateEnglishLetter,
+//   validateIllegalFileNameCharacters
+// } from "../../utils/validator";
+import Validator from "../../utils/validator"
+
 import {
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
@@ -19,6 +21,20 @@ import {
 } from "../../utils/constants";
 
 const RegisterForm = (props) => {
+  const validateEmptyInput = new Validator("validateEmptyInput")
+  const validateEmail = new Validator("validateEmail")
+
+  const validatePasswordLength = new Validator("validateLength", { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH })
+  const validateConfirmPassword = new Validator("validateConfirmPassword")
+
+  const validateNameMaxLength = new Validator("validateMaxLength", { maxLength: NAME_MAX_LENGTH })
+  const validateSurNameMaxLength = new Validator("validateMaxLength", { maxLength: SURNAME_MAX_LENGTH })
+  const validateDentistIdMaxLength = new Validator("validateMaxLength", { maxLength: DENTISTID_MAX_LENGTH })
+  const validateEnglishLetter = new Validator("validateEnglishLetter")
+
+  const validateNoBlankValue = new Validator("validateNoBlankValue")
+  const validateIllegalFileNameCharacters = new Validator("validateIllegalFileNameCharacters")
+
   const {
     value: enteredEmail,
     isValueValid: isEmailValid,
@@ -39,10 +55,7 @@ const RegisterForm = (props) => {
     valueChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
     reset: resetPassword,
-  } = useInput("Password", [validateEmptyInput, validateLength], {
-    minLength: PASSWORD_MIN_LENGTH,
-    maxLength: PASSWORD_MAX_LENGTH,
-  });
+  } = useInput("Password", [validateEmptyInput, validatePasswordLength], {});
 
   const {
     value: enteredConfirmPassword,
@@ -64,9 +77,7 @@ const RegisterForm = (props) => {
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
     reset: resetName,
-  } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
-    maxLength: NAME_MAX_LENGTH,
-  });
+  } = useInput("Name", [validateNameMaxLength, validateEnglishLetter], {});
 
   const {
     value: enteredSurname,
@@ -76,9 +87,7 @@ const RegisterForm = (props) => {
     valueChangeHandler: surnameChangeHandler,
     inputBlurHandler: surnameBlurHandler,
     reset: resetSurname,
-  } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
-    maxLength: SURNAME_MAX_LENGTH,
-  });
+  } = useInput("Surname", [validateSurNameMaxLength, validateEnglishLetter], {});
 
   const {
     value: enteredDentistId,
@@ -88,9 +97,7 @@ const RegisterForm = (props) => {
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
     reset: resetDentistID,
-  } = useInput("Dentist ID", [validateNoBlankValue, validateIllegalFileNameCharacters, validateMaxLength], {
-    maxLength: DENTISTID_MAX_LENGTH,
-  });
+  } = useInput("Dentist ID", [validateNoBlankValue, validateIllegalFileNameCharacters, validateDentistIdMaxLength], {});
 
   const stypeInputClasses = (isValid, hasError) => {
     if (hasError) {
@@ -147,7 +154,6 @@ const RegisterForm = (props) => {
     // resetSurname();
     // resetDentistID();
   };
-
   return (
     <form onSubmit={handleSubmit} className="register-form" noValidate>
       {/* 1) ส่วนกรอกข้อมูล */}

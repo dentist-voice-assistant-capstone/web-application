@@ -1,10 +1,11 @@
 import useInput from "../../hooks/use-input";
-import {
-  validateMaxLength,
-  validateEnglishLetter,
-  validateIllegalFileNameCharacters,
-  validateNoBlankValue
-} from "../../utils/validator";
+import Validator from "../../utils/validator";
+// import {
+//   validateMaxLength,
+//   validateEnglishLetter,
+//   validateIllegalFileNameCharacters,
+//   validateNoBlankValue
+// } from "../../utils/validator";
 import {
   NAME_MAX_LENGTH,
   SURNAME_MAX_LENGTH,
@@ -16,6 +17,13 @@ import classes from "./AccountEditForm.module.css";
 const AccountEditForm = (props) => {
   const userDefaultData = props.userDefaultData;
 
+  const validateNameMaxLength = new Validator("validateMaxLength", { maxLength: NAME_MAX_LENGTH })
+  const validateSurNameMaxLength = new Validator("validateMaxLength", { maxLength: SURNAME_MAX_LENGTH })
+  const validateDentistIdMaxLength = new Validator("validateMaxLength", { maxLength: DENTISTID_MAX_LENGTH })
+  const validateEnglishLetter = new Validator("validateEnglishLetter")
+  const validateNoBlankValue = new Validator("validateNoBlankValue")
+  const validateIllegalFileNameCharacters = new Validator("validateIllegalFileNameCharacters")
+
   const {
     value: enteredName,
     isValueValid: isNameValid,
@@ -24,9 +32,8 @@ const AccountEditForm = (props) => {
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
     reset: resetName,
-  } = useInput("Name", [validateMaxLength, validateEnglishLetter], {
-    maxLength: NAME_MAX_LENGTH,
-    defaultValue: userDefaultData.dentistName,
+  } = useInput("Name", [validateNameMaxLength, validateEnglishLetter], {
+    defaultValue: userDefaultData.dentistName
   });
 
   const {
@@ -37,9 +44,8 @@ const AccountEditForm = (props) => {
     valueChangeHandler: surnameChangeHandler,
     inputBlurHandler: surnameBlurHandler,
     reset: resetSurname,
-  } = useInput("Surname", [validateMaxLength, validateEnglishLetter], {
-    maxLength: SURNAME_MAX_LENGTH,
-    defaultValue: userDefaultData.dentistSurname,
+  } = useInput("Surname", [validateSurNameMaxLength, validateEnglishLetter], {
+    defaultValue: userDefaultData.dentistSurname
   });
 
   const {
@@ -50,9 +56,8 @@ const AccountEditForm = (props) => {
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
     reset: resetDentistID,
-  } = useInput("Dentist ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateMaxLength], {
-    maxLength: DENTISTID_MAX_LENGTH,
-    defaultValue: userDefaultData.dentistID,
+  } = useInput("Dentist ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateDentistIdMaxLength], {
+    defaultValue: userDefaultData.dentistID
   });
 
   let isFormValid = false;

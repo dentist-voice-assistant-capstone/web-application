@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 const useInput = (field, validators, parameters) => {
+  // console.log("field", field)
+  // console.log("parameters", parameters)
+
   let defaultValue = "";
   if (parameters.defaultValue) {
     defaultValue = parameters.defaultValue
@@ -13,17 +16,17 @@ const useInput = (field, validators, parameters) => {
   let isValueValid = true;
   let errorMessage;
 
+  // console.log(field)
   for (const validator of validators) {
     let validateResult;
-    if (validator.name === 'validateLength') {
-      validateResult = validator(enteredValue, parameters.minLength, parameters.maxLength)
-    } else if (validator.name === 'validateMaxLength') {
-      validateResult = validator(enteredValue, parameters.maxLength)
-    } else if (validator.name === 'validateConfirmPassword' || validator.name === 'validateOldandNewPassword') {
-      validateResult = validator(enteredValue, parameters.password)
+    // console.log(validator.validatorName)
+    if (validator.validatorName === 'validateConfirmPassword' || validator.validatorName === 'validateOldandNewPassword') {
+      console.log("oldPw", enteredValue, parameters.password)
+      validateResult = validator.validate(enteredValue, { password: parameters.password })
     } else {
-      validateResult = validator(enteredValue)
+      validateResult = validator.validate(enteredValue, {})
     }
+
     const { isPass, defaultErrorMessage: defaultErrorMsg, specialErrorMessage: specialErrorMsg } = validateResult
 
     if (!isPass) {
