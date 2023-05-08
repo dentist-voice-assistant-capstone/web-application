@@ -5,7 +5,8 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
-RUN npm run build
+RUN npm install -g serve
+
 
 # Resolve Module not found: Error: Can't resolve 'fs'
 RUN sed -i '$ d' node_modules/@tensorflow-models/speech-commands/package.json
@@ -15,4 +16,5 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["serve", "-l 5000", "-s build"]
+RUN npm run build
+CMD ["serve", "-l", "5000", "-s", "build", "--ssl-cert", "cert.pem", "--ssl-key", "key.pem"]
