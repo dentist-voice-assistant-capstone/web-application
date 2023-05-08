@@ -17,14 +17,14 @@ function DropdownSm({
     handleSetInformation(quadrant, id, side, mode, target, specific_id);
   };
 
-  const PDDropdown = (
+  const REDropdown = (
     <DropdownButton
-      className={`${classes["smallbox"]} ${
-        isHighlighted ? classes["highlighted"] : ""
-      }`}
-      title={data}
+      className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
     >
+      <Dropdown.Item eventKey="">-</Dropdown.Item>
       <Dropdown.Item eventKey="-5">-5</Dropdown.Item>
       <Dropdown.Item eventKey="-4">-4</Dropdown.Item>
       <Dropdown.Item eventKey="-3">-3</Dropdown.Item>
@@ -49,14 +49,14 @@ function DropdownSm({
     </DropdownButton>
   );
 
-  const REDropdown = (
+  const PDDropdown = (
     <DropdownButton
-      className={`${classes["smallbox"]} ${
-        isHighlighted ? classes["highlighted"] : ""
-      }`}
-      title={data}
+      className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
+        }`}
+      title={data || ""}
       onSelect={handleSelect}
     >
+      <Dropdown.Item eventKey="">-</Dropdown.Item>
       <Dropdown.Item eventKey="1">1</Dropdown.Item>
       <Dropdown.Item eventKey="2">2</Dropdown.Item>
       <Dropdown.Item eventKey="3">3</Dropdown.Item>

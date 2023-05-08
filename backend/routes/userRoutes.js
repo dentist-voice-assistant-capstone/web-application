@@ -7,6 +7,13 @@ const router = express.Router();
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
+router.get("/checkToken", authController.protect, (req, res) => {
+  res.status(200).json({
+    status: "success",
+    user_id: req.user._id
+  });
+});
+
 router.patch(
   "/updateProfile",
   authController.protect,

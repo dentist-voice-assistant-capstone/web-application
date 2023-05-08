@@ -36,13 +36,13 @@
 .information-box__subbox p:first-child {
   height: 100%;
   /* border: 0.5px solid green; */
-  font-size: 18px;
+  font-size: 2.5vh;
   font-weight: 600;
 }
 
 .information-box__subbox p:nth-child(2) {
   /* border: 0.5px solid orange; */
-  font-size: 18px;
+  font-size: 2.5vh;
   font-weight: bold;
   padding: 0px 20px 0px 20px;
   color: var(--primary-color-info);

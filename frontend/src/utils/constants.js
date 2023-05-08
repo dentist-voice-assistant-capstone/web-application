@@ -9,21 +9,48 @@ const NAME_MAX_LENGTH = 45;
 const SURNAME_MAX_LENGTH = 45;
 const DENTISTID_MAX_LENGTH = 45;
 
+const PATIENTID_MAX_LENGTH = 45;
+
 // RTCPeerConnection Configuration Object
 const RTC_CONFIG = {
   iceServers: [
     {
-      urls: ["stun:stun.l.google.com:19302"],
+      urls: "stun:a.relay.metered.ca:80",
+    },
+    {
+      urls: "turn:a.relay.metered.ca:80",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:80?transport=tcp",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:443",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:443?transport=tcp",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
     },
   ],
 };
 
 // socket reconnection
-const SOCKET_RECONNECTION_ATTEMPTS = 2;
-const SOCKET_RECONNECTION_DELAY = 1500; //milliseconds
+const SOCKET_RECONNECTION_ATTEMPTS = 5;
+const SOCKET_RECONNECTION_DELAY = 500; //milliseconds
 
 // Auto change Quadrant Delay
 const AUTO_CHANGE_QUADRANT_DELAY = 1000; //milliseconds
+
+// Update Record Interval
+const UPDATE_RECORD_EVERY_MILLISECONDS = 10000 //milliseconds
+
+const MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD = 24 * 60 * 60 * 1000 // 1 day in milliseconds
 
 const EX_DATA = [
   {
@@ -31,7 +58,7 @@ const EX_DATA = [
     idxArray: [
       {
         ID: 8,
-        missing: null,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -51,7 +78,7 @@ const EX_DATA = [
       },
       {
         ID: 7,
-        missing: null,
+        missing: false,
         depended_side_data: [
           {
             side: "buccal",
@@ -695,11 +722,14 @@ export {
   NAME_MAX_LENGTH,
   SURNAME_MAX_LENGTH,
   DENTISTID_MAX_LENGTH,
+  PATIENTID_MAX_LENGTH,
   RTC_CONFIG,
   URL_BACKEND,
   URL_BACKEND_STREAMING,
   SOCKET_RECONNECTION_ATTEMPTS,
   SOCKET_RECONNECTION_DELAY,
   AUTO_CHANGE_QUADRANT_DELAY,
+  UPDATE_RECORD_EVERY_MILLISECONDS,
+  MAXIMUM_TIME_TO_RETRIEVE_FINISHED_RECORD,
   EX_DATA,
 };

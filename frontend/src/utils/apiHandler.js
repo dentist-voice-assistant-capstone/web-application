@@ -8,6 +8,8 @@ const USER_INFO_ENDPOINT = `${URL_BACKEND}/user/userInfo`;
 const USER_UPDATE_PROFILE_ENDPOINT = `${URL_BACKEND}/user/updateProfile`;
 const USER_UPDATE_PASSWORD_ENDPOINT = `${URL_BACKEND}/user/updatePassword`;
 const USER_SEND_REPORT_EXCEL_ENDPOINT = `${URL_BACKEND}/user/sendReportExcel`;
+const USER_ACTIVATE_EMAIL_ENDPOINT = `${URL_BACKEND}/user/activateAccount/`;
+const USER_CHECK_TOKEN_ENDPOINT = `${URL_BACKEND}/user/checkToken`;
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -68,6 +70,10 @@ const userEmailConfirmationAPIHandler = (userEmail) => {
   axios.post(USER_EMAIL_CONFIRMATION_ENDPOINT, userEmail);
 };
 
+const emailActivatedHandler = (id) => {
+  axios.patch(`${USER_ACTIVATE_EMAIL_ENDPOINT}${id}`);
+};
+
 // const saveLocalExcelAPIHandler = (data) => {
 //   console.log(data);
 //   axios.post(USER_SAVE_LOCAL_EXCEL_ENDPOINT, data).then(function (response) {
@@ -91,10 +97,10 @@ const sendReportExcelAPIHandler = (data, email, file_name) => {
       file_name: file_name,
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
     });
 };
 const userLoginAPIHandler = (
@@ -107,7 +113,7 @@ const userLoginAPIHandler = (
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       if (result.status === 200) {
         const expirationTime = new Date(new Date().getTime() + session_time);
         authCtx.login(result.data.token, expirationTime.toISOString());
@@ -117,7 +123,7 @@ const userLoginAPIHandler = (
       }
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       if (!error.response) {
         setLoginError({
           header: "Connection Error",
@@ -133,43 +139,68 @@ const userLoginAPIHandler = (
     });
 };
 
-const startAPIHandler = () => {
-  console.log("Starting");
-};
+// const fetchUserInfoAPIHandler = (
+//   token,
+//   setUserData,
+//   setIsLoaded,
+//   setUpdateError
+// ) => {
+//   const config = {
+//     headers: { Authorization: `Bearer ${token}` },
+//   };
+//   axios
+//     .get(USER_INFO_ENDPOINT, config)
+//     .then((result) => {
+//       // console.log(result)
+//       if (result.status === 200) {
+//         let userInfoData = result.data.data.user;
+//         setIsLoaded(true);
+//         setUserData({
+//           email: userInfoData.email,
+//           dentistName: userInfoData.dentistName || "",
+//           dentistSurname: userInfoData.dentistSurname || "",
+//           dentistID: userInfoData.dentistID || "",
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       if (!error.response) {
+//         setUpdateError({
+//           header: "Connection Error",
+//           content: <p>Cannot connect to backend server.</p>,
+//         });
+//         return false;
+//       }
+//     });
+// };
 
-const fetchUserInfoAPIHandler = (
-  token,
-  setUserData,
-  setIsLoaded,
-  setUpdateError
-) => {
+const fetchUserInfoAPIHandler = async (token) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  axios
-    .get(USER_INFO_ENDPOINT, config)
-    .then((result) => {
-      // console.log(result)
-      if (result.status === 200) {
-        let userInfoData = result.data.data.user;
-        setIsLoaded(true);
-        setUserData({
-          email: userInfoData.email,
-          dentistName: userInfoData.dentistName || "",
-          dentistSurname: userInfoData.dentistSurname || "",
-          dentistID: userInfoData.dentistID || "",
-        });
-      }
-    })
-    .catch((error) => {
-      if (!error.response) {
-        setUpdateError({
-          header: "Connection Error",
-          content: <p>Cannot connect to backend server.</p>,
-        });
-        return false;
-      }
-    });
+
+  try {
+    const result = await axios.get(USER_INFO_ENDPOINT, config);
+    if (result.status === 200) {
+      let userDataFetched = result.data.data.user;
+      let userDataReturned = {
+        email: userDataFetched.email,
+        // dentistName, dentistSurname, dentistID may be null
+        dentistName: userDataFetched.dentistName || "",
+        dentistSurname: userDataFetched.dentistSurname || "",
+        dentistID: userDataFetched.dentistID || "",
+      };
+      return userDataReturned;
+    }
+  } catch (err) {
+    if (!err.response) {
+      throw new Error("Cannot connect to backend server");
+    }
+    // other error
+    const response = err.response;
+    // console.log("ERROR!!", response.status, response.statusText)
+    return null;
+  }
 };
 
 const updateUserProfileAPIHandler = (
@@ -222,7 +253,7 @@ const updateUserPasswordAPIHandler = (
   axios
     .patch(USER_UPDATE_PASSWORD_ENDPOINT, userPasswordUpdateData, config)
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       // change password completed
       if (result.status === 200) {
         // TODO: show InfoModal to let the user re-login again, logout the user, navigate to login page
@@ -267,13 +298,30 @@ const updateUserPasswordAPIHandler = (
     });
 };
 
+const checkUserTokenAPIHandler = async (token) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  try {
+    const result = await axios.get(USER_CHECK_TOKEN_ENDPOINT, config);
+    if (result.status === 200) {
+      return result.data.user_id;
+    }
+  } catch (err) {
+    const response = err.response;
+    // console.log(response.status, response.statusText)
+    return null;
+  }
+};
+
 export {
   userRegisterAPIHandler,
   userEmailConfirmationAPIHandler,
   userLoginAPIHandler,
-  startAPIHandler,
   fetchUserInfoAPIHandler,
   updateUserProfileAPIHandler,
   updateUserPasswordAPIHandler,
   sendReportExcelAPIHandler,
+  emailActivatedHandler,
+  checkUserTokenAPIHandler,
 };

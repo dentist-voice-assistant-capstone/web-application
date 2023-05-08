@@ -18,8 +18,8 @@ function TopInformationBar(props) {
                   {props.dentistID}
                 </div>
                 <div className={classes["content-center"]}>
-                  {"Patience ID: "}
-                  {props.patienceID}
+                  {"Patient ID: "}
+                  {props.patientID}
                 </div>
 
                 <div className={classes["content-right"]}>

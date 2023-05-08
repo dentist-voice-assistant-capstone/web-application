@@ -14,7 +14,7 @@
 .control label {
   width: 100px;
   text-align: right;
-  font-size: 20px;
+  font-size: 2.5vh;
 }
 
 .control input {
@@ -26,7 +26,7 @@
   padding: 0.25rem;
   width: 82.5%;
   background-color: #ececec;
-  font-size: 18px;
+  font-size: 2vh;
 }
 
 .actions {
@@ -36,7 +36,7 @@
 
 .actions button {
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 2vh;
   width: 85%;
   height: 40px;
   border: 0;
@@ -47,8 +47,10 @@
 .actions button:disabled,
 .actions button:disabled:hover {
   background-color: gray;
+  transition: var(--transition-hover);
 }
 
 .actions button:hover {
   background-color: green;
+  transition: var(--transition-hover);
 }

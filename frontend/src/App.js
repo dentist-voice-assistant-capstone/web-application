@@ -1,27 +1,88 @@
-import { ROUTES, ROUTES_NOT_LOGIN } from "./routes";
 import { Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-import AuthContext from "./store/auth-context";
+import HomePage from "./pages/home/HomePage";
+import RegisterPage from "./pages/register/RegisterPage";
+import LoginPage from "./pages/login/LoginPage";
+import EmailConfirmPage from "./pages/register/EmailConfirmPage";
+import VerificationPage from "./pages/register/VerificationPage";
+import AccountEditPage from "./pages/account/AccountEditPage";
+import AudioStreamingPage from "./pages/audioStreaming/AudioStreamingPage";
+import RecordPage from "./pages/record/RecordPage";
+import SummaryPage from "./pages/record/SummaryPage";
+import ErrorPage from "./pages/error/ErrorPage";
+import { LoggedInRoute } from "./components/routes/LoggedInRoute";
+import { LoggedOutRoute } from "./components/routes/LoggedOutRoute";
 
 function App() {
-  const authCtx = useContext(AuthContext);
-
   return (
     <div>
-      {authCtx.isLoggedIn && (
-        <Routes>
-          {ROUTES.map((route) => (
-            <Route path={route.path} element={route.element} key={route.path} />
-          ))}
-        </Routes>
-      )}
-      {!authCtx.isLoggedIn && (
-        <Routes>
-          {ROUTES_NOT_LOGIN.map((route) => (
-            <Route path={route.path} element={route.element} key={route.path} />
-          ))}
-        </Routes>
-      )}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/register"
+          element={
+            <LoggedOutRoute>
+              <RegisterPage />
+            </LoggedOutRoute>
+          }
+        />
+        <Route
+          path="/register/email_confirmation"
+          element={
+            <LoggedOutRoute>
+              <EmailConfirmPage />
+            </LoggedOutRoute>
+          }
+        />
+        <Route
+          path="/register/verification/:id"
+          element={
+            <LoggedOutRoute>
+              <VerificationPage />
+            </LoggedOutRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <LoggedOutRoute>
+              <LoginPage />
+            </LoggedOutRoute>
+          }
+        />
+        <Route
+          path="/account/edit"
+          element={
+            <LoggedInRoute>
+              <AccountEditPage />
+            </LoggedInRoute>
+          }
+        />
+        <Route
+          path="/streaming"
+          element={
+            <LoggedInRoute>
+              <AudioStreamingPage />
+            </LoggedInRoute>
+          }
+        />
+        <Route
+          path="/record"
+          element={
+            <LoggedInRoute>
+              <RecordPage />
+            </LoggedInRoute>
+          }
+        />
+        <Route
+          path="/summary"
+          element={
+            <LoggedInRoute>
+              <SummaryPage />
+            </LoggedInRoute>
+          }
+        />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
     </div>
   );
 }

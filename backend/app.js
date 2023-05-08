@@ -5,9 +5,13 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const userRouter = require("./routes/userRoutes");
+const recordRouter = require("./routes/recordRoutes");
 
 const corsOptions = {
-  origin: true, //"http://127.0.0.1:5000",
+  origin: [
+    `http://${process.env.FRONTEND_IP}:${process.env.FRONTEND_PORT}`,
+    `http://${process.env.BACKEND_WEB_RTC_IP}:${process.env.BACKEND_WEB_RTC_PORT}`,
+  ],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
@@ -23,6 +27,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "25kb" }));
 
 app.use("/user", userRouter);
+app.use("/record", recordRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

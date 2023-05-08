@@ -5,8 +5,8 @@ class ToothTable {
     this.quadrants = [];
 
     for (let quadrant = 1; quadrant <= 4; quadrant++) {
-      const q = new Quadrant(quadrant)
-      this.quadrants.push(q)
+      const q = new Quadrant(quadrant);
+      this.quadrants.push(q);
     }
   }
 
@@ -16,27 +16,31 @@ class ToothTable {
     */
     let isUpdate;
     switch (mode) {
-      case ("PD"):
-        isUpdate = this.quadrants[q - 1].teeth[i - 1].PD[side][position] !== target;
+      case "PD":
+        isUpdate =
+          this.quadrants[q - 1].teeth[i - 1].PD[side][position] !== target;
         this.quadrants[q - 1].teeth[i - 1].PD[side][position] = target;
         break;
-      case ("RE"):
-        isUpdate = this.quadrants[q - 1].teeth[i - 1].RE[side][position] !== target;
+      case "RE":
+        isUpdate =
+          this.quadrants[q - 1].teeth[i - 1].RE[side][position] !== target;
         this.quadrants[q - 1].teeth[i - 1].RE[side][position] = target;
         break;
-      case ("BOP"):
-        isUpdate = this.quadrants[q - 1].teeth[i - 1].BOP[side][position] !== target;
-        isUpdate = this.quadrants[q - 1].teeth[i - 1].BOP[side][position] = target;
+      case "BOP":
+        isUpdate =
+          this.quadrants[q - 1].teeth[i - 1].BOP[side][position] !== target;
+        isUpdate = this.quadrants[q - 1].teeth[i - 1].BOP[side][position] =
+          target;
         break;
-      case ("MO"):
+      case "MO":
         isUpdate = this.quadrants[q - 1].teeth[i - 1].MO !== target;
         this.quadrants[q - 1].teeth[i - 1].MO = target;
         break;
-      case ("MGJ"):
+      case "MGJ":
         isUpdate = this.quadrants[q - 1].teeth[i - 1].MGJ !== target;
         this.quadrants[q - 1].teeth[i - 1].MGJ = target;
         break;
-      case ("Missing"):
+      case "Missing":
         isUpdate = this.quadrants[q - 1].teeth[i - 1].missing !== target;
         this.quadrants[q - 1].teeth[i - 1].missing = target;
         break;
@@ -47,10 +51,10 @@ class ToothTable {
   }
 
   findNextAvailableTooth(q, i, side = null) {
-    // instantiate toothArray that represents the order of recording PDRE values 
+    // instantiate toothArray that represents the order of recording PDRE values
     // based on the quadrant, side that being recorded
     let toothArray = [];
-    if ((q === 1) || (q === 2)) {
+    if (q === 1 || q === 2) {
       for (let quadrant = 1; quadrant <= 2; quadrant++) {
         if (quadrant === 1) {
           for (let toothID = 8; toothID >= 1; toothID--) {
@@ -62,7 +66,7 @@ class ToothTable {
           }
         }
       }
-    } else if ((q === 3) || (q === 4)) {
+    } else if (q === 3 || q === 4) {
       for (let quadrant = 4; quadrant >= 3; quadrant--) {
         if (quadrant === 4) {
           for (let toothID = 8; toothID >= 1; toothID--) {
@@ -75,20 +79,25 @@ class ToothTable {
         }
       }
     }
-    // reverse the toothArray 
+    // reverse the toothArray
     // for quadrant 1-2 if side === "lingual"
     // for quadrant 3-4 if side === "buccal"
-    if (!!side && (((q === 1 || q === 2) && side === "lingual") || ((q === 3 || q === 4) && side === "buccal"))) {
+    if (
+      !!side &&
+      (((q === 1 || q === 2) && side === "lingual") ||
+        ((q === 3 || q === 4) && side === "buccal"))
+    ) {
       toothArray.reverse();
     }
 
-    let toothIndex = toothArray.findIndex((t) => {
-      return t[0] === q && t[1] === i
-    }) + 1;
+    let toothIndex =
+      toothArray.findIndex((t) => {
+        return t[0] === q && t[1] === i;
+      }) + 1;
 
     let next_tooth = null;
     while (toothIndex < toothArray.length) {
-      const [next_tooth_q, next_tooth_i] = toothArray[toothIndex]
+      const [next_tooth_q, next_tooth_i] = toothArray[toothIndex];
       // check that tooth at quadrant: next_tooth_q, ID: next_tooth_i is not missing ?
       if (!this.quadrants[next_tooth_q - 1].teeth[next_tooth_i - 1].missing) {
         next_tooth = { q: next_tooth_q, i: next_tooth_i };
@@ -99,14 +108,14 @@ class ToothTable {
     return next_tooth;
   }
 
-  clearToothValue(q, i, mode, side=null) {
+  clearToothValue(q, i, mode, side = null) {
     /*
       This function is called when the user want to record PDRE/MGJ value at the same tooth that has been recorded earlier.
       It set all the corresponding values in the particular tooth to be null, so the new incoming target should not repeated with the old kept values.
     */
-   console.log("hihi", q, i, mode, side);
-    switch(mode) {
-      case ("PDRE"):
+    console.log("hihi", q, i, mode, side);
+    switch (mode) {
+      case "PDRE":
         side = side.toLowerCase();
         const positionArray = ["mesial", side, "distal"];
         for (const position of positionArray) {
@@ -114,33 +123,33 @@ class ToothTable {
           this.quadrants[q - 1].teeth[i - 1].RE[side][position] = null;
         }
         break;
-        
-      case ("MGJ"): 
+
+      case "MGJ":
         this.quadrants[q - 1].teeth[i - 1].MGJ = null;
         break;
-        
+
       default:
         return false;
     }
   }
 
   showPDREValue() {
-    let pd = 'PD: ';
-    let re = 'RE: ';
-    let tooth = '   ';
+    let pd = "PD: ";
+    let re = "RE: ";
+    let tooth = "   ";
     for (let i = 8; i >= 1; i--) {
-      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["distal"] || 'x' + ' '
-      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["buccal"] || 'x' + ' '
-      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["mesial"] || 'x' + ' '
+      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["distal"] || "x" + " ";
+      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["buccal"] || "x" + " ";
+      pd += this.quadrants[0].teeth[i - 1].PD["buccal"]["mesial"] || "x" + " ";
 
-      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["distal"] || 'x' + ' '
-      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["buccal"] || 'x' + ' '
-      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["mesial"] || 'x' + ' '
+      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["distal"] || "x" + " ";
+      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["buccal"] || "x" + " ";
+      re += this.quadrants[0].teeth[i - 1].RE["buccal"]["mesial"] || "x" + " ";
 
-      pd += '| '
-      re += '| '
+      pd += "| ";
+      re += "| ";
 
-      tooth += `==1${i}== `
+      tooth += `==1${i}== `;
     }
     // pd += '||| '
     // re += '||| '
@@ -159,9 +168,21 @@ class ToothTable {
     //   tooth += `==2${i}== `
     // }
 
-    console.log(pd)
-    console.log(re)
-    console.log(tooth)
+    console.log(pd);
+    console.log(re);
+    console.log(tooth);
+  }
+
+  exportValue() {
+    let ex_data = [];
+    this.quadrants.forEach((quadrant) => ex_data.push(quadrant.exportValue()));
+    return ex_data;
+  }
+
+  importValue(recordData) {
+    const quadrants = recordData;
+    quadrants.forEach((quadrant, index) => this.quadrants[index].importValue(quadrant));
+    return;
   }
 }
 

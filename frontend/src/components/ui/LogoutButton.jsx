@@ -8,7 +8,7 @@ function LogoutButton() {
   const authCtx = useContext(AuthContext);
   const logoutHandler = () => {
     authCtx.logout();
-    navigate("/");
+    navigate("/login");
   };
 
   return (

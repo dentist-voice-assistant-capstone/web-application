@@ -3,14 +3,45 @@
   --main-border-radius: 10px;
 }
 
+/* iPad */
+/* @media (min-width: 770px) and (max-width: 1200px) and (min-height: 770px) and (max-height: 1000px) {
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    width: 55%;
+    border-radius: var(--main-border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    background-color: white;
+    animation: drop 0.3s forwards 0s ease-out;
+  }
+} */
+
+/* WideScreen */
+/* @media (min-width: 1201px) or (min-height: 1001px) {
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    width: 40%;
+    border-radius: var(--main-border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    background-color: white;
+    animation: drop 0.3s forwards 0s ease-out;
+  }
+} */
+
 .modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
-  /* width: 35%; */
-  width: 50%;
+  width: 50vw;
   border-radius: var(--main-border-radius);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   background-color: white;
@@ -57,7 +88,7 @@
 }
 
 .modal .modal__header p {
-  font-size: 20px;
+  font-size: 2vh;
   color: white;
   font-weight: bolder;
   text-align: center;
@@ -70,13 +101,13 @@
 }
 
 .modal__content p {
-  font-size: 18px;
+  font-size: 2vh;
   text-align: center;
 }
 
 .modal__content p b {
   color: red;
-  font-size: 20px;
+  font-size: 2vh;
 }
 
 /* in case there only 1 button */
@@ -90,7 +121,7 @@
 .modal .modal__actions button {
   border-radius: var(--main-border-radius);
   text-align: center;
-  font-size: 18px;
+  font-size: 2vh;
   width: 30%;
   padding: 0.25rem 1rem 0.25rem 1rem;
   border: 0;

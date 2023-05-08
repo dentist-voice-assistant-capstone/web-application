@@ -1,11 +1,11 @@
 import { useLocation, useParams } from "react-router-dom";
 import "./VerificationPage.css";
-import { userEmailConfirmationAPIHandler } from "../../utils/apiHandler";
+import { emailActivatedHandler } from "../../utils/apiHandler";
 
 const VerificationPage = () => {
   const { id } = useParams();
-  console.log(id);
-
+  // console.log(id);
+  emailActivatedHandler(id);
   return (
     <div className="landing-page">
       <div className="verification centered">

@@ -16,24 +16,33 @@ import NavBar from "../../components/ui/NavBar";
 import Modal from "../../components/ui/Modal";
 import { createReport } from "../../utils/createExcel";
 import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
-import { teethInformationHandler } from "../../utils/TeethInformationHandler";
+import {
+  teethInformationHandler,
+  // randomValue,
+  valueGenarator,
+} from "../../utils/TeethInformationHandler";
+import { EX_DATA } from "../../utils/constants";
 
 const SummaryPage = () => {
   const navigate = useNavigate();
 
   const state = useLocation();
+  const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
   const userData = state.state.userData;
 
-  const patienceID = state.state.patienceID;
+  const patientID = state.state.patientID;
   const dentistID = state.state.dentistID;
   const date = state.state.date;
 
-  const file_name = `${patienceID}_${date}`;
+  const file_name = `${patientID}_${date}`;
 
-  const [information, setInformation] = useState(state.state.information);
+  const [information, setInformation] = useState(
+    Object.assign([], state.state.information)
+  );
   const [checkMailExport, setCheckMailExport] = useState(false);
   const [checkBackToHome, setCheckBackToHome] = useState(false);
   const [showSentSuccess, setShowSentSuccess] = useState(false);
+  const [value, setValue] = useState(null);
 
   /* states for quadrant */
   const [quadrant, setQuadrant] = useState(1);
@@ -47,7 +56,11 @@ const SummaryPage = () => {
       return !prevcheckMailExport;
     });
   };
-
+  // const valueHandler = () => {
+  //   const v = randomValue("MO");
+  //   setValue(v);
+  //   console.log(v);
+  // };
   const checkBackToHomeHandler = () => {
     setCheckBackToHome((prevcheckBackToHome) => {
       return !prevcheckBackToHome;
@@ -80,14 +93,32 @@ const SummaryPage = () => {
     setInformation(newInformation);
   };
 
+  const handleUndoToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", false);
+  };
+
+  const handleAddToothMissing = (q, i) => {
+    handleSetInformation(q, i, null, "Missing", true);
+  };
+
+  const handleRandomInformation = () => {
+    const newInformation = information.map((obj) => {
+      return valueGenarator(obj);
+    });
+    setInformation(newInformation);
+  };
+
+  const handleResetInformation = () => {
+    setInformation(JSON.parse(JSON.stringify(defaultInformation)));
+  };
+
   const modalExportContent = (
     <p>
-      report will send to {userData.email}
-      {/* <br />
-      Once export,{" "} */}
-      {/* <span style={{ color: "red" }}>
-        <b> this procedure cannot be reversed.</b>
-      </span> */}
+      The report will be sent to {userData.email}
+      <br />
+      <span style={{ color: "red" }}>
+        <b> Please recheck whether email is correct before export.</b>
+      </span>
     </p>
   );
 
@@ -126,16 +157,17 @@ const SummaryPage = () => {
         />
       )}
       <div className="landing-page">
-        <div className={classes["success_message"]}>
-          <Alert
-            show={showSentSuccess}
-            variant="success"
-            style={{ height: "56px", border: 0, margin: 0 }}
-            // className={classes["success_message"]}
-          >
-            Report has been sent successfully
-          </Alert>
-        </div>
+        {showSentSuccess && (
+          <div className={classes["success_message"]}>
+            <Alert
+              show={showSentSuccess}
+              variant="success"
+              style={{ height: "5.5vh", border: 0, margin: 0 }}
+            >
+              Report has been sent successfully
+            </Alert>
+          </div>
+        )}
         <div className={classes["top-bar"]}>
           <NavBar
             userData={userData}
@@ -143,55 +175,68 @@ const SummaryPage = () => {
             isSummary={true}
             checkBackToHomeHandler={checkBackToHomeHandler}
           ></NavBar>
-        </div>
-        <div className={classes.information_box}>
-          <InformationBox
-            dentistID={dentistID}
-            patienceID={patienceID}
-            date={date}
-          />
-        </div>
+        </div>{" "}
         <div className={classes.droplist}>
           <DropdownButton
             className={classes.box}
-            title={quadrant}
+            title={`Q${quadrant}`}
             onSelect={handleSelect}
           >
-            <Dropdown.Item eventKey="1">1</Dropdown.Item>
-            <Dropdown.Item eventKey="2">2</Dropdown.Item>
-            <Dropdown.Item eventKey="3">3</Dropdown.Item>
-            <Dropdown.Item eventKey="4">4</Dropdown.Item>
+            <Dropdown.Item eventKey="1">Q1</Dropdown.Item>
+            <Dropdown.Item eventKey="2">Q2</Dropdown.Item>
+            <Dropdown.Item eventKey="3">Q3</Dropdown.Item>
+            <Dropdown.Item eventKey="4">Q4</Dropdown.Item>
           </DropdownButton>
         </div>
-        <div className="centered">
-          {quadrant === 1 && (
-            <RecordInformation
-              information={information[0]}
-              currentCommand={false}
-              handleSetInformation={handleSetInformation}
-            />
-          )}
-          {quadrant === 2 && (
-            <RecordInformation
-              information={information[1]}
-              currentCommand={false}
-              handleSetInformation={handleSetInformation}
-            />
-          )}
-          {quadrant === 3 && (
-            <RecordInformation
-              information={information[2]}
-              currentCommand={false}
-              handleSetInformation={handleSetInformation}
-            />
-          )}
-          {quadrant === 4 && (
-            <RecordInformation
-              information={information[3]}
-              currentCommand={false}
-              handleSetInformation={handleSetInformation}
-            />
-          )}
+        <div className={classes["information_area"]}>
+          <div className={classes["information_user"]}>
+            <div className={classes["information_box"]}>
+              <InformationBox
+                dentistID={dentistID}
+                patientID={patientID}
+                date={date}
+              />
+            </div>
+          </div>
+
+          <div className={classes["information_process"]}>
+            {quadrant === 1 && (
+              <RecordInformation
+                information={information[0]}
+                currentCommand={false}
+                handleSetInformation={handleSetInformation}
+                handleUndoToothMissing={handleUndoToothMissing}
+                handleAddToothMissing={handleAddToothMissing}
+              />
+            )}
+            {quadrant === 2 && (
+              <RecordInformation
+                information={information[1]}
+                currentCommand={false}
+                handleSetInformation={handleSetInformation}
+                handleUndoToothMissing={handleUndoToothMissing}
+                handleAddToothMissing={handleAddToothMissing}
+              />
+            )}
+            {quadrant === 3 && (
+              <RecordInformation
+                information={information[2]}
+                currentCommand={false}
+                handleSetInformation={handleSetInformation}
+                handleUndoToothMissing={handleUndoToothMissing}
+                handleAddToothMissing={handleAddToothMissing}
+              />
+            )}
+            {quadrant === 4 && (
+              <RecordInformation
+                information={information[3]}
+                currentCommand={false}
+                handleSetInformation={handleSetInformation}
+                handleUndoToothMissing={handleUndoToothMissing}
+                handleAddToothMissing={handleAddToothMissing}
+              />
+            )}
+          </div>
         </div>
         <RecordControlSummaryBar
           createReport={createReport}

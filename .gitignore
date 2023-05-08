@@ -12,23 +12,28 @@ frontend/coverage
 frontend/build
 
 # misc
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+frontend/.env
+frontend/.env.development
+frontend/.env.test
+frontend/.env.production
 
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
+# backend
 backend/node_modules
 backend/package-lock.json
+backend/.env
 
+# backend_webrtc
 backend_webrtc/node_modules
 backend_webrtc/package-lock.json
+backend_webrtc/.env.development
+backend_webrtc/.env.production
 
+# backend_ner
 backend_ner/model/onnx_model-quantized.onnx
-
 backend_ner/ner_onnx.ipynb
 
 # ignore all Python cache files
@@ -36,8 +41,6 @@ backend_ner/ner_onnx.ipynb
 *.pyc
 backend_ner/__pycache__
 backend_ner/utils/__pycache__
-
-backend/config.env
 
 # public and private key of backend server (for https)
 cert.pem
