@@ -8,7 +8,7 @@ process.on('uncaughtException', err => {
   process.exit(1);
 });
 
-dotenv.config({ path: './config.env' });
+dotenv.config();
 const app = require('./app');
 
 // Connect MongoDB
@@ -25,7 +25,7 @@ mongoose
   });
 
 const port = process.env.SERVER_PORT || 3000;
-const server = app.listen(port, () => {});
+const server = app.listen(port, () => { });
 
 process.on('unhandledRejection', err => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
