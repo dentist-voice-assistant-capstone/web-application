@@ -1,10 +1,11 @@
 import { Fragment } from "react";
 import useInput from "../../hooks/use-input";
-import {
-  validateMaxLength,
-  validateIllegalFileNameCharacters,
-  validateNoBlankValue
-} from "../../utils/validator";
+import Validator from "../../utils/validator";
+// import {
+//   validateMaxLength,
+//   validateIllegalFileNameCharacters,
+//   validateNoBlankValue
+// } from "../../utils/validator";
 import {
   DENTISTID_MAX_LENGTH,
   PATIENTID_MAX_LENGTH
@@ -13,6 +14,12 @@ import {
 import classes from "./InputModal.module.css";
 
 const InputModal = (props) => {
+
+  const validateIllegalFileNameCharacters = new Validator("validateIllegalFileNameCharacters")
+  const validateNoBlankValue = new Validator("validateNoBlankValue")
+  const validateDentistIdMaxLength = new Validator("validateMaxLength", { maxLength: DENTISTID_MAX_LENGTH })
+  const validatePatientIdMaxLength = new Validator("validateMaxLength", { maxLength: PATIENTID_MAX_LENGTH })
+
   // Dentist ID
   const {
     value: enteredDentistId,
@@ -22,7 +29,7 @@ const InputModal = (props) => {
     valueChangeHandler: dentistIdChangeHandler,
     inputBlurHandler: dentistIdBlurHandler,
     reset: resetDentistID
-  } = useInput("Dentist ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateMaxLength], {
+  } = useInput("Dentist ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateDentistIdMaxLength], {
     maxLength: DENTISTID_MAX_LENGTH,
     defaultValue: props.dentistID
   })
@@ -36,7 +43,7 @@ const InputModal = (props) => {
     valueChangeHandler: patientIdChangeHandler,
     inputBlurHandler: patientIdBlurHandler,
     reset: resetPatientID
-  } = useInput("Patient ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validateMaxLength], {
+  } = useInput("Patient ID", [validateIllegalFileNameCharacters, validateNoBlankValue, validatePatientIdMaxLength], {
     maxLength: PATIENTID_MAX_LENGTH
   })
 
