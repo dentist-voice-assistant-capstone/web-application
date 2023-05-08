@@ -1,6 +1,3 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./../config.env" });
-
 exports.verificationContent = (id) => {
   return (
     "<div> <h3>Click the button below to activate your email address </h3>" +

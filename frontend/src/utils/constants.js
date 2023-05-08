@@ -15,7 +15,27 @@ const PATIENTID_MAX_LENGTH = 45;
 const RTC_CONFIG = {
   iceServers: [
     {
-      urls: ["stun:stun.l.google.com:19302"],
+      urls: "stun:a.relay.metered.ca:80",
+    },
+    {
+      urls: "turn:a.relay.metered.ca:80",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:80?transport=tcp",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:443",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
+    },
+    {
+      urls: "turn:a.relay.metered.ca:443?transport=tcp",
+      username: process.env.REACT_APP_OPEN_RELAY_USERNAME,
+      credential: process.env.REACT_APP_OPEN_RELAY_CREDENTIAL,
     },
   ],
 };
