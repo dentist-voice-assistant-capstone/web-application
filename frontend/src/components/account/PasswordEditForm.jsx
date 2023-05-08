@@ -1,10 +1,11 @@
 import useInput from "../../hooks/use-input";
-import {
-  validateEmptyInput,
-  validateLength,
-  validateOldandNewPassword,
-  validateConfirmPassword,
-} from "../../utils/validator";
+import Validator from "../../utils/validator";
+// import {
+//   validateEmptyInput,
+//   validateLength,
+//   validateOldandNewPassword,
+//   validateConfirmPassword,
+// } from "../../utils/validator";
 import {
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
@@ -14,6 +15,12 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 import classes from "./AccountEditForm.module.css";
 
 const PasswordEditForm = (props) => {
+
+  const validateEmptyInput = new Validator("validateEmptyInput")
+  const validatePasswordLength = new Validator("validateLength", { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH })
+  const validateConfirmPassword = new Validator("validateConfirmPassword")
+  const validateOldandNewPassword = new Validator("validateOldandNewPassword")
+
   const {
     value: enteredOldPassword,
     isValueValid: isOldPasswordValid,
@@ -32,10 +39,8 @@ const PasswordEditForm = (props) => {
     valueChangeHandler: newPasswordChangeHandler,
     inputBlurHandler: newPasswordBlurHandler,
     reset: resetNewPassword,
-  } = useInput("Password", [validateLength, validateOldandNewPassword], {
-    password: enteredOldPassword,
-    minLength: PASSWORD_MIN_LENGTH,
-    maxLength: PASSWORD_MAX_LENGTH,
+  } = useInput("Password", [validatePasswordLength, validateOldandNewPassword], {
+    password: enteredOldPassword
   });
 
   const {
@@ -66,13 +71,14 @@ const PasswordEditForm = (props) => {
     console.log(userPasswordUpdateData);
     props.onSaveClick(userPasswordUpdateData);
   };
-
+  console.log("=====")
+  console.log(enteredOldPassword, enteredNewPassword)
+  console.log("=====")
   return (
     <form onSubmit={handleSubmit}>
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasOldPasswordError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasOldPasswordError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="oldPassword">Old Password</label>
         <br />
@@ -89,7 +95,7 @@ const PasswordEditForm = (props) => {
         style={{
           color:
             hasNewPasswordError &&
-            errorMessageNewPassword !==
+              errorMessageNewPassword !==
               "New password should not be same as old password."
               ? "red"
               : "",
@@ -99,9 +105,8 @@ const PasswordEditForm = (props) => {
       </p>
 
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasNewPasswordError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasNewPasswordError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="newPassword">New Password</label>
         <br />
@@ -114,15 +119,14 @@ const PasswordEditForm = (props) => {
         ></input>
         {hasNewPasswordError &&
           errorMessageNewPassword !==
-            "Password length must be between 8-12 characters." && (
+          "Password length must be between 8-12 characters." && (
             <p className={classes["error"]}>{errorMessageNewPassword}</p>
           )}
       </div>
 
       <div
-        className={`${classes["account-edit__form-items"]} ${
-          hasConfirmNewPasswordError ? classes["invalid"] : ""
-        }`}
+        className={`${classes["account-edit__form-items"]} ${hasConfirmNewPasswordError ? classes["invalid"] : ""
+          }`}
       >
         <label htmlFor="confirmNewPassword">Confirm New Password</label>
         <br />
