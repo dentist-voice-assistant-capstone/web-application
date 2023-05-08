@@ -8,7 +8,7 @@ const axios = require("axios");
 const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const RATE = 48000; // Sample rate of the input audio
 
@@ -116,7 +116,35 @@ io.on("connection", async (socket) => {
   );
 
   // Create RTC peer connection and send server candidate to client
-  const pc = new webrtc.RTCPeerConnection();
+  const RTC_CONFIG = {
+    iceServers: [
+      {
+        urls: "stun:a.relay.metered.ca:80",
+      },
+      {
+        urls: "turn:a.relay.metered.ca:80",
+        username: process.env.OPEN_RELAY_USERNAME,
+        credential: process.env.OPEN_RELAY_CREDENTIAL,
+      },
+      {
+        urls: "turn:a.relay.metered.ca:80?transport=tcp",
+        username: process.env.OPEN_RELAY_USERNAME,
+        credential: process.env.OPEN_RELAY_CREDENTIAL,
+      },
+      {
+        urls: "turn:a.relay.metered.ca:443",
+        username: process.env.OPEN_RELAY_USERNAME,
+        credential: process.env.OPEN_RELAY_CREDENTIAL,
+      },
+      {
+        urls: "turn:a.relay.metered.ca:443?transport=tcp",
+        username: process.env.OPEN_RELAY_USERNAME,
+        credential: process.env.OPEN_RELAY_CREDENTIAL,
+      },
+    ],
+  };
+
+  const pc = new webrtc.RTCPeerConnection(RTC_CONFIG);
   pc.onicecandidate = ({ candidate }) => {
     socket.emit("candidate", candidate);
   };
