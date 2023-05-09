@@ -1,10 +1,11 @@
 const ToothTable = require("./teeth/ToothTable.js");
 
+const fs = require("fs");
 const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
+const https = require("https");
 const http = require("http");
-const axios = require("axios");
 const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
@@ -46,7 +47,13 @@ let ner_protoc = grpc.loadPackageDefinition(ner_packageDefinition).ner_backend;
 
 // Initialize Socket
 const app = express();
-const server = http.createServer(app);
+const server = process.env.NODE_ENV === "production" ? https.createServer(
+  {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  }, 
+  app
+) : http.createServer(app);
 const io = new Server(server, {
   // Create CORS, in order to give an access to front-end server
   cors: {
@@ -152,31 +159,33 @@ io.on("connection", async (socket) => {
 
   // When client undo missing
   socket.on("undo_missing", async (toothData) => {
-    tooth = { first_zee: toothData.q, second_zee: toothData.i };
-    ner_stub.UndoMissing(tooth, (err, response) => {
-      if (err) console.log(err);
-    });
-    toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
-    console.log("undo_missing:", toothData);
-  });
+    if (!!ner_call){
+      tooth = { first_zee: toothData.q, second_zee: toothData.i };
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.undo_missing = tooth;
+      ner_call.write(ner_request)
+      toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
+    }
+  })
 
   // When client add missing
   socket.on("add_missing", async (toothData) => {
-    tooth = { first_zee: toothData.q, second_zee: toothData.i };
-    ner_stub.AddMissing(tooth, (err, response) => {
-      if (err) console.log(err);
-    });
-    toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
-    console.log("add_missing:", toothData);
-  });
+    if (!!ner_call){
+      tooth = { first_zee: toothData.q, second_zee: toothData.i };
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.add_missing = tooth;
+      ner_call.write(ner_request)
+      toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
+    }
+  })
 
   // When disconnect end the streaming
   socket.on("disconnect", () => {
     console.log("disconnect");
     if (sink) {
       sink.stop();
-      // gowajee_call.cancel();
-      // ner_call.cancel()
+      gowajee_call.cancel();
+      ner_call.cancel()
       sink = null;
     }
   });
@@ -210,9 +219,14 @@ io.on("connection", async (socket) => {
 
     // When receive response from Gowajee Server, Send it to ner backend server
     gowajee_call.on("data", (response) => {
-      ner_call.write(response);
-      // }).once('error', () => {
-      //   console.log("end grpc streaming");
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.results = response.results;
+      ner_request.is_final = response.is_final;
+      ner_request.version = response.version;
+      ner_request.duration = response.duration;
+      ner_call.write(ner_request);
+      }).once('error', () => {
+        console.log("end grpc streaming");
     });
 
     ner_call.on("data", (response) => {
@@ -357,9 +371,9 @@ io.on("connection", async (socket) => {
         // await axios.post(url, updatedData, config);
         // ----------------------------------------------------------------- //
       });
-      // }).once('error', () => {
-      //   console.log("end grpc streaming");
-    });
+      }).once('error', () => {
+        console.log("end grpc streaming");
+    });;
   };
 });
 

@@ -30,4 +30,23 @@ function init_streaming_request() {
     return request;
 }
 
-module.exports = { init_streaming_request };
+function init_ner_request() {
+    ner_request = {
+        results : null,
+        is_final : null,
+        add_missing : {
+            first_zee : 100,
+            second_zee : 100,
+        },
+        undo_missing : {
+            first_zee : 100,
+            second_zee : 100,
+        },
+        version : "",
+        duration : 0.0,
+    };
+
+    return ner_request
+}
+
+module.exports = { init_streaming_request, init_ner_request };

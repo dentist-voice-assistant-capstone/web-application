@@ -3,7 +3,7 @@ syntax = "proto3";
 package ner_backend;
 
 service NERBackend {
-    rpc StreamingNER(stream StreamingTranscribeResponse) returns (stream NERResponse);
+    rpc StreamingNER(stream NERRequest) returns (stream NERResponse);
     rpc UndoMissing(Zee) returns (Empty);
     rpc AddMissing(Zee) returns (Empty);
 }
@@ -59,14 +59,15 @@ message WordInfo {
 }
 
 
-message StreamingTranscribeResponse {
+message NERRequest {
 
   repeated TranscriptionResult results = 1;
 
   bool is_final = 2;
 
-  
-  string version = 4;
+  Zee add_missing = 3;
+  Zee undo_missing = 4;
+  string version = 5;
   float duration = 7;
 }
 

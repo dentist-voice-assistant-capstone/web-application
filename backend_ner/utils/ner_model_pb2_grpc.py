@@ -16,7 +16,7 @@ class NERBackendStub(object):
         """
         self.StreamingNER = channel.stream_stream(
                 '/ner_backend.NERBackend/StreamingNER',
-                request_serializer=ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
+                request_serializer=ner__model__pb2.NERRequest.SerializeToString,
                 response_deserializer=ner__model__pb2.NERResponse.FromString,
                 )
         self.UndoMissing = channel.unary_unary(
@@ -57,7 +57,7 @@ def add_NERBackendServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'StreamingNER': grpc.stream_stream_rpc_method_handler(
                     servicer.StreamingNER,
-                    request_deserializer=ner__model__pb2.StreamingTranscribeResponse.FromString,
+                    request_deserializer=ner__model__pb2.NERRequest.FromString,
                     response_serializer=ner__model__pb2.NERResponse.SerializeToString,
             ),
             'UndoMissing': grpc.unary_unary_rpc_method_handler(
@@ -92,7 +92,7 @@ class NERBackend(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.stream_stream(request_iterator, target, '/ner_backend.NERBackend/StreamingNER',
-            ner__model__pb2.StreamingTranscribeResponse.SerializeToString,
+            ner__model__pb2.NERRequest.SerializeToString,
             ner__model__pb2.NERResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
