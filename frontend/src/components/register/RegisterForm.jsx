@@ -205,7 +205,7 @@ const RegisterForm = (props) => {
                   onBlur={passwordBlurHandler}
                 />
                 <p className={hasPasswordError ? "error" : ""}>
-                  Password should have 8-12 characters length.
+                  Password should have {PASSWORD_MIN_LENGTH}-{PASSWORD_MAX_LENGTH} characters length.
                 </p>
               </div>
             </li>

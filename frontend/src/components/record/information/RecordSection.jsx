@@ -1,6 +1,5 @@
 import RecordBuccalInformation from "./RecordBuccalInformation";
 import RecordLingualInformation from "./RecordLingualInformation";
-import { useState } from "react";
 
 import classes from "./RecordSection.module.css";
 

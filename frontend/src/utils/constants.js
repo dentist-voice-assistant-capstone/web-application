@@ -1,3 +1,6 @@
+// Production
+const SUPPRESS_LOG_PRODUCTION = true;
+
 // Backend Streaming URL
 const URL_BACKEND = `http://${process.env.REACT_APP_BACKEND_IP}:${process.env.REACT_APP_BACKEND_PORT}`;
 const URL_BACKEND_STREAMING = `http://${process.env.REACT_APP_BACKEND_STREAMING_IP}:${process.env.REACT_APP_BACKEND_STREAMING_PORT}`;
@@ -717,6 +720,7 @@ const EX_DATA = [
 ];
 
 export {
+  SUPPRESS_LOG_PRODUCTION,
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   NAME_MAX_LENGTH,
