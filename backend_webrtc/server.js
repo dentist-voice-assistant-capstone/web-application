@@ -5,6 +5,7 @@ const webrtc = require("wrtc");
 const { RTCAudioSink } = require("wrtc").nonstandard;
 const express = require("express");
 const https = require("https");
+const http = require("http");
 const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
@@ -45,13 +46,13 @@ let ner_protoc = grpc.loadPackageDefinition(ner_packageDefinition).ner_backend;
 
 // Initialize Socket
 const app = express();
-const server = https.createServer(
+const server = process.env.NODE_ENV === "production" ? https.createServer(
   {
     key: fs.readFileSync("key.pem"),
     cert: fs.readFileSync("cert.pem"),
   }, 
   app
-);
+) : http.createServer(app);
 const io = new Server(server, {
   // Create CORS, in order to give an access to front-end server
   cors: {
