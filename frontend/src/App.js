@@ -11,8 +11,14 @@ import SummaryPage from "./pages/record/SummaryPage";
 import ErrorPage from "./pages/error/ErrorPage";
 import { LoggedInRoute } from "./components/routes/LoggedInRoute";
 import { LoggedOutRoute } from "./components/routes/LoggedOutRoute";
+import { SUPPRESS_LOG_PRODUCTION } from "./utils/constants";
 
 function App() {
+  // Disable console.log in production environment ==================================================
+  if (!!process.env.NODE_ENV && process.env.NODE_ENV === "production" && SUPPRESS_LOG_PRODUCTION) {
+    console.log = () => { };
+  }
+  // ================================================================================================
   return (
     <div>
       <Routes>

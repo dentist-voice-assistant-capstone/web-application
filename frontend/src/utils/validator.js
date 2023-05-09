@@ -1,6 +1,6 @@
 export default class Validator {
   constructor(validatorName, parameters) {
-    /* validatorName list
+    /* [validatorName list]
       - validateEmptyInput
       - validateNoBlankValue
       - validateEmail

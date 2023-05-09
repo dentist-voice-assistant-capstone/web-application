@@ -50,8 +50,6 @@ import {
 } from "../../utils/toothLogic";
 import { playConnectionSound } from "../../utils/soundPlayerHandler";
 
-const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
-
 const RecordPage = () => {
   const navigate = useNavigate();
   const state = useLocation();
@@ -73,7 +71,7 @@ const RecordPage = () => {
     if (mode === "resume") {
       latestInformation = state.state.latestInformation;
     }
-  } catch (err) {}
+  } catch (err) { }
   // =========== FOR TESTING ======================
   // const userData = { email: "test@hotmail.com" };
   // const patientID = "123456";
@@ -81,9 +79,8 @@ const RecordPage = () => {
   // ===============================================
 
   const current = new Date();
-  const date = `${current.getDate()}/${
-    current.getMonth() + 1
-  }/${current.getFullYear()}`;
+  const date = `${current.getDate()}/${current.getMonth() + 1
+    }/${current.getFullYear()}`;
 
   // [States] ===============================================================
   const [userId, setUserId] = useState(null);
@@ -114,9 +111,9 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
-  const startInformation =
-    mode === "resume" ? latestInformation : defaultInformation;
-  const [information, setInformation] = useState(startInformation);
+  const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
+  const startInformation = mode === "resume" ? latestInformation : defaultInformation
+  const [information, setInformation] = useState([...startInformation]);
 
   /* state for keeping the interval id to update record */
   const updateInformationIntervalIdRef = useRef(null);
@@ -401,8 +398,8 @@ const RecordPage = () => {
         setWebRTCFailedToConnect
       );
       // clear data in the table
-      setInformation(defaultInformation);
-    };
+      setInformation([...defaultInformation]);
+    }
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
       // console.log("clear connection from popstate...");
@@ -576,7 +573,10 @@ const RecordPage = () => {
             isSummary={false}
           />
         </div>
-
+        {/* test button */}
+        {/* <button onClick={() => {
+          // new Audio(connectedSound).play()
+        }}> test</button> */}
         {/* Center */}
         {CenterComponentToBeRendered}
       </div>

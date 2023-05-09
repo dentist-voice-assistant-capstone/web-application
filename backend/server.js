@@ -28,6 +28,7 @@ mongoose
 
 const port = process.env.SERVER_PORT || 3000;
 
+console.log(`Starting Backend Server in ${process.env.NODE_ENV} mode...`)
 if (process.env.NODE_ENV === "development") {
   const server = app.listen(port, () => { });
 } else if (process.env.NODE_ENV === "production") {
