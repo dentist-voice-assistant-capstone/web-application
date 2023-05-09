@@ -21,7 +21,7 @@ function DropdownSm({
     <DropdownButton
       className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
         }`}
-      title={data || ""}
+      title={data !== null ? data : ""}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="">-</Dropdown.Item>
@@ -53,7 +53,7 @@ function DropdownSm({
     <DropdownButton
       className={`${classes["smallbox"]} ${isHighlighted ? classes["highlighted"] : ""
         }`}
-      title={data || ""}
+      title={data !== null ? data : ""}
       onSelect={handleSelect}
     >
       <Dropdown.Item eventKey="">-</Dropdown.Item>
