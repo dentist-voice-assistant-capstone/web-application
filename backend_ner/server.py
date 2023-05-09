@@ -19,15 +19,14 @@ import config
 
 
 class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
-    def __init__(self, token_classifier: TokenClassifier, parser: ParserModel, dict_map: DictionaryMapping):
+    def __init__(self, token_classifier: TokenClassifier, dict_map: DictionaryMapping):
         self.token_classifier = token_classifier
-        self.parser = parser
         self.dict_map = dict_map
 
     # Insert a logic of StreamingNER function
     def StreamingNER(
         self,
-        request_iterator: Iterable[ner_model_pb2.StreamingTranscribeResponse],
+        request_iterator: Iterable[ner_model_pb2.NERRequest],
         context: ServicerContext,
     ) -> Iterable[ner_model_pb2.NERResponse]:
         """
@@ -38,9 +37,18 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
         old_tooth_list = []
         old_is_final = True
         old_command, old_tooth, old_tooth_side = None, None, None
-        self.parser.reset()
+        parser = ParserModel() # independent parser
         for request in request_iterator:
             # Concatenate trancripts in the responses
+            if(request.add_missing.first_zee != 100 and request.add_missing.second_zee != 100):
+                q, i = request.add_missing.first_zee, request.add_missing.second_zee
+                parser.remove_zee_from_available_teeth_dict([q, i])
+                continue
+            elif(request.undo_missing.first_zee != 100 and request.undo_missing.second_zee != 100):
+                q, i = request.undo_missing.first_zee, request.undo_missing.second_zee
+                parser.append_zee_to_available_teeth_dict([q, i])
+                continue
+
             sentence = ""
             for transcript in request.results:
                 # fix the problem, when the user does not speak, but
@@ -72,7 +80,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             # predicted_token = self.token_classifier.inference(sentence)
             # print(predicted_token)
             # Preprocess the predicted token and convert to semantic command
-            semantics = self.parser.inference(sentence, self.token_classifier, request.is_final)
+            semantics = parser.inference(sentence, self.token_classifier, request.is_final)
             # print(semantics)
             command, tooth, tooth_side, semantics, _ = semantics.values()    
             
@@ -108,25 +116,6 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             if len(semantics) > 0:
                 response = create_ner_response(semantics)
                 yield response
-    
-    def UndoMissing(
-        self,
-        request: ner_model_pb2.Zee,
-        context: ServicerContext,
-    ) -> ner_model_pb2.Empty:
-        q, i = request.first_zee, request.second_zee
-        self.parser.append_zee_to_available_teeth_dict([q, i])
-        return ner_model_pb2.Empty()
-    
-    def AddMissing(
-        self,
-        request: ner_model_pb2.Zee,
-        context: ServicerContext,
-    ) -> ner_model_pb2.Empty:
-        q, i = request.first_zee, request.second_zee
-        self.parser.remove_zee_from_available_teeth_dict([q, i])
-        return ner_model_pb2.Empty()
-
 
 address = f"[::]:{config.PORT}"
 
@@ -138,7 +127,6 @@ def main():
     )
     # Create token classifier and parser model
     token_classifier = TokenClassifier(tokenizer, "model/onnx_model-quantized.onnx", "model/model_args.json")
-    parser = ParserModel()
     dict_map = DictionaryMapping("dictionary_mapping.csv")
 
     # Create a gRPC server
@@ -146,7 +134,7 @@ def main():
 
     # Add NERBackendServicer to the server
     ner_model_pb2_grpc.add_NERBackendServicer_to_server(
-        NERBackendServicer(token_classifier, parser, dict_map), server
+        NERBackendServicer(token_classifier, dict_map), server
     )
 
     # Start the server

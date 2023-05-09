@@ -159,22 +159,24 @@ io.on("connection", async (socket) => {
 
   // When client undo missing
   socket.on("undo_missing", async (toothData) => {
-    tooth = { first_zee: toothData.q, second_zee: toothData.i };
-    ner_stub.UndoMissing(tooth, (err, response) => {
-      if (err) console.log(err);
-    });
-    toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
-    // console.log("undo_missing:", toothData);
+    if (!!ner_call){
+      tooth = { first_zee: toothData.q, second_zee: toothData.i };
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.undo_missing = tooth;
+      ner_call.write(ner_request)
+      toothTable.updateValue(toothData.q, toothData.i, "Missing", false);
+    }
   })
 
   // When client add missing
   socket.on("add_missing", async (toothData) => {
-    tooth = { first_zee: toothData.q, second_zee: toothData.i };
-    ner_stub.AddMissing(tooth, (err, response) => {
-      if (err) console.log(err);
-    });
-    toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
-    // console.log("add_missing:", toothData);
+    if (!!ner_call){
+      tooth = { first_zee: toothData.q, second_zee: toothData.i };
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.add_missing = tooth;
+      ner_call.write(ner_request)
+      toothTable.updateValue(toothData.q, toothData.i, "Missing", true);
+    }
   })
 
   // When disconnect end the streaming
@@ -217,7 +219,12 @@ io.on("connection", async (socket) => {
 
     // When receive response from Gowajee Server, Send it to ner backend server
     gowajee_call.on("data", (response) => {
-      ner_call.write(response);
+      ner_request = gowajee_service.init_ner_request();
+      ner_request.results = response.results;
+      ner_request.is_final = response.is_final;
+      ner_request.version = response.version;
+      ner_request.duration = response.duration;
+      ner_call.write(ner_request);
       }).once('error', () => {
         console.log("end grpc streaming");
     });
