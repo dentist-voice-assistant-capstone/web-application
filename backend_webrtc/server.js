@@ -9,6 +9,7 @@ const { Server } = require("socket.io");
 const gowajee_service = require("./utils/gowajee_service.js");
 const dotenv = require("dotenv");
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+console.log(`Staring Backend Streaming Server in ${process.env.NODE_ENV} mode...`)
 
 const RATE = 48000; // Sample rate of the input audio
 
@@ -67,32 +68,6 @@ io.on("connection", async (socket) => {
   let old_i = null;
   let old_side = "";
   let toothTable = new ToothTable();
-  // ----------------- Update record data from MongoDB if userID exists ----------------- //
-  // // Sample token
-  // let token =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MjFhMmMzOTliODg0NTdlODBhNDZkZSIsImlhdCI6MTY4MDEwMjAxMiwiZXhwIjoxNjg3ODc4MDEyfQ.p8-uTTUVMt3qUe7JrQe0TeRZ1mwy8RsfbyfapQfeBSs";
-  // // const token = socket.handshake.query.token;
-  // // Send request to backend server to get previous record data if exists
-  // let config = {
-  //   headers: {
-  //     Authorization: "Bearer " + token,
-  //   },
-  //   withCredentials: true,
-  // };
-  // let url = `http://${process.env.NORMAL_BACKEND_IP}:${process.env.NORMAL_BACKEND_PORT}/record`;
-  // await axios
-  //   .get(url, config)
-  //   .then((response) => response.data)
-  //   .then((data) => {
-  //     if (data.data) {
-  //       let recordData = data.data.recordData;
-  //       toothTable.importValue(recordData);
-  //     }
-  //   })
-  //   .catch((err) => console.log(err));
-  // console.log("Tooth table data", toothTable);
-  // toothTable.showPDREValue();
-  // -------------------------------------------------------------------------------------------------------------- //
 
   console.log(
     "socket id:",

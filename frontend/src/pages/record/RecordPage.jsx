@@ -37,8 +37,6 @@ import {
 import { defaultCurrentCommand, currentCommandReducer } from "../../utils/toothLogic";
 import { playConnectionSound } from "../../utils/soundPlayerHandler";
 
-const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
-
 const RecordPage = () => {
   const navigate = useNavigate();
   const state = useLocation();
@@ -101,8 +99,10 @@ const RecordPage = () => {
   };
 
   /* states for teeth information */
+  const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
   const startInformation = mode === "resume" ? latestInformation : defaultInformation
-  const [information, setInformation] = useState(startInformation);
+  console.log(mode, startInformation, '***')
+  const [information, setInformation] = useState([...startInformation]);
 
   /* state for keeping the interval id to update record */
   const updateInformationIntervalIdRef = useRef(null);
@@ -383,7 +383,7 @@ const RecordPage = () => {
         setWebRTCFailedToConnect
       );
       // clear data in the table
-      setInformation(defaultInformation);
+      setInformation([...defaultInformation]);
     }
     window.addEventListener("popstate", handleBeforeUnload);
     return () => {
@@ -553,9 +553,9 @@ const RecordPage = () => {
           />
         </div>
         {/* test button */}
-        <button onClick={() => {
+        {/* <button onClick={() => {
           // new Audio(connectedSound).play()
-        }}> test</button>
+        }}> test</button> */}
 
         {/* Center */}
         {CenterComponentToBeRendered}
