@@ -10,7 +10,7 @@
 .register-form__topics {
   font-weight: bold;
   margin-bottom: 1rem;
-  font-size: 24px;
+  font-size: 2.5vh;
 }
 
 .register-form__items-list li {
@@ -35,12 +35,13 @@
 }
 
 .register-form__items > * {
-  font-size: 20px;
+  font-size: 2.25vh;
 }
 
 .register-form__items label {
   width: 100px;
   text-align: right;
+  width: 8vw;
   /* border: 1px solid sandybrown; */
 }
 
@@ -53,9 +54,9 @@
   border-radius: 10px;
   border: 0;
   background-color: #ececec;
-  height: 40px;
+  height: 4.5vh;
   width: 100%;
-  font-size: 18px;
+  font-size: 2vh;
 }
 
 .register-form__submit-area {
@@ -68,7 +69,7 @@
 
 .register-form__register-button {
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 2vh;
   width: 85%;
   height: 40px;
   border: 0;
@@ -86,6 +87,6 @@
 }
 
 .register-form__items p {
-  font-size: 14px;
+  font-size: 1.5vh;
   margin-bottom: 0;
 }

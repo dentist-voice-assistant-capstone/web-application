@@ -322,8 +322,9 @@ exports.createReport = (DATA, file_name) => {
           ws.getCell(
             `${colID[start_col + id]}${cal_mode[side_data.side][mode]}`
           ).value =
-            side_data.PD[pattern_flag[flag][id]] +
-            side_data.RE[pattern_flag[flag][id]];
+            parseInt(side_data.PD[pattern_flag[flag][id]]) ||
+            null + parseInt(side_data.RE[pattern_flag[flag][id]]) ||
+            null;
 
           if (side_data.BOP[pattern_flag[flag][id]] | 0) {
             ws.getCell(

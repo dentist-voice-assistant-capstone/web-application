@@ -31,7 +31,6 @@ function NavBar(props) {
   const [hoverClass, setHoverClass] = useState("home-icon");
 
   const mouseEnterHandler = () => {
-    // console.log(isMouseOver);
     setIsMouseOver(!isMouseOver);
     isMouseOver ? setHoverClass("home-icon-hover") : setHoverClass("home-icon");
   };
@@ -57,7 +56,7 @@ function NavBar(props) {
           <div className={classes["content-left"]}>
             <FaHome
               className={classes["home-icon"]}
-              size={40}
+              style={{ height: "5vh", width: "5vh" }}
               onClick={props.checkBackToHomeHandler}
             />
           </div>
@@ -66,7 +65,7 @@ function NavBar(props) {
           <div className={classes["content-left"]}>
             <FaHome
               className={classes["home-icon"]}
-              size={40}
+              style={{ height: "5vh", width: "5vh" }}
               onClick={homeMenuOnClickHandler}
             />
           </div>

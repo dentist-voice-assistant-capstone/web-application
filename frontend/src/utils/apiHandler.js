@@ -9,7 +9,7 @@ const USER_UPDATE_PROFILE_ENDPOINT = `${URL_BACKEND}/user/updateProfile`;
 const USER_UPDATE_PASSWORD_ENDPOINT = `${URL_BACKEND}/user/updatePassword`;
 const USER_SEND_REPORT_EXCEL_ENDPOINT = `${URL_BACKEND}/user/sendReportExcel`;
 const USER_ACTIVATE_EMAIL_ENDPOINT = `${URL_BACKEND}/user/activateAccount/`;
-const USER_CHECK_TOKEN_ENDPOINT = `${URL_BACKEND}/user/checkToken`
+const USER_CHECK_TOKEN_ENDPOINT = `${URL_BACKEND}/user/checkToken`;
 
 const userRegisterAPIHandler = (
   userRegisterData,
@@ -97,10 +97,10 @@ const sendReportExcelAPIHandler = (data, email, file_name) => {
       file_name: file_name,
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
     });
 };
 const userLoginAPIHandler = (
@@ -113,7 +113,7 @@ const userLoginAPIHandler = (
   axios
     .post(USER_LOGIN_ENDPOINT, userLoginData)
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       if (result.status === 200) {
         const expirationTime = new Date(new Date().getTime() + session_time);
         authCtx.login(result.data.token, expirationTime.toISOString());
@@ -123,7 +123,7 @@ const userLoginAPIHandler = (
       }
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       if (!error.response) {
         setLoginError({
           header: "Connection Error",
@@ -188,20 +188,20 @@ const fetchUserInfoAPIHandler = async (token) => {
         // dentistName, dentistSurname, dentistID may be null
         dentistName: userDataFetched.dentistName || "",
         dentistSurname: userDataFetched.dentistSurname || "",
-        dentistID: userDataFetched.dentistID || ""
+        dentistID: userDataFetched.dentistID || "",
       };
-      return userDataReturned
+      return userDataReturned;
     }
   } catch (err) {
     if (!err.response) {
-      throw new Error("Cannot connect to backend server")
+      throw new Error("Cannot connect to backend server");
     }
     // other error
-    const response = err.response
-    console.log("ERROR!!", response.status, response.statusText)
-    return null
+    const response = err.response;
+    // console.log("ERROR!!", response.status, response.statusText)
+    return null;
   }
-}
+};
 
 const updateUserProfileAPIHandler = (
   token,
@@ -253,7 +253,7 @@ const updateUserPasswordAPIHandler = (
   axios
     .patch(USER_UPDATE_PASSWORD_ENDPOINT, userPasswordUpdateData, config)
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       // change password completed
       if (result.status === 200) {
         // TODO: show InfoModal to let the user re-login again, logout the user, navigate to login page
@@ -303,16 +303,16 @@ const checkUserTokenAPIHandler = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   };
   try {
-    const result = await axios.get(USER_CHECK_TOKEN_ENDPOINT, config)
+    const result = await axios.get(USER_CHECK_TOKEN_ENDPOINT, config);
     if (result.status === 200) {
       return result.data.user_id;
     }
   } catch (err) {
-    const response = err.response
-    console.log(response.status, response.statusText)
+    const response = err.response;
+    // console.log(response.status, response.statusText)
     return null;
   }
-}
+};
 
 export {
   userRegisterAPIHandler,
@@ -323,5 +323,5 @@ export {
   updateUserPasswordAPIHandler,
   sendReportExcelAPIHandler,
   emailActivatedHandler,
-  checkUserTokenAPIHandler
+  checkUserTokenAPIHandler,
 };

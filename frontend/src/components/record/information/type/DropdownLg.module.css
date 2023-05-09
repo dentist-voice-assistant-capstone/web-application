@@ -1,6 +1,7 @@
 .largebox {
-  width: 100px;
-  height: 32px;
+  width: 7.9vw;
+  height: 4vh;
+  box-sizing: border-box;
 }
 
 .largebox.highlighted button {
