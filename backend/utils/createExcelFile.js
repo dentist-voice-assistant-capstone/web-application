@@ -24,6 +24,13 @@ const setFont = (ws, col, row) => {
   };
 };
 
+const setRedFont = (ws, col, row) => {
+  ws.getCell(`${col}${row}`).font = {
+    size: 8.5,
+    color: { argb: "ffef5350" },
+  };
+};
+
 const setGrayColor = (ws, col, row) => {
   ws.getCell(`${col}${row}`).fill = {
     type: `pattern`,
@@ -92,25 +99,31 @@ const colID = [
   `AX`,
 ];
 const header = [
+  `CAL`,
   `MGJ`,
   `BOP`,
   `PD`,
   `RE`,
   ``,
-  `RE`,
-  `PD`,
-  `BOP`,
   `MO`,
+  `F`,
+  `BOP`,
+  `PD`,
+  `RE`,
+  `CAL`,
   ``,
-  `MO`,
-  `BOP`,
-  `PD`,
+  `CAL`,
   `RE`,
+  `PD`,
+  `BOP`,
+  `F`,
+  `MO`,
   ``,
   `RE`,
   `PD`,
   `BOP`,
   `MGJ`,
+  `CAL`,
 ];
 
 const merge = (ws, r) => {
@@ -143,60 +156,63 @@ exports.createReport = (DATA) => {
   for (let i = 1; i <= colID.length; i++) {
     colW.push(colW[0]);
   }
-  for (let i = 1; i <= 19; i++) {
+  for (let i = 1; i <= 25; i++) {
     ws.getRow(i).height = 20;
   }
   ws.columns = colW;
 
   //----------------------set gray color----------------------------------
   for (let i = 0; i < colID.length; i++) {
-    setGrayColor(ws, colID[i], 10);
+    setGrayColor(ws, colID[i], 13);
   }
-  for (let i = 1; i < 20; i++) {
+  for (let i = 1; i <= 25; i++) {
     setGrayColor(ws, `Z`, i);
   }
 
   //-----------------------merge cell ---------------------------------
-  merge(ws, `1`);
-  merge(ws, `5`);
-  merge(ws, `9`);
-  merge(ws, `11`);
-  merge(ws, `15`);
+  merge(ws, `2`);
+  merge(ws, `6`);
+  merge(ws, `7`);
   merge(ws, `19`);
+  merge(ws, `20`);
+  merge(ws, `24`);
 
-  ws.mergeCells(`A10:AX10`);
-  ws.mergeCells(`Z1:Z4`);
-  ws.mergeCells(`Z6:Z9`);
-  ws.mergeCells(`Z11:Z14`);
-  ws.mergeCells(`Z16:Z19`);
+  ws.mergeCells(`A13:AX13`);
+  ws.mergeCells(`Z1:Z5`);
+  ws.mergeCells(`Z7:Z12`);
+  ws.mergeCells(`Z14:Z19`);
+  ws.mergeCells(`Z21:Z25`);
 
   //-----------------------fill side---------------------------------
   ws.getCell(`Z1`).value = `B\nU\nC\nC\nA\nL`;
-  ws.getCell(`Z6`).value = `L\nI\nN\nG\nU\nA\nL`;
-  ws.getCell(`Z11`).value = `L\nI\nN\nG\nU\nA\nL`;
-  ws.getCell(`Z16`).value = `B\nU\nC\nC\nA\nL`;
+  ws.getCell(`Z7`).value = `L\nI\nN\nG\nU\nA\nL`;
+  ws.getCell(`Z14`).value = `L\nI\nN\nG\nU\nA\nL`;
+  ws.getCell(`Z21`).value = `B\nU\nC\nC\nA\nL`;
 
   //-----------------------set properties at side---------------------------------
   setExcelProperties(ws, `Z`, 1);
-  setExcelProperties(ws, `Z`, 6);
-  setExcelProperties(ws, `Z`, 11);
-  setExcelProperties(ws, `Z`, 16);
+  setExcelProperties(ws, `Z`, 7);
+  setExcelProperties(ws, `Z`, 14);
+  setExcelProperties(ws, `Z`, 21);
 
   //-----------------------set row header and properties---------------------------------
   const row_header = ws.getColumn(1);
   row_header.values = header;
 
-  for (let row = 1; row < 20; row++) {
+  for (let row = 1; row <= 25; row++) {
     setExcelProperties(ws, `A`, row);
   }
 
   //-----------------------create instant for indexing---------------------------------
-  const mo_mode = [9, 11];
-  const mgj_mode = [1, 19];
-  const tooth_mode = [5, 15];
-  const pd_mode = { buccal: [3, 17], lingual: [7, 13] };
-  const re_mode = { buccal: [4, 16], lingual: [6, 14] };
-  const bop_mode = { buccal: [2, 18], lingual: [8, 12] };
+
+  const mo_mode = [7, 19];
+  const f_mode = [8, 18];
+  const mgj_mode = [2, 24];
+  const tooth_mode = [6, 20];
+  const pd_mode = { buccal: [4, 22], lingual: [10, 16] };
+  const re_mode = { buccal: [5, 21], lingual: [11, 15] };
+  const bop_mode = { buccal: [3, 23], lingual: [9, 17] };
+  const cal_mode = { buccal: [1, 25], lingual: [12, 14] };
 
   const pattern_flag = [
     { 0: `distal`, 1: `middle`, 2: `mesial` },
@@ -212,6 +228,7 @@ exports.createReport = (DATA) => {
     const mo_row = mo_mode[mode];
     const mgj_row = mgj_mode[mode];
     const tooth_row = tooth_mode[mode];
+    const f_row = f_mode[mode];
 
     data.idxArray.forEach((idx) => {
       ws.getCell(
@@ -248,6 +265,12 @@ exports.createReport = (DATA) => {
             colID[start_col + id],
             bop_mode[side_data.side][mode]
           );
+          setExcelProperties(
+            ws,
+            colID[start_col + id],
+            cal_mode[side_data.side][mode]
+          );
+          setExcelProperties(ws, colID[start_col + id], f_row);
 
           if (idx.missing) {
             setGrayColor(
@@ -265,15 +288,42 @@ exports.createReport = (DATA) => {
               colID[start_col + id],
               bop_mode[side_data.side][mode]
             );
+            setGrayColor(
+              ws,
+              colID[start_col + id],
+              cal_mode[side_data.side][mode]
+            );
+            setGrayColor(ws, colID[start_col + id], f_row);
             continue;
           }
-
+          if (side_data.PD[pattern_flag[flag][id]] >= 4) {
+            setRedFont(
+              ws,
+              colID[start_col + id],
+              pd_mode[side_data.side][mode]
+            );
+          }
           ws.getCell(
             `${colID[start_col + id]}${pd_mode[side_data.side][mode]}`
           ).value = side_data.PD[pattern_flag[flag][id]];
+
+          if (side_data.RE[pattern_flag[flag][id]] >= 4) {
+            setRedFont(
+              ws,
+              colID[start_col + id],
+              re_mode[side_data.side][mode]
+            );
+          }
           ws.getCell(
             `${colID[start_col + id]}${re_mode[side_data.side][mode]}`
           ).value = side_data.RE[pattern_flag[flag][id]];
+
+          ws.getCell(
+            `${colID[start_col + id]}${cal_mode[side_data.side][mode]}`
+          ).value =
+            parseInt(side_data.PD[pattern_flag[flag][id]]) ||
+            null + parseInt(side_data.RE[pattern_flag[flag][id]]) ||
+            null;
 
           if (side_data.BOP[pattern_flag[flag][id]] | 0) {
             ws.getCell(
