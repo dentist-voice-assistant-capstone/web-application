@@ -206,8 +206,8 @@ io.on("connection", async (socket) => {
     console.log("disconnect");
     if (sink) {
       sink.stop();
-      // gowajee_call.cancel();
-      // ner_call.cancel()
+      gowajee_call.cancel();
+      ner_call.cancel()
       sink = null;
     }
   });

@@ -49,9 +49,9 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 # for word in transcript.word_timestamps:
                 #     print("Word", word.word)
                 #     print("Confidence", word.confidence)
-                if len(transcript.word_timestamps) == 1 and \
-                    transcript.word_timestamps[0].confidence < 0.3:
-                    continue
+                # if len(transcript.word_timestamps) == 1 and \
+                #     transcript.word_timestamps[0].confidence < 0.3:
+                #     continue
                 sentence += str(transcript.transcript)
 
 
@@ -66,7 +66,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
                 old_tooth_list = []
             else:
                 sentences[-1] = sentence
-            print(sentences)
+            # print(sentences)
 
             # Predict the class of each token in the sentence
             # predicted_token = self.token_classifier.inference(sentence)
