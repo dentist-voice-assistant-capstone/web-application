@@ -101,7 +101,6 @@ const RecordPage = () => {
   /* states for teeth information */
   const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
   const startInformation = mode === "resume" ? latestInformation : defaultInformation
-  console.log(mode, startInformation, '***')
   const [information, setInformation] = useState([...startInformation]);
 
   /* state for keeping the interval id to update record */
