@@ -228,21 +228,6 @@ const initiateConnection = async (
       // console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
     } else {
       // for "BOP" data[]
-
-      /* Sometimes, when start a new zee in BOP command, there was no update_command object sent 
-      from the backend_webrtc server. Therefore, we add some temporary code below to update 
-      the cursor on the page.
-      */
-      // dispatchCurrentCommand({
-      //   type: "UPDATE_COMMAND",
-      //   payload: {
-      //     command: data.mode,
-      //     tooth: data.q.toString() + data.i.toString(),
-      //     side: data.side,
-      //     position: null
-      //   }
-      // })
-
       let positionArray;
       if (data.q === 1 || data.q === 4) {
         positionArray = ["distal", "middle", "mesial"];
