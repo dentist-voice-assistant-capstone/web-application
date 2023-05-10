@@ -44,11 +44,11 @@ const RTC_CONFIG = {
 };
 
 // socket reconnection
-const SOCKET_RECONNECTION_ATTEMPTS = 5;
+const SOCKET_RECONNECTION_ATTEMPTS = 10;
 const SOCKET_RECONNECTION_DELAY = 500; //milliseconds
 
 // Auto change Quadrant Delay
-const AUTO_CHANGE_QUADRANT_DELAY = 1000; //milliseconds
+const AUTO_CHANGE_QUADRANT_DELAY = 1250; //milliseconds
 
 // Update Record Interval
 const UPDATE_RECORD_EVERY_MILLISECONDS = 10000 //milliseconds

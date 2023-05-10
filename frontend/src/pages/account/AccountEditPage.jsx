@@ -37,13 +37,13 @@ const AccountEditPage = () => {
 
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    const fetchUserInfo = async (token) => {
-      let userData = await fetchUserInfoAPIHandler(token);
+    const fetchUserInfo = async (token, authCtx) => {
+      let userData = await fetchUserInfoAPIHandler(token, authCtx);
       return { userData };
     };
 
     if (isLoggedIn) {
-      fetchUserInfo(token)
+      fetchUserInfo(token, authCtx)
         .then(({ userData }) => {
           setUserData(userData);
           setIsLoaded(true);
@@ -155,9 +155,8 @@ const AccountEditPage = () => {
               <h2>User Profile</h2>
               {sideBarMenuLabels.map((sidebarMenuLabel, idx) => (
                 <div
-                  className={`${classes["account-edit__sidebar-menu"]} ${
-                    idx === idxMenuSelected ? classes["selected"] : ""
-                  }`}
+                  className={`${classes["account-edit__sidebar-menu"]} ${idx === idxMenuSelected ? classes["selected"] : ""
+                    }`}
                   key={sidebarMenuLabel}
                   idx={idx}
                   onClick={changeMenuHandler}

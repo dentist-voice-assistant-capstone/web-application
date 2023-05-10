@@ -158,7 +158,7 @@ const initiateConnection = async (
   // 2.3) events for recieving periodental value from backend streaming
   // receiving updated command from backend streaming server
   s.on("update_command", async (data) => {
-    // console.log("update_command", data);
+    console.log("update_command", data);
 
     // automatically determine the start position of the tooth for PDRE command (from given tooth's quadrant, id)
     let position = null;
@@ -180,7 +180,7 @@ const initiateConnection = async (
 
   // receiving recorded data from backend streaming server
   s.on("data", async (data) => {
-    // console.log(data);
+    console.log("data", data);
 
     /* if we receive the next data while the autoChaneToothTimer is ticking, then immediately executued the timer by
       clearout the timer and then calling the callbackFunction immediately
@@ -228,6 +228,21 @@ const initiateConnection = async (
       // console.log(data.q, data.i, data.side, data.mode, data.target, spec_id)
     } else {
       // for "BOP" data[]
+
+      /* Sometimes, when start a new zee in BOP command, there was no update_command object sent 
+      from the backend_webrtc server. Therefore, we add some temporary code below to update 
+      the cursor on the page.
+      */
+      // dispatchCurrentCommand({
+      //   type: "UPDATE_COMMAND",
+      //   payload: {
+      //     command: data.mode,
+      //     tooth: data.q.toString() + data.i.toString(),
+      //     side: data.side,
+      //     position: null
+      //   }
+      // })
+
       let positionArray;
       if (data.q === 1 || data.q === 4) {
         positionArray = ["distal", "middle", "mesial"];

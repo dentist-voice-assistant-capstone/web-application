@@ -174,7 +174,7 @@ const userLoginAPIHandler = (
 //     });
 // };
 
-const fetchUserInfoAPIHandler = async (token) => {
+const fetchUserInfoAPIHandler = async (token, authCtx) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -196,8 +196,12 @@ const fetchUserInfoAPIHandler = async (token) => {
     if (!err.response) {
       throw new Error("Cannot connect to backend server");
     }
+    if (err.response.data.error.name === 'JsonWebTokenError') {
+      alert('JsonWebTokenError')
+      authCtx.logout();
+    }
     // other error
-    const response = err.response;
+    // const response = err.response;
     // console.log("ERROR!!", response.status, response.statusText)
     return null;
   }

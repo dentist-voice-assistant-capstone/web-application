@@ -1,3 +1,6 @@
+/* This function tells the start position of each given tooth and side for
+   record the PD and RE data.
+*/
 const getToothStartPosition = (quadrant, id, tooth_side) => {
   if (!!!quadrant || !!!id || !!!tooth_side) {
     return null;
@@ -14,6 +17,11 @@ const getToothStartPosition = (quadrant, id, tooth_side) => {
   }
 }
 
+/* This function retrieves all the missing tooths from the information (ToothTable).
+   This function is called when the user choose "Resume Recording" menu, once the information
+   is fetched from the database, it needs to tell the backend streaming server that which tooths
+   are missing in order to process the tooth data correctly once the user record his/her sound. 
+*/
 const getListOfMissingToothFromInformation = (information) => {
   /* input: information (ToothTable)
      output: a array of objects of missing tooths 
@@ -33,7 +41,7 @@ const getListOfMissingToothFromInformation = (information) => {
 
 const defaultCurrentCommand = {
   command: null,
-  tooth: null,
+  tooth: null, // String (length: 2) = "XY"; X = Quadrant (1-4), Y = ToothID (1-8)
   side: null,
   position: null,
   quadrant: 1,
@@ -44,6 +52,13 @@ const currentCommandReducer = (prevCommand, action) => {
     case "CLEAR_COMMAND":
       return defaultCurrentCommand;
     case "UPDATE_COMMAND":
+      /* payload object should contain the following keys:
+        - command
+        - tooth
+        - side
+        - position
+      */
+
       // if the quadrant is changed, then set new quadrant
       let quadrant = prevCommand.quadrant;
       if (!!action.payload.tooth) {

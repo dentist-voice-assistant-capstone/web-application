@@ -66,15 +66,15 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    const fetchInformation = async (token) => {
-      let userData = await fetchUserInfoAPIHandler(token);
+    const fetchInformation = async (token, authCtx) => {
+      let userData = await fetchUserInfoAPIHandler(token, authCtx);
       let latestRecordData = await fetchUserLatestRecordAPIHandler(token);
       return { userData, latestRecordData };
     };
 
     // fetch userData and LatestRecordData
     if (isLoggedIn) {
-      fetchInformation(token)
+      fetchInformation(token, authCtx)
         .then(({ userData, latestRecordData }) => {
           checkIsLatestRecordAbleToBeRestored(latestRecordData);
           setUserData(userData);
@@ -83,8 +83,11 @@ const HomePage = () => {
           setIsLoaded(true);
         })
         .catch((err) => {
-          if (err.message === "Cannot connect to backend server") {
-            // console.log(`${err.message}`);
+          switch (err.message) {
+            case "Cannot connect to backend server":
+              alert(err.message)
+              break
+            default:
           }
         });
     }
