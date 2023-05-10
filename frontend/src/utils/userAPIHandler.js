@@ -143,18 +143,14 @@ const fetchUserInfoAPIHandler = async (token) => {
       return userDataReturned;
     }
   } catch (err) {
+    console.log(err)
     if (!err.response) {
       // ERROR: Cannot connect to backend server
       throw new Error("Cannot connect to backend server");
-    } else if (err.response.data.error.name === 'JsonWebTokenError') {
-      // ERROR: JWT Token is invalid
-      throw new Error("JsonWebTokenError");
-    } else if (err.response.data.message === 'The user belonging to this token does no longer exist.') {
-      // ERROR: The user belonging to this token does no longer exist
-      throw new Error("The user belonging to this token does no longer exist.")
+      // ERROR: Token Unauthorized
+    } else if (err.response.status === 401) {
+      throw new Error("Unauthorized")
     }
-    // other error
-    console.log(err)
     return null;
   }
 };
