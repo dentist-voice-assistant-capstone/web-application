@@ -92,6 +92,10 @@ const HomePage = () => {
               authCtx.logout();
               navigate("/login");
               break
+            case "The user belonging to this token does no longer exist.":
+              alert("The user belonging to this token does no longer exist.")
+              authCtx.logout();
+              navigate("/login");
             default:
           }
         });

@@ -1,7 +1,7 @@
 import classes from "./SummaryPage.module.css";
 /* import React Libraries */
-import { useState, Fragment } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, Fragment, useEffect } from "react";
+import { useNavigate, useLocation, redirect } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -25,19 +25,26 @@ import { EX_DATA } from "../../utils/constants";
 
 const SummaryPage = () => {
   const navigate = useNavigate();
-
   const state = useLocation();
+
   const defaultInformation = JSON.parse(JSON.stringify(EX_DATA));
-  const userData = state.state.userData;
 
-  const patientID = state.state.patientID;
-  const dentistID = state.state.dentistID;
-  const date = state.state.date;
-
+  let userData = null;
+  let patientID = null;
+  let dentistID = null;
+  let date = null;
+  let recordedInformation = null;
+  if (state.state !== null) {
+    userData = state.state.userData
+    patientID = state.state.patientID
+    dentistID = state.state.dentistID
+    date = state.state.date
+    recordedInformation = state.state.information
+  }
   const file_name = `${patientID}_${date}`;
 
   const [information, setInformation] = useState(
-    Object.assign([], state.state.information)
+    Object.assign([], recordedInformation)
   );
   const [checkMailExport, setCheckMailExport] = useState(false);
   const [checkBackToHome, setCheckBackToHome] = useState(false);
@@ -49,6 +56,14 @@ const SummaryPage = () => {
   const handleSelect = (e) => {
     setQuadrant(parseInt(e));
   };
+
+  // redirect to home page, if no recorded data found *****
+  if (state.state === null) {
+    alert("No recorded data found.")
+    window.location = '/'
+    return null
+  }
+  // ******************************************************
 
   const checkMailExportHandler = () => {
     /* if click "MailExport" button, if the recording is not paused, pause the recording */

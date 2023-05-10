@@ -146,15 +146,15 @@ const fetchUserInfoAPIHandler = async (token) => {
     if (!err.response) {
       // ERROR: Cannot connect to backend server
       throw new Error("Cannot connect to backend server");
-    }
-    if (err.response.data.error.name === 'JsonWebTokenError') {
+    } else if (err.response.data.error.name === 'JsonWebTokenError') {
       // ERROR: JWT Token is invalid
       throw new Error("JsonWebTokenError");
+    } else if (err.response.data.message === 'The user belonging to this token does no longer exist.') {
+      // ERROR: The user belonging to this token does no longer exist
+      throw new Error("The user belonging to this token does no longer exist.")
     }
-
     // other error
-    // const response = err.response;
-    // console.log("ERROR!!", response.status, response.statusText)
+    console.log(err)
     return null;
   }
 };
