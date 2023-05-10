@@ -33,7 +33,7 @@ import {
 } from "../../utils/constants";
 import { teethInformationHandler } from "../../utils/TeethInformationHandler";
 import { getListOfMissingToothFromInformation } from "../../utils/toothLogic";
-import { checkUserTokenAPIHandler } from "../../utils/apiHandler";
+import { checkUserTokenAPIHandler } from "../../utils/userAPIHandler";
 import { postRecordAPIHandler } from "../../utils/recordAPIHandler";
 
 import {
@@ -375,7 +375,7 @@ const RecordPage = () => {
               <span style={{ color: "red" }}>
                 Your session has already expired.
               </span>{" "}
-              Re-login is needed. The system will redirect you to the login
+              Re-login is needed. System will redirect you to the login
               page.
             </p>
           ),

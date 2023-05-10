@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import RegisterForm from "../../components/register/RegisterForm";
 import Modal from "../../components/ui/Modal";
-import { userRegisterAPIHandler } from "../../utils/apiHandler";
+import { userRegisterAPIHandler } from "../../utils/userAPIHandler";
 import NavBar from "../../components/ui/NavBar";
 
 import classes from "./RegisterPage.module.css";

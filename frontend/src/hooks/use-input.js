@@ -21,7 +21,6 @@ const useInput = (field, validators, parameters) => {
     let validateResult;
     // console.log(validator.validatorName)
     if (validator.validatorName === 'validateConfirmPassword' || validator.validatorName === 'validateOldandNewPassword') {
-      console.log("oldPw", enteredValue, parameters.password)
       validateResult = validator.validate(enteredValue, { password: parameters.password })
     } else {
       validateResult = validator.validate(enteredValue, {})

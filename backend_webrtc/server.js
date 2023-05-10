@@ -51,7 +51,7 @@ const server = process.env.NODE_ENV === "production" ? https.createServer(
   {
     key: fs.readFileSync("key.pem"),
     cert: fs.readFileSync("cert.pem"),
-  }, 
+  },
   app
 ) : http.createServer(app);
 const io = new Server(server, {
@@ -159,7 +159,7 @@ io.on("connection", async (socket) => {
 
   // When client undo missing
   socket.on("undo_missing", async (toothData) => {
-    if (!!ner_call){
+    if (!!ner_call) {
       tooth = { first_zee: toothData.q, second_zee: toothData.i };
       ner_request = gowajee_service.init_ner_request();
       ner_request.undo_missing = tooth;
@@ -170,7 +170,7 @@ io.on("connection", async (socket) => {
 
   // When client add missing
   socket.on("add_missing", async (toothData) => {
-    if (!!ner_call){
+    if (!!ner_call) {
       tooth = { first_zee: toothData.q, second_zee: toothData.i };
       ner_request = gowajee_service.init_ner_request();
       ner_request.add_missing = tooth;
@@ -225,8 +225,8 @@ io.on("connection", async (socket) => {
       ner_request.version = response.version;
       ner_request.duration = response.duration;
       ner_call.write(ner_request);
-      }).once('error', () => {
-        console.log("end grpc streaming");
+    }).once('error', () => {
+      console.log("end grpc streaming");
     });
 
     ner_call.on("data", (response) => {
@@ -356,23 +356,9 @@ io.on("connection", async (socket) => {
           });
         }
         // toothTable.showPDREValue();
-        // ----------------- Update record data to MongoDB ----------------- //
-        // let config = {
-        //   headers: {
-        //     Authorization: "Bearer " + token,
-        //   },
-        //   withCredentials: true,
-        // };
-        // let updatedData = {
-        //   recordData: toothTable.exportValue(),
-        //   timestamp: Date.now(),
-        // };
-        // let url = `http://${process.env.NORMAL_BACKEND_IP}:${process.env.NORMAL_BACKEND_PORT}/record`;
-        // await axios.post(url, updatedData, config);
-        // ----------------------------------------------------------------- //
       });
-      }).once('error', () => {
-        console.log("end grpc streaming");
+    }).once('error', () => {
+      console.log("end grpc streaming");
     });;
   };
 });

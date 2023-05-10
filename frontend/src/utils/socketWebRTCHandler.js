@@ -158,7 +158,7 @@ const initiateConnection = async (
   // 2.3) events for recieving periodental value from backend streaming
   // receiving updated command from backend streaming server
   s.on("update_command", async (data) => {
-    // console.log("update_command", data);
+    console.log("update_command", data);
 
     // automatically determine the start position of the tooth for PDRE command (from given tooth's quadrant, id)
     let position = null;
@@ -180,7 +180,7 @@ const initiateConnection = async (
 
   // receiving recorded data from backend streaming server
   s.on("data", async (data) => {
-    // console.log(data);
+    console.log("data", data);
 
     /* if we receive the next data while the autoChaneToothTimer is ticking, then immediately executued the timer by
       clearout the timer and then calling the callbackFunction immediately
@@ -505,7 +505,6 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
 /* This function is called once the user successfully reconnect via sockets after the connection is lost.
  * This function will set-up new webRTC connection by creating a new peer connection.
  */
-
 const reConnection = async (
   socket,
   setSocket,
@@ -515,8 +514,6 @@ const reConnection = async (
   setWebRTCFailedToConnect
 ) => {
   // console.log("reConnection function called")
-
-  // socket -> socket client object
 
   /* 1) initiate RTCPeerConnectionObject object */
   const pc = new RTCPeerConnection(RTC_CONFIG);
