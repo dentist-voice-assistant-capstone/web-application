@@ -82,7 +82,7 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             # Preprocess the predicted token and convert to semantic command
             semantics = parser.inference(sentence, self.token_classifier, request.is_final)
             # print(semantics)
-            command, tooth, tooth_side, semantics, _ = semantics.values()    
+            command, tooth, tooth_side, semantics, _ = semantics.values()
             
             # Create an incomplete semantic for update display to frontend
             # 1.) first we consider that if there is not semantic from the result but the command is not None
@@ -99,7 +99,8 @@ class NERBackendServicer(ner_model_pb2_grpc.NERBackendServicer):
             if ((len(semantics) == 0) or (len(semantics) > 0 and (semantics[-1]["command"] != command or tooth is None or tooth_side is None or command=="BOP"))) \
             and command and (command != old_command or old_tooth is None or old_tooth_side is None or \
             ((command == old_command and command != "MGJ" and (tooth is None or tooth_side is None)) or \
-             (command == old_command and command == "MGJ" and (tooth is None)))): # or tooth != old_tooth or tooth_side != old_tooth_side):
+             (command == old_command and command == "MGJ" and (tooth is None)) or \
+             (command == old_command and command == "BOP" and (tooth != old_tooth)))): # or tooth != old_tooth or tooth_side != old_tooth_side):
                 # print("create incomplete semantic", command, tooth, tooth_side)
                 # print("old command", old_command, old_tooth, old_tooth_side)
                 update_display = create_incomplete_semantic(command, tooth, tooth_side)
