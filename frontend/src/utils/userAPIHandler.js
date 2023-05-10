@@ -74,21 +74,6 @@ const emailActivatedHandler = (id) => {
   axios.patch(`${USER_ACTIVATE_EMAIL_ENDPOINT}${id}`);
 };
 
-// const saveLocalExcelAPIHandler = (data) => {
-//   console.log(data);
-//   axios.post(USER_SAVE_LOCAL_EXCEL_ENDPOINT, data).then(function (response) {
-//     console.log(response.data);
-//     console.log(response.status);
-//     console.log(response.statusText);
-//     console.log(response.headers);
-//     console.log(response.config);
-//     const blob = new Blob([response.data], {
-//       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-//     });
-//     saveAs(blob, "myexcel.xlsx");
-//   });
-// };
-
 const sendReportExcelAPIHandler = (data, email, file_name) => {
   axios
     .post(USER_SEND_REPORT_EXCEL_ENDPOINT, {
@@ -139,41 +124,6 @@ const userLoginAPIHandler = (
     });
 };
 
-// const fetchUserInfoAPIHandler = (
-//   token,
-//   setUserData,
-//   setIsLoaded,
-//   setUpdateError
-// ) => {
-//   const config = {
-//     headers: { Authorization: `Bearer ${token}` },
-//   };
-//   axios
-//     .get(USER_INFO_ENDPOINT, config)
-//     .then((result) => {
-//       // console.log(result)
-//       if (result.status === 200) {
-//         let userInfoData = result.data.data.user;
-//         setIsLoaded(true);
-//         setUserData({
-//           email: userInfoData.email,
-//           dentistName: userInfoData.dentistName || "",
-//           dentistSurname: userInfoData.dentistSurname || "",
-//           dentistID: userInfoData.dentistID || "",
-//         });
-//       }
-//     })
-//     .catch((error) => {
-//       if (!error.response) {
-//         setUpdateError({
-//           header: "Connection Error",
-//           content: <p>Cannot connect to backend server.</p>,
-//         });
-//         return false;
-//       }
-//     });
-// };
-
 const fetchUserInfoAPIHandler = async (token) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -194,10 +144,16 @@ const fetchUserInfoAPIHandler = async (token) => {
     }
   } catch (err) {
     if (!err.response) {
+      // ERROR: Cannot connect to backend server
       throw new Error("Cannot connect to backend server");
     }
+    if (err.response.data.error.name === 'JsonWebTokenError') {
+      // ERROR: JWT Token is invalid
+      throw new Error("JsonWebTokenError");
+    }
+
     // other error
-    const response = err.response;
+    // const response = err.response;
     // console.log("ERROR!!", response.status, response.statusText)
     return null;
   }

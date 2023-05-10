@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "./EmailConfirmPage.css";
-import { userEmailConfirmationAPIHandler } from "../../utils/apiHandler";
+import { userEmailConfirmationAPIHandler } from "../../utils/userAPIHandler";
 import parse from "html-react-parser";
 
 const EmailConfirmPage = () => {

@@ -2,7 +2,7 @@ import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect, Fragment } from "react";
-import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
+import { fetchUserInfoAPIHandler } from "../../utils/userAPIHandler";
 import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
@@ -83,8 +83,16 @@ const HomePage = () => {
           setIsLoaded(true);
         })
         .catch((err) => {
-          if (err.message === "Cannot connect to backend server") {
-            // console.log(`${err.message}`);
+          switch (err.message) {
+            case "Cannot connect to backend server":
+              alert(err.message)
+              break
+            case "JsonWebTokenError":
+              alert("Your session has already expired. Re-login is needed. System will redirect you to the login page.")
+              authCtx.logout();
+              navigate("/login");
+              break
+            default:
           }
         });
     }
