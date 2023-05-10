@@ -2,7 +2,7 @@ import classes from "./HomePage.module.css";
 import NavBar from "../../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect, Fragment } from "react";
-import { fetchUserInfoAPIHandler } from "../../utils/apiHandler";
+import { fetchUserInfoAPIHandler } from "../../utils/userAPIHandler";
 import { fetchUserLatestRecordAPIHandler } from "../../utils/recordAPIHandler";
 import AuthContext from "../../store/auth-context";
 import InputModal from "../../components/ui/InputModal";
@@ -66,15 +66,15 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    const fetchInformation = async (token, authCtx) => {
-      let userData = await fetchUserInfoAPIHandler(token, authCtx);
+    const fetchInformation = async (token) => {
+      let userData = await fetchUserInfoAPIHandler(token);
       let latestRecordData = await fetchUserLatestRecordAPIHandler(token);
       return { userData, latestRecordData };
     };
 
     // fetch userData and LatestRecordData
     if (isLoggedIn) {
-      fetchInformation(token, authCtx)
+      fetchInformation(token)
         .then(({ userData, latestRecordData }) => {
           checkIsLatestRecordAbleToBeRestored(latestRecordData);
           setUserData(userData);
@@ -86,6 +86,11 @@ const HomePage = () => {
           switch (err.message) {
             case "Cannot connect to backend server":
               alert(err.message)
+              break
+            case "JsonWebTokenError":
+              alert("Your session has already expired. Re-login is needed. System will redirect you to the login page.")
+              authCtx.logout();
+              navigate("/login");
               break
             default:
           }

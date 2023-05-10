@@ -15,7 +15,7 @@ import NavBar from "../../components/ui/NavBar";
 
 import Modal from "../../components/ui/Modal";
 import { createReport } from "../../utils/createExcel";
-import { sendReportExcelAPIHandler } from "../../utils/apiHandler";
+import { sendReportExcelAPIHandler } from "../../utils/userAPIHandler";
 import {
   teethInformationHandler,
   // randomValue,

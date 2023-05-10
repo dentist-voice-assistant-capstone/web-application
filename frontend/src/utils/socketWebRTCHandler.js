@@ -520,7 +520,6 @@ const stopAudioStreaming = (socket, localStream, setIsAudioStreaming) => {
 /* This function is called once the user successfully reconnect via sockets after the connection is lost.
  * This function will set-up new webRTC connection by creating a new peer connection.
  */
-
 const reConnection = async (
   socket,
   setSocket,
@@ -530,8 +529,6 @@ const reConnection = async (
   setWebRTCFailedToConnect
 ) => {
   // console.log("reConnection function called")
-
-  // socket -> socket client object
 
   /* 1) initiate RTCPeerConnectionObject object */
   const pc = new RTCPeerConnection(RTC_CONFIG);

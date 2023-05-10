@@ -1,7 +1,7 @@
 import LoginForm from "../../components/login/LoginForm";
 import LoginBottom from "../../components/login/LoginBottom";
 import classes from "./LoginPage.module.css";
-import { userLoginAPIHandler } from "../../utils/apiHandler";
+import { userLoginAPIHandler } from "../../utils/userAPIHandler";
 import { useNavigate } from "react-router-dom";
 import { Fragment, useState, useContext } from "react";
 import Modal from "../../components/ui/Modal";
@@ -21,7 +21,7 @@ const LoginPage = () => {
   const [loginError, setLoginError] = useState();
 
   function loginHandler(loginData) {
-    console.log(loginData);
+    // console.log(loginData);
     // Parameter: x milliseconds login session time (15 days)
     const session_time = 15 * 24 * 60 * 60 * 1000;
     // Send a post request

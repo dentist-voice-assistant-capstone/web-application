@@ -10,7 +10,7 @@ import {
   fetchUserInfoAPIHandler,
   updateUserProfileAPIHandler,
   updateUserPasswordAPIHandler,
-} from "../../utils/apiHandler";
+} from "../../utils/userAPIHandler";
 
 import classes from "./AccountEditPage.module.css";
 
@@ -37,8 +37,8 @@ const AccountEditPage = () => {
 
   // fetching user data, when loaded page =========================
   useEffect(() => {
-    const fetchUserInfo = async (token, authCtx) => {
-      let userData = await fetchUserInfoAPIHandler(token, authCtx);
+    const fetchUserInfo = async (validateToken) => {
+      let userData = await fetchUserInfoAPIHandler(token);
       return { userData };
     };
 
@@ -49,11 +49,19 @@ const AccountEditPage = () => {
           setIsLoaded(true);
         })
         .catch((err) => {
-          if (err.message === "Cannot connect to backend server") {
-            setUpdateError({
-              header: "Connection Error",
-              content: <p>Cannot connect to backend server.</p>,
-            });
+          switch (err.message) {
+            case "Cannot connect to backend server":
+              setUpdateError({
+                header: "Connection Error",
+                content: <p>Cannot connect to backend server.</p>,
+              });
+              break
+            case "JsonWebTokenError":
+              alert("Your session has already expired. Re-login is needed. System will redirect you to the login page.")
+              authCtx.logout();
+              navigate("/login");
+              break
+            default:
           }
         });
     }
