@@ -87,15 +87,11 @@ const HomePage = () => {
             case "Cannot connect to backend server":
               alert(err.message)
               break
-            case "JsonWebTokenError":
-              alert("Your session has already expired. Re-login is needed. System will redirect you to the login page.")
+            case "Unauthorized":
+              alert("Your token is unauthorized.")
               authCtx.logout();
               navigate("/login");
               break
-            case "The user belonging to this token does no longer exist.":
-              alert("The user belonging to this token does no longer exist.")
-              authCtx.logout();
-              navigate("/login");
             default:
           }
         });
