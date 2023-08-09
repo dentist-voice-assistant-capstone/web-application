@@ -13,7 +13,7 @@ conda activate ner_backend
 # Third step, install libraries
 pip install -r requirements.txt
 ```
-After finishing, please load weight of wangchanberta through this [link](https://drive.google.com/file/d/1-H4koEFhtAOt1f1y17N0e8MxDCci37Mz/view?usp=share_link) and move it to model folder
+After finishing, please load weight of wangchanberta through this [link]([https://drive.google.com/file/d/1-H4koEFhtAOt1f1y17N0e8MxDCci37Mz/view?usp=share_link](https://drive.google.com/file/d/15xjAegzT-AWGlyqgguPssP_tu7-0CQw6/view?usp=drive_link)) and move it to model folder
 
 ## Running server
 For running the server, you can run the following command
