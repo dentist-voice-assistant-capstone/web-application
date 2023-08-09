@@ -5,6 +5,7 @@ This folder contains code (ExpressJS) for running an backend webrtc API for clie
 For the installation, you need to run the following command in your terminal
 ```sh
 # This will install all the dependency module
+npm install -g node-pre-gyp
 npm install
 ```
 ## Running server
