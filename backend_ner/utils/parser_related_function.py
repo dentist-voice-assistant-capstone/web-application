@@ -437,7 +437,7 @@ def create_semantic_object(semantic_object_list, word_list, available_teeth_dict
             ## Fill the current payload
             semantic_object['data']['payload'] = word_list[i]
           # 5.3.2.2 MO: Fill the current payload
-          elif semantic_object['command'] == MO:
+          elif semantic_object['command'] == MO: # and word_list[i] <= 3:
             if semantic_object['data']['payload'] == None:
               semantic_object['data']['payload'] = word_list[i]
           # 5.3.2.3 Edit: Fill the current payload

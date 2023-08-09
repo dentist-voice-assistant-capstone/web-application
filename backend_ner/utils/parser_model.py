@@ -21,7 +21,7 @@ class ParserModel:
         self.mo_prob = MOProb()
         self.bop_prob = BOPProb()
 
-    def inference(self, sentence, token_classifier, save=False, threshold=3):
+    def inference(self, sentence, token_classifier, save=False, threshold=3, prob_zee=False):
         ''' 
         Input: 
             - sentence: a consider sentence which want to parse
@@ -30,14 +30,20 @@ class ParserModel:
             - threshold: CER threshold
         '''
         tokens = token_classifier.inference(sentence)
-        semantic = self.parse(tokens, threshold=threshold) # Don't save parser, check alternate first
-        result = self.alternate_parse_zee(sentence, tokens, token_classifier, semantic, save, threshold)
+        semantic = self.parse(tokens, threshold=threshold, save=(save and (not prob_zee))) # Don't save parser, check alternate first
+        if prob_zee == True:
+            # four_occurance = sentence.count("สี่")
+            # print(four_occurance)
+            # for _ in range(four_occurance-1):
+            #     semantic, tokens, sentence = self.alternate_parse_zee(sentence, tokens, token_classifier, semantic, False, threshold)
+            semantic, tokens, sentence = self.alternate_parse_zee(sentence, tokens, token_classifier, semantic, save, threshold)
 
-        return result # result
+        return semantic # result
 
     def alternate_parse_zee(self, sentence, tokens, token_classifier, semantic, save=False, threshold=5):
         result_tokens = copy.deepcopy(tokens)
         result_semantic = copy.deepcopy(semantic)
+        new_sentence = copy.deepcopy(sentence)
 
         if semantic["command"] in ["PDRE", "MGJ"] and not semantic["is_zee"] and "สี่" in sentence: # No zee in this command
             new_sentence = re.sub("สี่", "ซี่", sentence, 1) # replace the first occurance of สี่ with ซี่ 
@@ -89,7 +95,7 @@ class ParserModel:
             self.prev_distant = self.distance_lastest_zee_token(result_tokens, self.prev_distant)[-1] if len(result_tokens) > 0 else -1
             _ = self.parse(result_tokens, save=save, threshold=threshold)
 
-        return result_semantic
+        return result_semantic, result_tokens, new_sentence
 
     def find_first_tag_four_index(self, tags):
         for idx, tag in enumerate(tags):
