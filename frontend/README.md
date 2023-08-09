@@ -5,6 +5,7 @@
 For the installation, you need to run the following command in your terminal
 
 ```sh
+npm install --legacy-peer-deps
 npm install
 ```
 
@@ -13,6 +14,7 @@ npm install
 For runnning the server (in development mode), you can run the following command in your terminal
 
 ```sh
+npm install --legacy-peer-deps
 npm start
 ```
 
